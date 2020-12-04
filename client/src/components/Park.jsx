@@ -10,7 +10,6 @@ import {
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import PropTypes from 'prop-types';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,6 +17,8 @@ import mapStyles from './ParkStyles';
 import SideBar from './SideBar';
 
 import Search from './Search';
+import Locate from './Locate';
+import './Park.css';
 
 const libraries = ['places'];
 
@@ -294,28 +295,6 @@ const Park = () => {
       </GoogleMap>
     </div>
   );
-};
-
-const Locate = ({ panTo }) => (
-  <button
-    className="locate"
-    type="submit"
-    onClick={() => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => panTo({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        }),
-        () => null,
-      );
-    }}
-  >
-    <img src="https://cdn.shopify.com/s/files/1/0082/3142/0009/products/Dog_Paw_Compass_SKU-02949-L_Black_800x.png?v=1549382505" alt="compass" />
-  </button>
-);
-
-Locate.propTypes = {
-  panTo: PropTypes.func.isRequired,
 };
 
 export default Park;
