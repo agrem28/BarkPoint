@@ -122,7 +122,7 @@ const Park = () => {
   const handleDelete = async (park) => {
     const { data } = await axios.get('session');
     const { email } = data;
-    await axios.delete(`/data/unfavpark/${email}`, park);
+    await axios.put(`/data/unfavpark/${email}`, park);
     getVenues();
     setSelected(null);
   };
@@ -226,7 +226,9 @@ const Park = () => {
                             isClicked[selected.venue
                               ? selected.venue.id : selected._id] ? false : true,
                         });
-                        if (isClicked) { handleLike(selected); } else { handleDelete(selected); }
+                        if (!isClicked[selected.venue ? selected.venue.id : selected._id]) {
+                          handleLike(selected);
+                        } else { handleDelete(selected); }
                       }}
                     >
                       {!isClicked[selected.venue ? selected.venue.id : selected._id]
