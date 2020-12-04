@@ -117,9 +117,12 @@ DB_DB |
   sudo service mongodb start
 ```
 
-  If mongo is not installed follow the steps on the official website:
-  https://docs.mongodb.com/manual/installation/
-
+   If mongo is not installed follow the steps on the official website:
+   https://docs.mongodb.com/manual/installation/
+  
+   For creating a publically accessible database, a mongoDB cluster will need to be incorporated.
+  
+   A great tutorial to follow for creating MongoDB Atlas clusters can be found here: https://medium.com/@bretcameron/mongodb-a-beginners-guide-8fca0c7787a4.
 6. Use **npm run start** to start local server
 
 ## Serpwow
