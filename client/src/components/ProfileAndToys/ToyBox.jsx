@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 
 // Styling import
@@ -55,33 +56,20 @@ const ToyBox = ({ dogs, getDogs }) => {
   const classes = useStyles();
   const [toys, setToys] = useState([]);
   const [hide, setHide] = useState(true);
-  const [theCurrentDog, settheCurrentDog] = useState({});
+  const [theCurrentDog, settheCurrentDog] = useState(dogs[dogs.length - 1]);
 
-  const getToy = () => {
-    axios.get('session')
-      .then((response) => {
-        axios.get('/data/dog', { params: response.data })
-          .then(({ data }) => {
-            const currentDog = data.slice(data.length - 1);
-            const obj = {
-              type1: currentDog[0].personalitytypes[0],
-              type2: currentDog[0].personalitytypes[1],
-              type3: currentDog[0].personalitytypes[2],
-            };
-            axios.get('/get/toys', { params: obj })
-              .then(({ data: toyData }) => {
-                setToys(toyData.filter((newToy) => newToy.price));
-                setHide(false);
-              })
-              .catch((error) => {
-                console.warn(error);
-              });
-          }).catch((error) => {
-            console.warn(error);
-          });
-      }).catch((error) => {
-        console.warn(error);
-      });
+  const getToy = async () => {
+    const { data } = await axios.get('session');
+    const { data: dogData } = await axios.get('/data/dog', { params: data });
+    const currentDog = dogData.slice(data.length - 1);
+    const obj = {
+      type1: currentDog[0].personalitytypes[0],
+      type2: currentDog[0].personalitytypes[1],
+      type3: currentDog[0].personalitytypes[2],
+    };
+    const { data: toyData } = await axios.get('/get/toys', { params: obj });
+    setToys(toyData.filter((newToy) => newToy.price));
+    setHide(false);
   };
 
   const refresh = () => {
@@ -94,54 +82,25 @@ const ToyBox = ({ dogs, getDogs }) => {
     }
   };
 
-  const saveToy = (image, title, link, rating, price) => {
-    if (!theCurrentDog) {
-      const toy = {
-        image,
-        title,
-        link,
-        rating,
-        price,
-      };
+  const saveToy = async (image, title, link, rating, price) => {
+    const toy = {
+      image,
+      title,
+      link,
+      rating,
+      price,
+    };
 
-      axios.get('session')
-        .then((response) => {
-          axios.get('/data/dog', { params: response.data })
-            .then(({ data }) => {
-            // eslint-disable-next-line no-underscore-dangle
-              const id = data.slice(data.length - 1)[0]._id;
-              axios.put(`/data/dog/${id}`, toy)
-                .then((resp) => {
-                  console.info(resp);
-                }).catch((error) => {
-                  console.warn(error);
-                });
-            }).catch((error) => {
-              console.warn(error);
-            });
-        }).catch((error) => {
-          console.warn(error);
-        });
-    } else {
-      const toy = {
-        image,
-        title,
-        link,
-        rating,
-        price,
-      };
-      // eslint-disable-next-line no-underscore-dangle
-      const id = theCurrentDog._id;
-      axios.put(`/data/dog/${id}`, toy)
-        .then((resp) => {
-          console.info(resp);
-        }).catch((error) => {
-          console.warn(error);
-        });
-    }
+    const { data: dogData } = axios.get('session');
+    const { data: dogIdData } = await axios.get('/data/dog', { params: dogData });
+    const id = dogIdData.find((dog) => theCurrentDog._id === dog._id);
+    // console.log(theCurrentDog._id);
+    // console.log(dogIdData);
+    // console.log(id);
+    await axios.put(`/data/dog/${id._id}`, toy);
   };
 
-  const getDogToy = (searchDog) => {
+  const getDogToy = async (searchDog) => {
     const ourDog = dogs.find((dogFind) => dogFind.name === searchDog);
 
     const obj = {
@@ -152,14 +111,10 @@ const ToyBox = ({ dogs, getDogs }) => {
 
     setHide(true);
 
-    axios.get('/get/toys', { params: obj })
-      .then(({ data: toyData }) => {
-        setToys(toyData.filter((newToy) => newToy.price));
-        setHide(false);
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+    const { data: toyData } = await axios.get('/get/toys', { params: obj });
+
+    setToys(toyData.filter((newToy) => newToy.price));
+    setHide(false);
 
     settheCurrentDog(ourDog);
   };
@@ -218,7 +173,7 @@ const ToyBox = ({ dogs, getDogs }) => {
               }}
               onChange={(event) => { getDogToy(event.target.value); }}
             >
-              {dogs && dogs.reverse().map((dog) => (
+              {dogs && dogs.map((dog) => (
                 <option value={dog.name}>{dog.name}</option>
               ))}
             </select>

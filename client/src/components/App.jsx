@@ -27,7 +27,7 @@ const App = () => {
       .then((response) => {
         axios.get('/data/dog', { params: response.data })
           .then(({ data }) => {
-            setDogs(data);
+            setDogs(data.reverse());
           }).catch((error) => {
             console.warn(error);
           });
