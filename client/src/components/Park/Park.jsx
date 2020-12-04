@@ -222,6 +222,7 @@ const Park = () => {
                     <IconButton
                       onClick={() => {
                         setIsClicked({
+                          ...isClicked,
                           [selected.venue ? selected.venue.id : selected._id]:
                             // eslint-disable-next-line no-unneeded-ternary
                             isClicked[selected.venue
