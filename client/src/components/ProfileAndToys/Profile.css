@@ -7,12 +7,23 @@ and appropriate space around each container.
 */
 
 .dogs {
-  align-items: center;
   column-count: 2;
-  padding-left: 2%;
+  padding-left: 20px;
   padding-top: 50px;
-  width: '10px';
-  height: '10px';
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  max-width: 60%;
+}
+
+.dogProfile {
+  max-width: 50%;
+  flex-wrap: wrap;
+  column-count: 2;
+  margin-left: 25%;
+  margin-top: 2rem;
 }
 
 /*
@@ -22,7 +33,6 @@ reduce white space.
 
 .Profile {
   background-image: WHITE;
-  margin: 0;
 }
 
 /*
