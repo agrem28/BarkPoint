@@ -192,9 +192,6 @@ const ToyBox = ({ dogs, getDogs }) => {
         </div>
         <div
           className="dogs"
-          // style={{
-          //   width: '100%', height: '100%', paddingBottom: '10px', columnCount: '3',
-          // }}
         >
           { toys.slice(0, 6).map((toy) => (
             <Card

@@ -39,6 +39,7 @@ const App = () => {
   return (
 
     <Router>
+      {/* React router is being used to switch between routes depending on the path chosen */}
       <Switch>
         <Route exact path="/">
           <GoogleLogin />
@@ -84,6 +85,7 @@ const App = () => {
         <Route path="/logout">
           <LogOut />
         </Route>
+        {/* if a route is not found it will direct to the 404 page */}
         <Route component={NotFound} />
       </Switch>
     </Router>
