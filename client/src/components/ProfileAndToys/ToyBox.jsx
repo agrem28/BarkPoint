@@ -56,16 +56,15 @@ const ToyBox = ({ dogs, getDogs }) => {
   const classes = useStyles();
   const [toys, setToys] = useState([]);
   const [hide, setHide] = useState(true);
-  const [theCurrentDog, settheCurrentDog] = useState(dogs[dogs.length - 1]);
+  const [theCurrentDog, settheCurrentDog] = useState(dogs[0]);
 
   const getToy = async () => {
     const { data } = await axios.get('session');
-    const { data: dogData } = await axios.get('/data/dog', { params: data });
-    const currentDog = dogData.slice(data.length - 1);
+    await axios.get('/data/dog', { params: data });
     const obj = {
-      type1: currentDog[0].personalitytypes[0],
-      type2: currentDog[0].personalitytypes[1],
-      type3: currentDog[0].personalitytypes[2],
+      type1: theCurrentDog.personalitytypes[0],
+      type2: theCurrentDog.personalitytypes[1],
+      type3: theCurrentDog.personalitytypes[2],
     };
     const { data: toyData } = await axios.get('/get/toys', { params: obj });
     setToys(toyData.filter((newToy) => newToy.price));
@@ -94,9 +93,6 @@ const ToyBox = ({ dogs, getDogs }) => {
     const { data: dogData } = axios.get('session');
     const { data: dogIdData } = await axios.get('/data/dog', { params: dogData });
     const id = dogIdData.find((dog) => theCurrentDog._id === dog._id);
-    // console.log(theCurrentDog._id);
-    // console.log(dogIdData);
-    // console.log(id);
     await axios.put(`/data/dog/${id._id}`, toy);
   };
 

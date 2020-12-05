@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable no-underscore-dangle */
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // Import materialui info
 import { makeStyles, styled } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
@@ -16,6 +16,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ClearIcon from '@material-ui/icons/Clear';
 // import { borders } from '@material-ui/system';
 
 // Import components & css
@@ -46,23 +47,37 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     height: 'auto',
-    maxWidth: '345px',
+    maxWidth: '30vw',
     flexDirection: 'row',
     backgroundColor: '#FEFDFF',
     breakInside: 'avoid',
     fontFamily: 'Roboto',
     marginBottom: '20px',
   },
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    height: 140,
+    width: 100,
+  },
+  control: {
+    padding: theme.spacing(2),
+  },
 }));
 
 const Profile = ({ dogs, getDogs }) => {
-  const [expanded, setExpanded] = useState(false);
+  // const [expanded, setExpanded] = useState(false);
+  // const [isClicked, setisClicked] = useState({});
 
   const history = useHistory();
   const classes = useStyles();
 
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+    // if (!isClicked[ID]) {
+    //   isClicked[ID] = false;
+    // } else {
+    //   isClicked[ID] = !isClicked[ID];
   };
 
   const deleteDog = (dog) => {
@@ -106,55 +121,58 @@ const Profile = ({ dogs, getDogs }) => {
   return (
     <div className="Profile">
       <Navbar />
-      <div className="dogs">
+      <div
+        className="dogProfile"
+        style={{
+          width: '100%', height: '100%', paddingBottom: '10px', columnCount: '3',
+        }}
+      >
         {dogs.map((dog) => (
-          <div className="header">
-            <Card
-              className={classes.card}
-            >
-              <CardHeader
-                title={dog.name}
-                action={(
-                  <IconButton aria-label="delete dogs">
-                    <DeleteIcon onClick={() => deleteDog(dog)} />
-                  </IconButton>
-              )}
-              />
-              <CardMedia
-                className={classes.media}
-                image={dog.image}
-              />
-              <CardActions disableSpacing>
-                <h3>{`${dog.name}'s Toys`}</h3>
-                <IconButton
-                  className={clsx(classes.expand, {
-                    [classes.expandOpen]: expanded,
-                  })}
-                  onClick={handleExpandClick}
-                  aria-expanded={expanded}
-                  aria-label="show more"
-                >
-                  <ExpandMoreIcon />
+          <Card
+            className={classes.card}
+          >
+            <CardHeader
+              title={dog.name}
+              action={(
+                <IconButton aria-label="delete dogs">
+                  <DeleteIcon onClick={() => deleteDog(dog)} />
                 </IconButton>
-              </CardActions>
-              <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                  {dog.toys && dog.toys.map((toys) => (
-                    <div>
-                      <h3><a href={toys.link}>{toys.name}</a></h3>
-                      <p>{toys.link}</p>
-                      <IconButton aria-label="add to favorites">
-                        <FavoriteIcon onClick={() => {
-                          deleteToy(dog, toys);
-                        }}
-                        />
-                      </IconButton>
-                    </div>
-                  ))}
-                </CardContent>
-              </Collapse>
-            </Card>
-          </div>
+              )}
+            />
+            <CardMedia
+              className={classes.media}
+              image={dog.image}
+            />
+            <CardActions disableSpacing>
+              <h3>{`${dog.name}'s Toys`}</h3>
+              <IconButton
+                className={clsx(classes.expand, {
+                  // [classes.expandOpen]: expanded,
+                })}
+                onClick={() => { handleExpandClick(dog._id); }}
+                // aria-expanded={expanded}
+                aria-label="show more"
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </CardActions>
+            <Collapse timeout="auto" unmountOnExit>
+              <CardContent>
+                {dog.toys && dog.toys.map((toys) => (
+                  <div>
+                    <h3><a href={toys.link}>{toys.name}</a></h3>
+                    <p>{toys.link}</p>
+                    <IconButton aria-label="add to favorites">
+                      <ClearIcon onClick={() => {
+                        deleteToy(dog, toys);
+                      }}
+                      />
+                    </IconButton>
+                  </div>
+                ))}
+              </CardContent>
+            </Collapse>
+          </Card>
         ))}
       </div>
       <div
