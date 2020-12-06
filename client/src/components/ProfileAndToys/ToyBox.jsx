@@ -141,12 +141,15 @@ const ToyBox = ({ dogs, getDogs }) => {
   });
 
   useEffect(() => {
-    getDogs();
-    getToy();
+    const doBoth = async () => {
+      await getDogs();
+      await getToy();
+    };
+    doBoth();
   }, []);
 
   return (
-    <div className="background">
+    <div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <img
           src="https://slack-imgs.com/?c=1&o1=ro&url=https%3A%2F%2Fcdn.dribbble.com%2Fusers%2F238583%2Fscreenshots%2F3630870%2Flagif-grande.gif"
@@ -156,7 +159,7 @@ const ToyBox = ({ dogs, getDogs }) => {
           }}
         />
       </div>
-      <div style={{ display: hide ? 'none' : 'block' }}>
+      <div className="background" style={{ display: hide ? 'none' : 'block' }}>
         <Navbar />
         <div style={{
           display: 'flex', alignItems: 'center', margin: '0 auto', width: '20%',
