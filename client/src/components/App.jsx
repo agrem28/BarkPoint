@@ -8,6 +8,9 @@ import ToyBox from './ProfileAndToys/ToyBox';
 import LogOut from './LoginLogout/LogOut';
 import './App.css';
 import NotFound from './LoginLogout/FourOhFour';
+import FriendsList from './ProfileAndToys/FriendsList.jsx';
+import Calendar from './ProfileAndToys/Calendar.jsx';
+import Notifications from './ProfileAndToys/Notifications.jsx';
 
 import Park from './Park/Park';
 import Form from './AboutDog/Form';
@@ -80,7 +83,15 @@ const App = () => {
         <Route path="/logout">
           <LogOut />
         </Route>
-
+        <Route path="/friendsList">
+          <FriendsList />
+        </Route>
+        <Route path="/calendar">
+          <Calendar />
+        </Route>
+        <Route path="/notifications">
+          <Notifications />
+        </Route>
         {/* if a route is not found it will direct to the 404 page */}
         <Route component={NotFound} />
       </Switch>
