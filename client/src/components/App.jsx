@@ -19,25 +19,33 @@ const App = () => {
   const [name, setName] = useState('');
   const [dogs, setDogs] = useState([]);
   const [form, setForm] = useState({
-    size: 'medium', breed: '', number: '', dogname: '', personalitytypes: [outgoing, aggressive, active], image: '',
+    size: 'medium',
+    breed: '',
+    number: '',
+    dogname: '',
+    personalitytypes: [outgoing, aggressive, active],
+    image: '',
   });
 
   const getDogs = () => {
-    axios.get('session')
+    axios
+      .get('session')
       .then((response) => {
-        axios.get('/data/dog', { params: response.data })
+        axios
+          .get('/data/dog', { params: response.data })
           .then(({ data }) => {
             setDogs(data.reverse());
-          }).catch((error) => {
+          })
+          .catch((error) => {
             console.warn(error);
           });
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.warn(error);
       });
   };
 
   return (
-
     <Router>
       {/* React router is being used to switch between routes depending on the path chosen */}
       <Switch>
@@ -55,36 +63,24 @@ const App = () => {
             active={active}
             outgoing={outgoing}
             aggressive={aggressive}
-
           />
         </Route>
         <Route path="/profile">
-          <Profile
-            dogs={dogs}
-            setDogs={setDogs}
-            getDogs={getDogs}
-          />
+          <Profile dogs={dogs} setDogs={setDogs} getDogs={getDogs} />
         </Route>
         <Route path="/toybox">
-          <ToyBox
-            dogs={dogs}
-            setDogs={setDogs}
-            getDogs={getDogs}
-          />
+          <ToyBox dogs={dogs} setDogs={setDogs} getDogs={getDogs} />
         </Route>
         <Route path="/park">
           <Park />
         </Route>
         <Route path="/form">
-          <Form
-            setName={setName}
-            form={form}
-            setForm={setForm}
-          />
+          <Form setName={setName} form={form} setForm={setForm} />
         </Route>
         <Route path="/logout">
           <LogOut />
         </Route>
+
         {/* if a route is not found it will direct to the 404 page */}
         <Route component={NotFound} />
       </Switch>

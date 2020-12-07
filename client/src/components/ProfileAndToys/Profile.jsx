@@ -22,6 +22,8 @@ import ClearIcon from '@material-ui/icons/Clear';
 // Import components & css
 // import ToyBox from './ToyBox';
 import Navbar from './Navbar';
+// import Sidebar
+import Sidebar from './Sidebar';
 // import Toast from './Snackbar';
 import './Profile.css';
 
@@ -33,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '81.25%',
     borderRadius: '50%',
     margin: '28px',
-
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -64,11 +65,13 @@ const Profile = ({ dogs, getDogs }) => {
   const deleteDog = (dog) => {
     // eslint-disable-next-line no-underscore-dangle
     const dogID = dog._id;
-    axios.delete(`data/dog${dogID}`)
+    axios
+      .delete(`data/dog${dogID}`)
       .then((response) => {
         console.info(response);
         getDogs();
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.warn(err);
       });
   };
@@ -79,10 +82,12 @@ const Profile = ({ dogs, getDogs }) => {
 
   const deleteToy = (dog, toy) => {
     // eslint-disable-next-line no-underscore-dangle
-    axios.delete(`data/toy${dog._id}`, { data: { data: toy } })
+    axios
+      .delete(`data/toy${dog._id}`, { data: { data: toy } })
       .then(() => {
         getDogs();
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.warn(err);
       });
   };
@@ -106,9 +111,8 @@ const Profile = ({ dogs, getDogs }) => {
   return (
     <div className="Profile">
       <Navbar />
-      <div
-        className="dogProfile"
-      >
+      <Sidebar />
+      <div className="dogProfile">
         {dogs.map((dog) => (
           <Card
             className={classes.card}
@@ -117,18 +121,24 @@ const Profile = ({ dogs, getDogs }) => {
             <CardHeader
               title={dog.name}
               style={{ color: '#e55812', fontFamily: 'Fredoka One' }}
-              action={(
+              action={
                 <IconButton aria-label="delete dogs">
-                  <DeleteIcon style={{ color: '#2CDA9D' }} onClick={() => deleteDog(dog)} />
+                  <DeleteIcon
+                    style={{ color: '#2CDA9D' }}
+                    onClick={() => deleteDog(dog)}
+                  />
                 </IconButton>
-              )}
+              }
             />
-            <CardMedia
-              className={classes.media}
-              image={dog.image}
-            />
+            <CardMedia className={classes.media} image={dog.image} />
             <CardActions disableSpacing>
-              <h3 style={{ color: '#2CDA9D', fontFamily: 'Lato', letterSpacing: '2' }}>{`${dog.name}'s Toys`}</h3>
+              <h3
+                style={{
+                  color: '#2CDA9D',
+                  fontFamily: 'Lato',
+                  letterSpacing: '2',
+                }}
+              >{`${dog.name}'s Toys`}</h3>
               <IconButton
                 id={dog._id}
                 className={clsx(classes.expand, {
@@ -143,41 +153,47 @@ const Profile = ({ dogs, getDogs }) => {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <CardContent>
-                {dog.toys && dog.toys.map((toys) => (
-                  <div className="">
-                    <IconButton
-                      onClick={() => {
-                        deleteToy(dog, toys);
-                      }}
-                    >
-                      <ClearIcon
-                        style={{ color: '#e55812' }}
-                      />
-                    </IconButton>
-                    <img className="toy-image" src={toys.image} alt="toy" />
-                  </div>
-                ))}
+                {dog.toys &&
+                  dog.toys.map((toys) => (
+                    <div className="">
+                      <IconButton
+                        onClick={() => {
+                          deleteToy(dog, toys);
+                        }}
+                      >
+                        <ClearIcon style={{ color: '#e55812' }} />
+                      </IconButton>
+                      <img className="toy-image" src={toys.image} alt="toy" />
+                    </div>
+                  ))}
               </CardContent>
             </Collapse>
           </Card>
         ))}
-
       </div>
       <div style={{ margin: 'auto', width: '50%', marginTop: '2rem' }}>
-        <MyButton onClick={() => { history.push('/form'); }}>Add Dog</MyButton>
+        <MyButton
+          onClick={() => {
+            history.push('/form');
+          }}
+        >
+          Add Dog
+        </MyButton>
       </div>
     </div>
   );
 };
 
 Profile.propTypes = {
-  dogs: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    breed: PropTypes.string,
-    image: PropTypes.string,
-    size: PropTypes.string,
-    toys: PropTypes.arrayOf,
-  })).isRequired,
+  dogs: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      breed: PropTypes.string,
+      image: PropTypes.string,
+      size: PropTypes.string,
+      toys: PropTypes.arrayOf,
+    })
+  ).isRequired,
   getDogs: PropTypes.func.isRequired,
 };
 
