@@ -1,6 +1,6 @@
 # BarkPoint <a href="https://possible-dream-296716.uc.r.appspot.com"><img src="https://i.ibb.co/zRR5Nd4/barkpoint.png" width=35 height=35></img><a>
 Entertain your pet by either finding a toy or park to play.
-    
+
 <a href="https://circleci.com/"><img src="https://avatars0.githubusercontent.com/u/1231870?s=400&v=4" width=2% height=2%></img><a> [![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs)
 
 ## Description
@@ -123,9 +123,9 @@ If mongo is installed, start mongodb server
 
    If mongo is not installed follow the steps on the official website:
    https://docs.mongodb.com/manual/installation/
-  
+
    For creating a publically accessible database, a mongoDB cluster will need to be incorporated.
-  
+
    A great tutorial to follow for creating MongoDB Atlas clusters can be found here: https://medium.com/@bretcameron/mongodb-a-beginners-guide-8fca0c7787a4.
 6. Use **npm run start** to start local server
 
@@ -146,7 +146,7 @@ which blurs the key from screen view. When the box is clicked, the key is expose
 In order to obtain google Oauth, a google cloud account must first be created. Direct to the **#deployment** section of the README and follow the google cloud installation instructions.
 
 When the google cloud account is created, navigate to the developer console. Once in the console, on the left side-bar find the **API's and services** category
-and click on **Oauth consent screen**. From there fill out the consent form **WARNING: DO NOT PROVIDE COMPANY ICON IMG**  and once the form is filled in, 
+and click on **Oauth consent screen**. From there fill out the consent form **WARNING: DO NOT PROVIDE COMPANY ICON IMG**  and once the form is filled in,
 click on credentials. Inside, click on **new credentials** and select **Oauth client ID** from the dropdown. Fill out the creation form and a clientID/secret key
 will be provided afterwards.
 
