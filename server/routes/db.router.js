@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const axios = require('axios');
 
 const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_TOKEN;
@@ -248,10 +249,56 @@ dbRouter.delete('/data/park/:id', (req, res) => {
     });
 });
 
-dbRouter.get('/findUser', (req, res) => {
+dbRouter.get('/findUsers', (req, res) => {
   User.User.find().then((users) => {
     res.send(users);
   });
 });
 
+dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
+  const currentUser = req.params.currentUser;
+  User.User.findOne({ name: currentUser })
+    .then((currentUser) => {
+      const friend = req.params.friend;
+      User.User.findOne({ name: friend })
+        .then((friend) => {
+          if (!friend.friendRequests.includes(currentUser._id)) {
+            User.User.updateOne(
+              { _id: friend._id },
+              { $push: { friendRequests: currentUser._id } }
+            )
+              .then(() => res.end())
+              .catch();
+          }
+        })
+        .catch();
+    })
+    .catch();
+});
+
+//To be deleted
+dbRouter.get('/addUser', (req, res) => {
+  User.User.create({
+    name: 'Fake User 1',
+    email: 'fakeuser1@gmail.com',
+    friends: [],
+    friendRequests: [],
+    parks: [],
+  }).then(() => res.send('User Added'));
+});
+
+//To be deleted
+dbRouter.get('/deleteUser', (req, res) => {
+  User.User.remove({ name: 'Fake User 1' }).then(() =>
+    console.log('Successfully deleted.')
+  );
+});
+
+//To be deleted
+dbRouter.get('/myFriends', (req, res) => {
+  User.User.update(
+    { _id: '5fcfc37aeb85294b20b878cb' },
+    { $push: { friends: '5fcfec242e2d1d5abd4a18db' } }
+  ).then(() => console.log('FRIEND ADDED'));
+});
 module.exports = dbRouter;

@@ -4,11 +4,14 @@
 import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar.jsx';
 import Sidebar from '../ProfileAndToys/Sidebar.jsx';
+import axios from 'axios';
 
 const FriendsList = () => {
   const [currentDms, setCurrentDms] = useState('Tee');
   const [messageText, setMessageText] = useState('');
-  const exampleUser = ['Tee', 'Amber', 'Andrew'];
+  const [friendToSearch, setFriendToSearch] = useState('');
+  const [friendsList, setFriendsList] = useState([]);
+  // const exampleUser = ['Tee', 'Amber', 'Andrew'];
   let exampleMessage = {
     Tee: [
       { name: 'Tee', message: 'hey man how your day' },
@@ -24,6 +27,23 @@ const FriendsList = () => {
     ],
   };
   const [messages, setMessages] = useState(exampleMessage);
+  const friendSearchOnChange = (event) => {
+    let friend = event.target.value;
+    setFriendToSearch(friend);
+  };
+
+  const addFriend = () => {
+    axios.get('/session').then(({ data }) => {
+      axios
+        .get(`/findFriend/${friendToSearch}/${data.name}`)
+        .then(() => {})
+        .catch((err) => console.log(err));
+      console.log('FRIEND', friendToSearch);
+    });
+  };
+
+  const getFriendsList = () => {};
+
   return (
     <div className="Profile">
       <Navbar />
@@ -32,8 +52,11 @@ const FriendsList = () => {
         <h1>Pup Budz</h1>
         <div className="main">
           <div className="friends">
-            <input placeholder="Search for Budz" />
-            <button>add</button>
+            <input
+              placeholder="Search for Budz"
+              onChange={friendSearchOnChange}
+            />
+            <button onClick={addFriend}>Add Friend</button>
             {exampleUser.map((user) => (
               <h1 onClick={() => setCurrentDms(user)}>{user}</h1>
             ))}

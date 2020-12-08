@@ -4,6 +4,7 @@ const userSchema = new Schema({
   email: String,
   name: String,
   friends: Array,
+  friendRequests: Array,
   messages: {},
   parks: [],
 });
@@ -19,6 +20,7 @@ const createUser = (body) => {
     name: body.name,
     friends: [],
     messages: { test: '' },
+    friendRequests: [],
     parks: [],
   });
   const { email } = user;
