@@ -73,17 +73,27 @@ the header and card media.
 
 .center {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.main{
+  display: flex;
+  flex-wrap: wrap;
+  width: 60%;
+  /* border: 5px solid purple; */
+}
+
 .friends {
-  display: inline-block;
-  float: right;
+  flex:0 0 25%;
+  border: 5px solid purple;
+  flex-direction: column
 }
 
 .messages {
-  display: inline-block;
-  float: right
+  flex: 1;
+  border: 5px solid blue;
+  flex-direction: column
 }
 
