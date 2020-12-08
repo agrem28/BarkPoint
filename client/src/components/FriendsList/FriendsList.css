@@ -1,0 +1,13 @@
+.friends{
+  display: inline-block;
+  text-align: center;
+  margin-left: 30%;
+  vertical-align:top;
+}
+
+.messages{
+  display: inline-block;
+  text-align: center;
+  margin-left: 20%;
+  vertical-align:top;
+}

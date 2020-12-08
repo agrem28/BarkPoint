@@ -8,6 +8,9 @@ import ToyBox from './ProfileAndToys/ToyBox';
 import LogOut from './LoginLogout/LogOut';
 import './App.css';
 import NotFound from './LoginLogout/FourOhFour';
+import FriendsList from './FriendsList/FriendsList';
+import Calendar from './Calendar/Calendar';
+import Notifications from './Notifications/Notifications';
 
 import Park from './Park/Park';
 import Form from './AboutDog/Form';
@@ -19,25 +22,33 @@ const App = () => {
   const [name, setName] = useState('');
   const [dogs, setDogs] = useState([]);
   const [form, setForm] = useState({
-    size: 'medium', breed: '', number: '', dogname: '', personalitytypes: [outgoing, aggressive, active], image: '',
+    size: 'medium',
+    breed: '',
+    number: '',
+    dogname: '',
+    personalitytypes: [outgoing, aggressive, active],
+    image: '',
   });
 
   const getDogs = () => {
-    axios.get('session')
+    axios
+      .get('session')
       .then((response) => {
-        axios.get('/data/dog', { params: response.data })
+        axios
+          .get('/data/dog', { params: response.data })
           .then(({ data }) => {
             setDogs(data.reverse());
-          }).catch((error) => {
+          })
+          .catch((error) => {
             console.warn(error);
           });
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.warn(error);
       });
   };
 
   return (
-
     <Router>
       {/* React router is being used to switch between routes depending on the path chosen */}
       <Switch>
@@ -55,35 +66,31 @@ const App = () => {
             active={active}
             outgoing={outgoing}
             aggressive={aggressive}
-
           />
         </Route>
         <Route path="/profile">
-          <Profile
-            dogs={dogs}
-            setDogs={setDogs}
-            getDogs={getDogs}
-          />
+          <Profile dogs={dogs} setDogs={setDogs} getDogs={getDogs} />
         </Route>
         <Route path="/toybox">
-          <ToyBox
-            dogs={dogs}
-            setDogs={setDogs}
-            getDogs={getDogs}
-          />
+          <ToyBox dogs={dogs} setDogs={setDogs} getDogs={getDogs} />
         </Route>
         <Route path="/park">
           <Park />
         </Route>
         <Route path="/form">
-          <Form
-            setName={setName}
-            form={form}
-            setForm={setForm}
-          />
+          <Form setName={setName} form={form} setForm={setForm} />
         </Route>
         <Route path="/logout">
           <LogOut />
+        </Route>
+        <Route path="/friendsList">
+          <FriendsList />
+        </Route>
+        <Route path="/calendar">
+          <Calendar />
+        </Route>
+        <Route path="/notifications">
+          <Notifications />
         </Route>
         {/* if a route is not found it will direct to the 404 page */}
         <Route component={NotFound} />

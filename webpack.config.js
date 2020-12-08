@@ -6,6 +6,7 @@ const distPath = path.join(__dirname, './client/dist');
 const srcPath = path.join(__dirname, './client/src/Index.jsx');
 
 module.exports = {
+  watch: true,
   mode: 'production',
   entry: srcPath,
   output: {

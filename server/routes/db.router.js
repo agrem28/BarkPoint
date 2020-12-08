@@ -1,4 +1,10 @@
 const { Router } = require('express');
+
+const accountSid = process.env.TWILIO_SID;
+const authToken = process.env.TWILIO_TOKEN;
+
+const twilio = require('twilio')(accountSid, authToken);
+
 const { Dog, User, Park } = require('../db/models/models');
 
 const dbRouter = Router();
@@ -46,6 +52,16 @@ dbRouter.post('/data/dog', (req, res) => {
   } = req.body;
   return Dog.addDog(dogname, breed, size, number, email, image, personalitytypes)
     .then(() => {
+      // Message.addMsg(dogname, breed, size, number, email, image,
+      twilio.messages
+        .create({
+          body: `Welcome to BarkPoint! ${dogname} has been registered. You will now recieve notifications at this number.`,
+          from: '+12678677568',
+          statusCallback: 'http://postb.in/1234abcd',
+          to: `${number}`,
+        })
+        .then((message) => console.log(message.sid))
+        .catch((err) => console.log('TWILIO ERROR==>', err));
       res.sendStatus(201);
     })
     .catch((err) => {
@@ -53,6 +69,7 @@ dbRouter.post('/data/dog', (req, res) => {
       res.sendStatus(500);
     });
 });
+
 /**
  * Adds a new toy into a the currently selected dog's toy field (an array)
  *
@@ -216,4 +233,5 @@ dbRouter.delete('/data/park/:id', (req, res) => {
       res.sendStatus(500);
     });
 });
+
 module.exports = dbRouter;

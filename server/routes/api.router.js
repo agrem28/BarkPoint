@@ -2,6 +2,7 @@ const { Router } = require('express');
 const serpwow = require('../api/serpwow.api.js');
 const personalityVerbs = require('./personalityTypes.json');
 
+
 const apiRouter = Router();
 
 const toysByVerb = [];

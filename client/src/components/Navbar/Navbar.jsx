@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-
   navDisplayFlex: {
     display: 'flex',
     justifyContent: 'space-around',
@@ -47,7 +46,11 @@ const Navbar = () => {
     <AppBar style={{ background: '#0e4749' }} position="static">
       <Toolbar>
         <Avatar className={classes.avatar}>
-          <img className="avatar-logo" src="https://i.ibb.co/zRR5Nd4/barkpoint.png" alt="" />
+          <img
+            className="avatar-logo"
+            src="https://i.ibb.co/zRR5Nd4/barkpoint.png"
+            alt=""
+          />
         </Avatar>
         <Container maxWidth="md">
           <List
