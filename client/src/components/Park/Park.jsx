@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, {
@@ -6,7 +7,10 @@ import React, {
 import axios from 'axios';
 // imports from GoogleMapsAPI package
 import {
-  GoogleMap, useLoadScript, Marker, InfoWindow,
+  GoogleMap,
+  useLoadScript,
+  Marker,
+  InfoWindow,
 } from '@react-google-maps/api';
 
 // imports from Material Ui for styling
@@ -50,7 +54,10 @@ const Park = () => {
   const [venues, setVenues] = useState([]);
   const [location, setLocation] = useState('29.951065, -90.071533');
   const [form, setForm] = useState({
-    name: '', lat: 1, long: 1, comments: '',
+    name: '',
+    lat: 1,
+    long: 1,
+    comments: '',
   });
   const [isClicked, setIsClicked] = useState({});
 
@@ -60,22 +67,27 @@ const Park = () => {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const getVenues = async () => {
-    const { data } = await axios.get('https://api.foursquare.com/v2/venues/explore', {
-      params: {
-        client_id: process.env.FOUR_SQUARE_CLIENT_ID,
-        client_secret: process.env.FOUR_SQUARE_CLIENT_SECRET,
-        query: 'dog park',
-        ll: location,
-        v: '20180323',
-        limit: 100,
-        radius: 100000,
+    const { data } = await axios.get(
+      'https://api.foursquare.com/v2/venues/explore',
+      {
+        params: {
+          client_id: process.env.FOUR_SQUARE_CLIENT_ID,
+          client_secret: process.env.FOUR_SQUARE_CLIENT_SECRET,
+          query: 'dog park',
+          ll: location,
+          v: '20180323',
+          limit: 100,
+          radius: 100000,
+        },
       },
-    });
+    );
 
     const { data: parks } = await axios.get('/data/park');
     const { data: userid } = await axios.get('session');
     const { email } = userid;
-    const { data: faveparks } = await axios.get('/data/favpark', { params: { id: email } });
+    const { data: faveparks } = await axios.get('/data/favpark', {
+      params: { id: email },
+    });
     setVenues(data.response.groups[0].items);
     setParkData(parks);
     setFavParks(faveparks);
@@ -98,11 +110,13 @@ const Park = () => {
   // whenver the map is clicked markers will be set and the lat
   // and long will be set in the form for those points
   const onMapClick = useCallback((e) => {
-    setMarkers((current) => [...current, {
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
-      time: new Date(),
-    },
+    setMarkers((current) => [
+      ...current,
+      {
+        lat: e.latLng.lat(),
+        lng: e.latLng.lng(),
+        time: new Date(),
+      },
     ]);
 
     setForm({ ...form, lat: e.latLng.lat(), long: e.latLng.lng() });
@@ -148,11 +162,13 @@ const Park = () => {
 
   return (
     <div>
-      <SideBar
-        favParks={favParks}
-      />
+      <SideBar favParks={favParks} />
       <div className="container">
-        <img src="https://i.imgur.com/NOS6OVz.png" alt="logo" className="logo-container" />
+        <img
+          src="https://i.imgur.com/NOS6OVz.png"
+          alt="logo"
+          className="logo-container"
+        />
       </div>
 
       <Search panTo={panTo} setLocation={setLocation} />
@@ -167,7 +183,7 @@ const Park = () => {
         onLoad={onMapLoad}
         streetViewControl // enables streetview control within park
       >
-        { markers.map((marker) => (
+        {markers.map((marker) => (
           <Marker
             key={marker.time.toISOString()}
             position={{ lat: marker.lat, lng: marker.lng }}
@@ -182,11 +198,14 @@ const Park = () => {
               setSelected(marker);
             }}
           />
-        )) }
-        { venues.map((marker) => (
+        ))}
+        {venues.map((marker) => (
           <Marker
             key={marker.venue.id}
-            position={{ lat: marker.venue.location.lat, lng: marker.venue.location.lng }}
+            position={{
+              lat: marker.venue.location.lat,
+              lng: marker.venue.location.lng,
+            }}
             icon={{
               url: 'https://i.imgur.com/T1JV3Qy.png',
               scaledSize: new window.google.maps.Size(30, 30),
@@ -198,7 +217,7 @@ const Park = () => {
             }}
           />
         ))}
-        { parkData.map((marker) => (
+        {parkData.map((marker) => (
           <Marker
             // eslint-disable-next-line no-underscore-dangle
             key={marker._id}
@@ -213,109 +232,122 @@ const Park = () => {
               setSelected(marker);
             }}
           />
-        )) }
-        { selected && (
+        ))}
+        {selected && (
           <InfoWindow
-          // sets the position of the info window over the point of the marker
-          // eslint-disable-next-line no-nested-ternary
-            position={selected.venue ? {
-              lat: selected.venue.location.lat,
-              lng: selected.venue.location.lng,
-            } : selected.long
-              ? { lat: selected.lat, lng: selected.long }
-              : { lat: selected.lat, lng: selected.lng }}
+            // sets the position of the info window over the point of the marker
+            // eslint-disable-next-line no-nested-ternary
+            position={
+              selected.venue
+                ? {
+                  lat: selected.venue.location.lat,
+                  lng: selected.venue.location.lng,
+                }
+                : selected.long
+                  ? { lat: selected.lat, lng: selected.long }
+                  : { lat: selected.lat, lng: selected.lng }
+            }
             onCloseClick={() => {
               setSelected(null);
             }}
           >
             <div>
-              { selected.venue || selected.name
-                ? (
-                  <div className="popup">
-                    <h1 className="popup-text">
-                      { selected.venue ? selected.venue.name : selected.name }
-                    </h1>
-                    <hr />
-                    <p className="popup-comment">
-                      { selected.venue ? selected.venue.location.formattedAddress[0]
-                        : selected.comments }
-                    </p>
-                    <IconButton
-                      onClick={() => {
-                        // sets state for favoriting or unfavorting parks
-                        setIsClicked({
-                          ...isClicked,
-                          [selected.venue ? selected.venue.id : selected._id]:
-                            // eslint-disable-next-line no-unneeded-ternary
-                            isClicked[selected.venue
-                              ? selected.venue.id : selected._id] ? false : true,
-                        });
-                        if (!isClicked[selected.venue ? selected.venue.id : selected._id]) {
-                          handleLike(selected);
-                        } else { handleDelete(selected); }
+              {selected.venue || selected.name ? (
+                <div className="popup">
+                  <h1 className="popup-text">
+                    {selected.venue ? selected.venue.name : selected.name}
+                  </h1>
+                  <hr />
+                  <p className="popup-comment">
+                    {selected.venue
+                      ? selected.venue.location.formattedAddress[0]
+                      : selected.comments}
+                  </p>
+                  <IconButton
+                    onClick={() => {
+                      // sets state for favoriting or unfavorting parks
+                      setIsClicked({
+                        ...isClicked,
+                        [selected.venue ? selected.venue.id : selected._id]:
+                          // eslint-disable-next-line no-unneeded-ternary
+                          isClicked[
+                            selected.venue ? selected.venue.id : selected._id
+                          ]
+                            ? false
+                            : true,
+                      });
+                      if (
+                        !isClicked[
+                          selected.venue ? selected.venue.id : selected._id
+                        ]
+                      ) {
+                        handleLike(selected);
+                      } else {
+                        handleDelete(selected);
+                      }
+                    }}
+                  >
+                    {!isClicked[
+                      selected.venue ? selected.venue.id : selected._id
+                    ] ? (
+                      <FavoriteBorderIcon
+                        fontSize="small"
+                        style={{ color: '#e55812' }}
+                      />
+                      ) : (
+                        <FavoriteIcon
+                          fontSize="small"
+                          style={{ color: '#e55812' }}
+                        />
+                      )}
+                  </IconButton>
+                </div>
+              ) : (
+                // for the form when a new park is created
+                <div className="form">
+                  <form>
+                    <TextField
+                      label="Park Name"
+                      variant="outlined"
+                      size="small"
+                      style={{ marginTop: '10px' }}
+                      onChange={handleChange}
+                      name="name"
+                    />
+                    <br />
+                    <TextField
+                      label="Comments"
+                      multiline
+                      rows={4}
+                      variant="outlined"
+                      style={{ marginTop: '5px' }}
+                      onChange={handleChange}
+                      name="comments"
+                    />
+                    <br />
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: '#e55812',
+                        color: '#002626',
+                        fontWeight: 'bold',
+                        marginTop: '5px',
+                        marginBottom: '5px',
+                      }}
+                      onClick={async () => {
+                        await axios.post('/data/park', form);
+                        await getVenues();
+                        setSelected(null);
                       }}
                     >
-                      {!isClicked[selected.venue ? selected.venue.id : selected._id]
-                        ? (
-                          <FavoriteBorderIcon
-                            fontSize="small"
-                            style={{ color: '#e55812' }}
-                          />
-                        )
-                        : (
-                          <FavoriteIcon
-                            fontSize="small"
-                            style={{ color: '#e55812' }}
-                          />
-                        ) }
-                    </IconButton>
-                  </div>
-                )
-                : (
-                  // for the form when a new park is created
-                  <div className="form">
-
-                    <form>
-                      <TextField
-                        label="Park Name"
-                        variant="outlined"
-                        size="small"
-                        style={{ marginTop: '10px' }}
-                        onChange={handleChange}
-                        name="name"
-                      />
-                      <br />
-                      <TextField
-                        label="Comments"
-                        multiline
-                        rows={4}
-                        variant="outlined"
-                        style={{ marginTop: '5px' }}
-                        onChange={handleChange}
-                        name="comments"
-                      />
-                      <br />
-                      <Button
-                        variant="contained"
-                        style={{
-                          backgroundColor: '#e55812', color: '#002626', fontWeight: 'bold', marginTop: '5px', marginBottom: '5px',
-                        }}
-                        onClick={async () => {
-                          await axios.post('/data/park', form);
-                          await getVenues();
-                          setSelected(null);
-                        }}
-                      >
-                        Submit
-                      </Button>
-                    </form>
-                  </div>
-                )}
-
+                      Submit
+                    </Button>
+                  </form>
+                </div>
+              )}
             </div>
-
           </InfoWindow>
-        ) }
+        )}
       </GoogleMap>
     </div>
   );
