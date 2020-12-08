@@ -3,6 +3,7 @@ import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 
 const FriendsList = () => {
+  console.log('Hey');
   return (
     <div className="Profile">
       <Navbar />
