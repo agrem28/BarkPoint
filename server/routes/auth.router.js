@@ -11,31 +11,37 @@ const isLoggedIn = (req, res, next) => {
   res.status(200).send('not logged in');
 };
 
-authRouter.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+authRouter.get(
+  '/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
 
 /**
  * If google authentication is successful, the user will be sent to a form page where
  * they can input information about their pet dog
  */
-authRouter.get('/auth/google/callback', passport.authenticate('google'),
+authRouter.get(
+  '/auth/google/callback',
+  passport.authenticate('google'),
   (req, res) => {
     const { _json } = req.user;
-
+    console.log('JSON', _json);
     User.findUser(_json.email)
       .then((result) => {
         if (result) {
           res.redirect('/profile');
         } else {
-          User.createUser(_json)
-            .then(() => {
-              res.redirect('/form');
-            });
+          User.createUser(_json).then(() => {
+            res.redirect('/form');
+          });
         }
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.error(err);
         res.sendStatus(500);
       });
-  });
+  }
+);
 
 /**
  * If the user is already logged in, don't send them to the form page

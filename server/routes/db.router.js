@@ -11,14 +11,16 @@ const dbRouter = Router();
 /**
  * Adds a new user into the barkPoint database
  */
-dbRouter.post('/data/user', (req, res) => User(req.body)
-  .then(() => {
-    res.sendStatus(201);
-  })
-  .catch((err) => {
-    console.error(err);
-    res.sendStatus(500);
-  }));
+dbRouter.post('/data/user', (req, res) =>
+  User(req.body)
+    .then(() => {
+      res.sendStatus(201);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    })
+);
 /**
  * Finds all dogs whose user_email field matches the current sessions user's email
  */
@@ -48,9 +50,23 @@ dbRouter.get('/data/dog', ({ user }, res) => {
  */
 dbRouter.post('/data/dog', (req, res) => {
   const {
-    size, breed, number, email, dogname, image, personalitytypes,
+    size,
+    breed,
+    number,
+    email,
+    dogname,
+    image,
+    personalitytypes,
   } = req.body;
-  return Dog.addDog(dogname, breed, size, number, email, image, personalitytypes)
+  return Dog.addDog(
+    dogname,
+    breed,
+    size,
+    number,
+    email,
+    image,
+    personalitytypes
+  )
     .then(() => {
       // Message.addMsg(dogname, breed, size, number, email, image,
       twilio.messages
@@ -133,9 +149,7 @@ dbRouter.get('/data/park', async (req, res) => {
  * Adds a park into the barkPoint database
  */
 dbRouter.post('/data/park', (req, res) => {
-  const {
-    name, lat, long, comments,
-  } = req.body;
+  const { name, lat, long, comments } = req.body;
   return Park.addPark(name, lat, long, comments)
     .then(() => {
       res.sendStatus(201);
@@ -232,6 +246,12 @@ dbRouter.delete('/data/park/:id', (req, res) => {
       console.error(err);
       res.sendStatus(500);
     });
+});
+
+dbRouter.get('/findUser', (req, res) => {
+  User.User.find().then((users) => {
+    res.send(users);
+  });
 });
 
 module.exports = dbRouter;
