@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Sansita+Swashed:wght@300&display=swap');
-.Sidebar{
+.Sidebar {
   height: 100%;
   width: 15vw;
   background-color: #002626;
@@ -7,13 +7,21 @@
   right: 0rem;
 }
 
-.sideBarList{
-  height: auto;
-  width: 100%;
-  padding: 0
+.SidebarProfile {
+  height: 100%;
+  width: 15vw;
+  background-color: #002626;
+  position: absolute;
+  left: 0rem;
 }
 
-.sideBarList .sideBarRow{
+.sideBarList {
+  height: auto;
+  width: 100%;
+  padding: 0;
+}
+
+.sideBarList .sideBarRow {
   width: 100%;
   height: 12vh;
   border: 1px solid black;
@@ -21,43 +29,38 @@
   margin: 0%;
   display: flex;
   flex-direction: row;
-  color: #FEFDFF;
+  color: #fefdff;
   text-decoration: none;
   justify-content: center;
 }
 
-.sideBarList .sideBarRow:hover{
+.sideBarList .sideBarRow:hover {
   cursor: pointer;
   background-color: #0e4749;
 }
 
-.form-title{
+.form-title {
   text-align: center;
-  color: #2CDA9D;
+  color: #2cda9d;
   letter-spacing: 2px;
 }
 
-
-.fave-parks{
-margin-left: 10px;
-background-color: #002626;
-
+.fave-parks {
+  margin-left: 10px;
+  background-color: #002626;
 }
 
-.park-text{
+.park-text {
   font-family: 'Montserrat', sans-serif;
-  color: #FEFDFF;
+  color: #fefdff;
   font-weight: bolder;
   display: inline;
   margin-bottom: 5px;
 }
 
-.flex{
+.flex {
   display: flex;
   flex-direction: row;
   height: auto;
   width: auto;
 }
-
-
-

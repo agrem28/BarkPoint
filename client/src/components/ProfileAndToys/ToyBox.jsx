@@ -23,7 +23,7 @@ import Box from '@material-ui/core/Box';
 import PetsIcon from '@material-ui/icons/Pets';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
-import Navbar from './Navbar';
+import Navbar from '../Navbar/Navbar';
 
 const axios = require('axios');
 

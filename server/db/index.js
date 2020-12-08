@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 const user = process.env.DB_USER;
 const pass = process.env.DB_PASS;
 const database = process.env.DB_DB;
+const url = `mongodb+srv://${user}:${pass}@cluster0.otxhu.mongodb.net/${database}?retryWrites=true&w=majority`;
 
-mongoose.connect(`mongodb+srv://${user}:${pass}@cluster0.xvjbc.mongodb.net/${database}?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`mongodb+srv://${user}:${pass}@cluster0.otxhu.mongodb.net/${database}?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 
