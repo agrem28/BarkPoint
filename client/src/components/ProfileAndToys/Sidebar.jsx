@@ -17,7 +17,9 @@ const Sidebar = () => {
       >
         {links.map((link) => (
           <Link to={link.path} key={link.title}>
-            test
+            <ListItem button className="sideBarRow">
+              <ListItemText primary={link.title} />
+            </ListItem>
           </Link>
         ))}
       </List>
