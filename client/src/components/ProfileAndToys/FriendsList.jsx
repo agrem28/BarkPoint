@@ -21,9 +21,10 @@ const FriendsList = () => {
       <Sidebar />
       <div className="center">
         <h4>search for dogs</h4>
-        <input />
         <div className="main">
           <div className="friends">
+            <input />
+            <button>add</button>
             {exampleUser.map((user) => (<h1 onClick={() => setCurrentDms(user)}>{user}</h1>))}
           </div>
           <div className="messages">
