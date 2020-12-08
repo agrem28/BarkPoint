@@ -4,6 +4,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core';
 
 const Sidebar = () => {
   const links = [
+    { title: 'My Dogs', path: '/profile' },
     { title: 'Friends List', path: '/friendsList' },
     { title: 'Calendar', path: '/calendar' },
     { title: 'Notifications', path: '/notifications' },
