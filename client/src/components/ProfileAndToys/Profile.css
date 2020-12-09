@@ -32,8 +32,8 @@ and appropriate space around each container.
   max-height: 1%;
   flex-wrap: wrap;
   column-count: 2;
-  
-  
+
+
 }
 
 /*
@@ -48,7 +48,7 @@ reduce white space.
     width: 100vw;
     background-size: cover;
     background-position: bottom;
-    
+
 }
 
 /*
@@ -70,3 +70,30 @@ the header and card media.
   height: 10vh;
   width: 5vw;
 }
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.main{
+  display: flex;
+  flex-wrap: wrap;
+  width: 60%;
+  /* border: 5px solid purple; */
+}
+
+.friends {
+  flex:0 0 25%;
+  border: 5px solid purple;
+  flex-direction: column
+}
+
+.messages {
+  flex: 1;
+  border: 5px solid blue;
+  flex-direction: column
+}
+

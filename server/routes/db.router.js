@@ -1,6 +1,9 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable max-len */
 /* eslint-disable no-console */
 const { Router } = require('express');
+// const axios = require('axios');
 
 const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_TOKEN;
@@ -51,9 +54,23 @@ dbRouter.get('/data/dog', ({ user }, res) => {
  */
 dbRouter.post('/data/dog', (req, res) => {
   const {
-    size, breed, number, email, dogname, image, personalitytypes,
+    size,
+    breed,
+    number,
+    email,
+    dogname,
+    image,
+    personalitytypes,
   } = req.body;
-  return Dog.addDog(dogname, breed, size, number, email, image, personalitytypes)
+  return Dog.addDog(
+    dogname,
+    breed,
+    size,
+    number,
+    email,
+    image,
+    personalitytypes,
+  )
     .then(() => {
       // Message.addMsg(dogname, breed, size, number, email, image,
       twilio.messages
@@ -309,4 +326,71 @@ dbRouter.get('/data/notifications', (req, res) => {
     });
 });
 
+dbRouter.get('/findUsers', (req, res) => {
+  User.User.find().then((users) => {
+    res.send(users);
+  });
+});
+
+// This route will find the user being searched for and add his/her
+// id to the current users "friendRequest" array.
+dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
+  const { currentUser } = req.params;
+  User.User.findOne({ name: currentUser })
+    .then((currentUser) => {
+      const { friend } = req.params;
+      User.User.findOne({ name: friend })
+        .then((friend) => {
+          if (!friend.friendRequests.includes(currentUser._id)) {
+            User.User.updateOne(
+              { _id: friend._id },
+              { $push: { friendRequests: currentUser._id } },
+            )
+              .then(() => res.end())
+              .catch();
+          }
+        })
+        .catch();
+    })
+    .catch();
+});
+
+dbRouter.get('/friends/:currentUser', (req, res) => {
+  User.User.findOne({ name: req.params.currentUser }).then((currentUser) => {
+    User.User.find()
+      .where('_id')
+      .in(currentUser.friends)
+      .exec((err, friends) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(friends);
+        }
+      });
+  });
+});
+
+// To be deleted
+dbRouter.get('/addUser', (req, res) => {
+  User.User.create({
+    name: 'Fake User 999',
+    email: 'fakeuser2@gmail.com',
+    friends: [],
+    friendRequests: [],
+    parks: [],
+  }).then(() => res.send('User Added'));
+});
+
+// To be deleted
+dbRouter.get('/deleteUser', () => {
+  User.User.remove({ name: 'Fake User 1' }).then(() => console.log('Successfully deleted.'));
+});
+
+// To be deleted
+dbRouter.get('/myFriends', () => {
+  User.User.update(
+    { _id: '5fcfc37aeb85294b20b878cb' },
+    { $push: { friends: '5fd0265137590d281d0bf560' } },
+  ).then(() => console.log('FRIEND ADDED'));
+});
 module.exports = dbRouter;

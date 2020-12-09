@@ -2,6 +2,10 @@ const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema({
   email: String,
+  name: String,
+  friends: Array,
+  friendRequests: Array,
+  messages: {},
   parks: [],
   notifs: [],
 });
@@ -14,6 +18,10 @@ const User = model('User', userSchema);
 const createUser = (body) => {
   const user = new User({
     email: body.email,
+    name: body.name,
+    friends: [],
+    messages: { test: '' },
+    friendRequests: [],
     parks: [],
     notifs: [],
   });
@@ -26,6 +34,8 @@ const createUser = (body) => {
   });
 };
 const findUser = (email) => User.findOne({ email }).exec();
+const findAllUsers = () => User.find().exec();
+
 /**
  * @param {ObjectId} userId -- the mongo-provided ObjectId
  * @param {string} park -- the name value of the park a user wishes to favorite
@@ -35,14 +45,8 @@ const findUser = (email) => User.findOne({ email }).exec();
  * $addToSet will add the value provided into an array if it doesn't already exist there.
  * $pull will remove the value provided from an array if it exists there.
  */
-const favPark = (email, park) => User.findOneAndUpdate(
-  { email },
-  { $addToSet: { parks: park } },
-);
-const unFavPark = (email, park) => User.findOneAndUpdate(
-  { email },
-  { $pull: { parks: park } },
-);
+const favPark = (email, park) => User.findOneAndUpdate({ email }, { $addToSet: { parks: park } });
+const unFavPark = (email, park) => User.findOneAndUpdate({ email }, { $pull: { parks: park } });
 const getFavParks = (email) => User.findOne({ email })
   .then((userData) => (userData.parks ? userData.parks : []))
   .catch((err) => console.error(err));
@@ -68,4 +72,6 @@ module.exports = {
   addNotif,
   deleteNotif,
   getNotifs,
+  findAllUsers,
+  User,
 };
