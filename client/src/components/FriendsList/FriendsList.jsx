@@ -8,6 +8,7 @@ import axios from 'axios';
 require('./FriendsList.css');
 
 const FriendsList = () => {
+  console.log('Helllooo');
   const [currentDms, setCurrentDms] = useState('Tee');
   const [messageText, setMessageText] = useState('');
   const [friendToSearch, setFriendToSearch] = useState('');

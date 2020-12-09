@@ -296,7 +296,7 @@ dbRouter.get('/friends/:currentUser', (req, res) => {
 //To be deleted
 dbRouter.get('/addUser', (req, res) => {
   User.User.create({
-    name: 'Fake User 999',
+    name: 'Best User Ever',
     email: 'fakeuser2@gmail.com',
     friends: [],
     friendRequests: [],
@@ -315,7 +315,7 @@ dbRouter.get('/deleteUser', (req, res) => {
 dbRouter.get('/myFriends', (req, res) => {
   User.User.update(
     { _id: '5fcfc37aeb85294b20b878cb' },
-    { $push: { friends: '5fd00fbe262ad66a4aa0eecb' } }
-  ).then(() => console.log('FRIEND ADDED'));
+    { $push: { friends: '5fd0203f3885066ee120ec8c' } }
+  ).then(() => res.send('FRIEND ADDED'));
 });
 module.exports = dbRouter;
