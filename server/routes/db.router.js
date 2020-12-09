@@ -80,7 +80,7 @@ dbRouter.post('/data/dog', (req, res) => {
           statusCallback: 'http://postb.in/1234abcd',
           to: `${number}`,
         })
-        .then((message) => console.log(message.sid))
+        .then((message) => res.json(message.sid))
         .catch((err) => console.log('TWILIO ERROR==>', err));
       res.sendStatus(201);
     })
@@ -93,35 +93,42 @@ dbRouter.post('/data/dog', (req, res) => {
 /**
  * Changes a dog's number in the barkPoint database.
  *
- * @data is equal to the current sessions user's email
  *
- * @personalitytypes is an array of length 3. It's values are booleans with
- * each value correlating to a personality type. Swiping left equaling false
- * and swiping right equaling false.
  */
+
 dbRouter.put('/data/notifications/:email', (req, res) => {
   const { email } = req.params;
   console.log(req.body, 'BODY');
-  const notif = req.body.number;
+  const notif = 'Number changed';
+  const newNum = req.body.number;
   console.log(notif, 'NOTIF');
   User.addNotif(email, notif)
-    .then(() => Dog.changeNumber(email, notif)).then(() => {
+    .then(() => Dog.changeNumber(email, newNum)).then(() => {
       twilio.messages
         .create({
           body: 'BarkPoint subscription number changed. You will now recieve notifications at this number.',
           from: '+12678677568',
           statusCallback: 'http://postb.in/1234abcd',
-          to: `${notif}`,
+          to: `${newNum}`,
         })
         .then((message) => {
-          console.log(message.sid);
-          res.sendStatus(200);
+          console.log(message, 'MESSAGE');
+          res.send(message);
         })
         .catch((err) => console.log('TWILIO error==>', err));
     })
     .catch((err) => {
       console.error(err);
       res.sendStatus(500);
+    });
+});
+
+dbRouter.get('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  User.User.findOne({ email })
+    .then((data) => {
+      console.log(data, 'DATA');
+      res.send(data);
     });
 });
 
@@ -144,6 +151,7 @@ dbRouter.put('/data/dog/:id', (req, res) => {
       res.sendStatus(500);
     });
 });
+
 /**
  * Removes a toy from the currently selected dog's toy field (an array)
  *
