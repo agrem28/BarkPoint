@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-shadow */
 /* eslint-disable no-console */
 /* eslint-disable react/button-has-type */
@@ -10,25 +11,13 @@ import Sidebar from '../ProfileAndToys/Sidebar';
 
 require('./FriendsList.css');
 
+const socket = io();
+
 const FriendsList = () => {
   const [currentDms, setCurrentDms] = useState({});
   const [messageText, setMessageText] = useState('');
   const [friendToSearch, setFriendToSearch] = useState('');
   const [friendsList, setFriendsList] = useState([]);
-  // let exampleMessage = {
-  //   Tee: [
-  //     { name: 'Tee', message: 'hey man how your day' },
-  //     { name: 'Billy', message: 'its been good' },
-  //   ],
-  //   Amber: [
-  //     { name: 'Amber', message: 'does the site looks good' },
-  //     { name: 'Billy', message: 'sure does' },
-  //   ],
-  //   Andrew: [
-  //     { name: 'Andrew', message: 'i like this youtube video' },
-  //     { name: 'Billy', message: 'same' },
-  //   ],
-  // };
 
   const [messages, setMessages] = useState({});
   const friendSearchOnChange = (event) => {
@@ -65,6 +54,11 @@ const FriendsList = () => {
       });
     });
   };
+
+  socket.on('recived', () => {
+    console.log('testing');
+    getMessagesList();
+  });
 
   useEffect(() => {
     getFriendsList();
@@ -136,6 +130,8 @@ const FriendsList = () => {
                             user: currentDms.email,
                             from: data.name,
                             to: currentDms.name,
+                          }).then(() => {
+                            socket.emit('sent');
                           });
                         });
                       }}
