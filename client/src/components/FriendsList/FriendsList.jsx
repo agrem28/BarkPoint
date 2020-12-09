@@ -1,14 +1,19 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { useState } from 'react';
-import Navbar from '../Navbar/Navbar.jsx';
-import Sidebar from '../ProfileAndToys/Sidebar.jsx';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Navbar from '../Navbar/Navbar';
+import Sidebar from '../ProfileAndToys/Sidebar';
+
+require('./FriendsList.css');
 
 const FriendsList = () => {
+  console.log('Helllooo');
   const [currentDms, setCurrentDms] = useState('Tee');
   const [messageText, setMessageText] = useState('');
-  const exampleUser = ['Tee', 'Amber', 'Andrew'];
+  const [friendToSearch, setFriendToSearch] = useState('');
+  const [friendsList, setFriendsList] = useState([]);
   let exampleMessage = {
     Tee: [
       { name: 'Tee', message: 'hey man how your day' },
@@ -23,7 +28,39 @@ const FriendsList = () => {
       { name: 'Billy', message: 'same' },
     ],
   };
+
+  useEffect(() => {
+    getFriendsList();
+  }, []);
+
   const [messages, setMessages] = useState(exampleMessage);
+  const friendSearchOnChange = (event) => {
+    const friend = event.target.value;
+    setFriendToSearch(friend);
+  };
+
+  // Sends friend request to user being searched...
+  const sendFriendRequest = () => {
+    axios.get('/session').then(({ data }) => {
+      axios
+        .get(`/findFriend/${friendToSearch}/${data.name}`)
+        .then(() => {})
+        .catch((err) => console.log(err));
+      console.log('FRIEND', friendToSearch);
+    });
+  };
+
+  // Grabs the current users friendsList...
+  const getFriendsList = () => {
+    console.log('outside');
+    axios.get('/session').then(({ data }) => {
+      axios.get(`/friends/${data.name}`).then(({ data }) => {
+        // console.log('DATA', data);
+        setFriendsList(data);
+      });
+    });
+  };
+
   return (
     <div className="Profile">
       <Navbar />
@@ -32,10 +69,15 @@ const FriendsList = () => {
         <h1>Pup Budz</h1>
         <div className="main">
           <div className="friends">
-            <input placeholder="Search for Budz" />
-            <button>add</button>
-            {exampleUser.map((user) => (
-              <h1 onClick={() => setCurrentDms(user)}>{user}</h1>
+            <input
+              placeholder="Search for Budz"
+              onChange={friendSearchOnChange}
+            />
+            <button onClick={sendFriendRequest}>Add Friend</button>
+            {friendsList.map((friend) => (
+              <div className="friendsList">
+                <h3>{friend.name}</h3>
+              </div>
             ))}
           </div>
           <div className="messages">

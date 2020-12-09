@@ -4,8 +4,10 @@ const userSchema = new Schema({
   email: String,
   name: String,
   friends: Array,
+  friendRequests: Array,
   messages: {},
   parks: [],
+  notifs: [],
 });
 const User = model('User', userSchema);
 /**
@@ -19,7 +21,9 @@ const createUser = (body) => {
     name: body.name,
     friends: [],
     messages: { test: '' },
+    friendRequests: [],
     parks: [],
+    notifs: [],
   });
   const { email } = user;
   return User.findOne({ email }).then((result) => {
@@ -41,14 +45,23 @@ const findAllUsers = () => User.find().exec();
  * $addToSet will add the value provided into an array if it doesn't already exist there.
  * $pull will remove the value provided from an array if it exists there.
  */
-const favPark = (email, park) =>
-  User.findOneAndUpdate({ email }, { $addToSet: { parks: park } });
-const unFavPark = (email, park) =>
-  User.findOneAndUpdate({ email }, { $pull: { parks: park } });
-const getFavParks = (email) =>
-  User.findOne({ email })
-    .then((userData) => (userData.parks ? userData.parks : []))
-    .catch((err) => console.error(err));
+const favPark = (email, park) => User.findOneAndUpdate({ email }, { $addToSet: { parks: park } });
+const unFavPark = (email, park) => User.findOneAndUpdate({ email }, { $pull: { parks: park } });
+const getFavParks = (email) => User.findOne({ email })
+  .then((userData) => (userData.parks ? userData.parks : []))
+  .catch((err) => console.error(err));
+
+const addNotif = (email, notif) => User.findOneAndUpdate(
+  { email },
+  { $addToSet: { notifs: notif } },
+);
+const deleteNotif = (email, notif) => User.findOneAndUpdate(
+  { email },
+  { $pull: { notifs: notif } },
+);
+const getNotifs = (email) => User.findOne({ email })
+  .then((userData) => (userData.notifs ? userData.notifs : []))
+  .catch((err) => console.error(err));
 
 module.exports = {
   createUser,
@@ -56,6 +69,9 @@ module.exports = {
   favPark,
   unFavPark,
   getFavParks,
+  addNotif,
+  deleteNotif,
+  getNotifs,
   findAllUsers,
   User,
 };

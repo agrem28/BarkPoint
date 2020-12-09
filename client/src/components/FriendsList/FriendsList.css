@@ -16,10 +16,19 @@
   flex: 0 0 25%;
   border: 5px solid purple;
   flex-direction: column;
+  background-color: purple;
 }
 
 .messages {
   flex: 1;
   border: 5px solid blue;
   flex-direction: column;
+}
+
+.friendsList {
+  margin: 10px 0 10px 0;
+  padding: 1.5px;
+  background-color: white;
+  color: 'white';
+  text-align: center;
 }
