@@ -5,7 +5,7 @@
   "main": "webpack.config.js",
   "scripts": {
     "test": "mocha test/sample.test.js",
-    "prod": "webpack --watch",
+    "prod": "webpack",
     "start": "nodemon server/index.js"
   },
   "repository": {

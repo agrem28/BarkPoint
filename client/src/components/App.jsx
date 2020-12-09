@@ -8,9 +8,9 @@ import ToyBox from './ProfileAndToys/ToyBox';
 import LogOut from './LoginLogout/LogOut';
 import './App.css';
 import NotFound from './LoginLogout/FourOhFour';
-import FriendsList from './ProfileAndToys/FriendsList.jsx';
-import Calendar from './ProfileAndToys/Calendar.jsx';
-import Notifications from './ProfileAndToys/Notifications.jsx';
+import FriendsList from './FriendsList/FriendsList';
+import Calendar from './Calendar/Calendar';
+import Notifications from './Notifications/Notifications';
 
 import Park from './Park/Park';
 import Form from './AboutDog/Form';
