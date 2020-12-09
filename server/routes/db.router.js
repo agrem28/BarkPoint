@@ -82,7 +82,7 @@ dbRouter.post('/data/dog', (req, res) => {
           statusCallback: 'http://postb.in/1234abcd',
           to: `${number}`,
         })
-        .then((message) => console.log(message.sid))
+        .then((message) => res.json(message.sid))
         .catch((err) => console.log('TWILIO ERROR==>', err));
       res.sendStatus(201);
     })
@@ -95,19 +95,17 @@ dbRouter.post('/data/dog', (req, res) => {
 /**
  * Changes a dog's number in the barkPoint database.
  *
- * @data is equal to the current sessions user's email
  *
- * @personalitytypes is an array of length 3. It's values are booleans with
- * each value correlating to a personality type. Swiping left equaling false
- * and swiping right equaling false.
  */
+
 dbRouter.put('/data/notifications/:email', (req, res) => {
   const { email } = req.params;
-  console.log(req.body, 'BODY');
-  const notif = req.body.number;
-  console.log(notif, 'NOTIF');
+  // console.log(req.body, 'BODY');
+  const notif = `BarkPoint subscription number changed to ${req.body.number}.`;
+  const newNum = req.body.number;
+  // console.log(notif, 'NOTIF');
   User.addNotif(email, notif)
-    .then(() => Dog.changeNumber(email, notif))
+    .then(() => Dog.changeNumber(email, newNum))
     .then(() => {
       twilio.messages
         .create({
@@ -115,11 +113,11 @@ dbRouter.put('/data/notifications/:email', (req, res) => {
             'BarkPoint subscription number changed. You will now recieve notifications at this number.',
           from: '+12678677568',
           statusCallback: 'http://postb.in/1234abcd',
-          to: `${notif}`,
+          to: `${newNum}`,
         })
         .then((message) => {
-          console.log(message.sid);
-          res.sendStatus(200);
+          // console.log(message, 'MESSAGE');
+          res.send(message);
         })
         .catch((err) => console.log('TWILIO error==>', err));
     })
@@ -127,6 +125,22 @@ dbRouter.put('/data/notifications/:email', (req, res) => {
       console.error(err);
       res.sendStatus(500);
     });
+});
+
+dbRouter.get('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  User.User.findOne({ email }).then((data) => {
+    // console.log(data, 'DATA');
+    res.send(data);
+  });
+});
+
+dbRouter.delete('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  User.User.update({ email }, { notifs: [] }).then(() => {
+    console.log('NOTIFS DELETED');
+    res.send('NOTIFS DELETED');
+  });
 });
 
 /**
@@ -148,6 +162,7 @@ dbRouter.put('/data/dog/:id', (req, res) => {
       res.sendStatus(500);
     });
 });
+
 /**
  * Removes a toy from the currently selected dog's toy field (an array)
  *
@@ -372,6 +387,38 @@ dbRouter.get('/friends/:currentUser', (req, res) => {
   });
 });
 
+dbRouter.get('/friendRequests/:user', (req, res) => {
+  const user = req.params.user;
+
+  User.User.findOne({ name: user }, 'friendRequests').then(
+    ({ friendRequests }) => {
+      User.User.find()
+        .where('_id')
+        .in(friendRequests)
+        .exec((err, friendRequests) => {
+          if (err) {
+            console.warn(err);
+          } else {
+            res.send(friendRequests);
+          }
+        });
+    }
+  );
+});
+
+dbRouter.put('/declineFriendRequest', (req, res) => {
+  const userId = req.body.id;
+  const currentUser = req.body.user;
+  User.User.updateOne(
+    { name: currentUser },
+    { $pull: { friendRequests: userId } }
+  )
+    .then(() => {
+      res.send('Friend Request Declined');
+    })
+    .catch((err) => console.warn(err));
+});
+
 // To be deleted
 dbRouter.get('/addUser', (req, res) => {
   User.User.create({
@@ -391,19 +438,35 @@ dbRouter.get('/deleteUser', () => {
 });
 
 //To be deleted - will remove a friend from your friends list...hardcoded.
-dbRouter.get('/deleteUser', (req, res) => {
+dbRouter.get('/removeFriend', (req, res) => {
   User.User.updateOne(
     { _id: '5fd10978a7ac2b7f3ce6566e' },
-    { $pull: { friends: '5fd10303c79fab1c58a1c313' } }
+    { $pull: { friends: '5fd11a35d65978454b6c765f' } }
   ).then(() => res.send('Successfully deleted.'));
 });
 
-// To be deleted - manually adds a friend to your friends list...hardcoded.
-dbRouter.get('/myFriends', (req, res) => {
+//To be deleted - will remove a user from your friend requests list...hardcoded.
+dbRouter.get('/removeFriendRequest', (req, res) => {
+  User.User.updateOne(
+    { _id: '5fd10978a7ac2b7f3ce6566e' },
+    { $pull: { friendRequests: '5fd11a35d65978454b6c765f' } }
+  ).then(() => res.send('Successfully removed friend request.'));
+});
+
+// To be deleted - will add a friend to your friends list...hardcoded.
+dbRouter.get('/addFriend', (req, res) => {
   User.User.update(
     { _id: '5fd10978a7ac2b7f3ce6566e' },
-    { $push: { friends: '5fd10359c79fab1c58a1c314' } }
+    { $push: { friends: 'firnenlakdf' } }
   ).then(() => res.send('FRIEND ADDED'));
+});
+
+//To be deleted - will add a user to your friend request list...hardcoded.
+dbRouter.get('/addFriendRequest', (req, res) => {
+  User.User.updateOne(
+    { _id: '5fd10978a7ac2b7f3ce6566e' },
+    { $push: { friendRequests: '5fd10359c79fab1c58a1c314' } }
+  ).then(() => res.send('Successfully added friend request.'));
 });
 
 dbRouter.get('/messages/:currentUser', (req, res) => {

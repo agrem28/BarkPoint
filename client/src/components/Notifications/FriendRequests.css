@@ -1,0 +1,11 @@
+.friendRequests {
+  margin-left: 35%;
+  border: 3px solid black;
+  font-size: 25px;
+  color: white;
+  width: 400px;
+}
+
+.requestResponse {
+  color: red;
+}

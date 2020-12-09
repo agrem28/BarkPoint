@@ -11,7 +11,10 @@
 
 .all-notif{
   margin-left: 40%;
-  margin-bottom: 10%;
+}
+
+.notif-list{
+  margin-left: 40%;
 }
 
 #change-number-msg{
