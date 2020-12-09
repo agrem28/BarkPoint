@@ -1,5 +1,28 @@
 .notif-container{
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  text-align: center;
+  text-align: center; */
+}
+
+.notif-header{
+  font-weight: bold;
+  margin-left: 45%;
+}
+
+.all-notif{
+  margin-left: 40%;
+  margin-bottom: 10%;
+}
+
+#change-number-msg{
+  margin-left: 40%;
+  color:blue;
+}
+
+.change-num-input{
+  margin-left: 50%;
+}
+
+.change-num-btn{
+  margin-left: 50%;
 }

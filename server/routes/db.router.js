@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-console */
 const { Router } = require('express');
 
 const accountSid = process.env.TWILIO_SID;
@@ -37,6 +39,7 @@ dbRouter.get('/data/dog', ({ user }, res) => {
       res.sendStatus(500);
     });
 });
+
 /**
  * Adds a new dog into the barkPoint database.
  *
@@ -71,6 +74,41 @@ dbRouter.post('/data/dog', (req, res) => {
 });
 
 /**
+ * Changes a dog's number in the barkPoint database.
+ *
+ * @data is equal to the current sessions user's email
+ *
+ * @personalitytypes is an array of length 3. It's values are booleans with
+ * each value correlating to a personality type. Swiping left equaling false
+ * and swiping right equaling false.
+ */
+dbRouter.put('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  console.log(req.body, 'BODY');
+  const notif = req.body.number;
+  console.log(notif, 'NOTIF');
+  User.addNotif(email, notif)
+    .then(() => Dog.changeNumber(email, notif)).then(() => {
+      twilio.messages
+        .create({
+          body: 'BarkPoint subscription number changed. You will now recieve notifications at this number.',
+          from: '+12678677568',
+          statusCallback: 'http://postb.in/1234abcd',
+          to: `${notif}`,
+        })
+        .then((message) => {
+          console.log(message.sid);
+          res.sendStatus(200);
+        })
+        .catch((err) => console.log('TWILIO error==>', err));
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+});
+
+/**
  * Adds a new toy into a the currently selected dog's toy field (an array)
  *
  * @id is equal to the current dog's mongo-provided ObjectId
@@ -88,7 +126,6 @@ dbRouter.put('/data/dog/:id', (req, res) => {
       console.error(err);
       res.sendStatus(500);
     });
-  // return dog.then(console.log('inside dog', dog));
 });
 /**
  * Removes a toy from the currently selected dog's toy field (an array)
@@ -227,6 +264,44 @@ dbRouter.delete('/data/park/:id', (req, res) => {
   return Park.deletePark(name)
     .then(() => {
       res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+});
+
+/**
+ * Adds a notification into the current users notifs array
+ *
+ * @id is equal to the current user's mongo-provided ObjectId
+ * @body is equal to an object with the to be added park's info
+ */
+dbRouter.put('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  const { body } = req;
+  console.warn('id in db router for notification', email);
+  return User.addNotif(email, body)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+});
+
+/**
+ * Below is the getter for notifications. This request is made to
+ * retrieve the notifications from a specific user id @param {string} id .
+ *
+ * The request outputs the notifications object data in the form of an @array .
+ */
+dbRouter.get('/data/notifications', (req, res) => {
+  const { id } = req.query;
+  User.getNotifs(id)
+    .then((notifData) => {
+      res.status(200).send(notifData);
     })
     .catch((err) => {
       console.error(err);

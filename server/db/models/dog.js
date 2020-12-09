@@ -74,10 +74,22 @@ const removeToy = (id, body) => Dog.findByIdAndUpdate(
   { $pull: { toys: body } },
 );
 
+/**
+ * Takes in a @param {*} dogId and @param {*} body.
+ * should change the number of a specific dog depending on id.
+ */
+const changeNumber = (email, body) => {
+  const newNum = { number: body.number };
+  return Dog.updateMany(
+    { email_user: email }, newNum,
+  );
+};
+
 module.exports = {
   addDog,
   deleteDog,
   addToy,
   removeToy,
   findDogs,
+  changeNumber,
 };

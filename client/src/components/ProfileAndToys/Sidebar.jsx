@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { List, ListItem, ListItemText } from '@material-ui/core';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const Sidebar = () => {
   const links = [
     { title: 'Friends List', path: '/friendsList' },
     { title: 'Calendar', path: '/calendar' },
-    { title: 'Notifications', path: '/notifications' },
   ];
   return (
     <div className="SidebarProfile">
@@ -22,6 +22,12 @@ const Sidebar = () => {
             </ListItem>
           </Link>
         ))}
+        <Link to="/notifications" key="Notifications">
+          <ListItem button className="sideBarRow">
+            <ListItemText primary="Notifications" />
+            <NotificationsIcon />
+          </ListItem>
+        </Link>
       </List>
     </div>
   );

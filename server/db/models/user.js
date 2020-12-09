@@ -3,6 +3,7 @@ const { Schema, model } = require('mongoose');
 const userSchema = new Schema({
   email: String,
   parks: [],
+  notifs: [],
 });
 const User = model('User', userSchema);
 /**
@@ -14,6 +15,7 @@ const createUser = (body) => {
   const user = new User({
     email: body.email,
     parks: [],
+    notifs: [],
   });
   const { email } = user;
   return User.findOne({ email }).then((result) => {
@@ -45,10 +47,25 @@ const getFavParks = (email) => User.findOne({ email })
   .then((userData) => (userData.parks ? userData.parks : []))
   .catch((err) => console.error(err));
 
+const addNotif = (email, notif) => User.findOneAndUpdate(
+  { email },
+  { $addToSet: { notifs: notif } },
+);
+const deleteNotif = (email, notif) => User.findOneAndUpdate(
+  { email },
+  { $pull: { notifs: notif } },
+);
+const getNotifs = (email) => User.findOne({ email })
+  .then((userData) => (userData.notifs ? userData.notifs : []))
+  .catch((err) => console.error(err));
+
 module.exports = {
   createUser,
   findUser,
   favPark,
   unFavPark,
   getFavParks,
+  addNotif,
+  deleteNotif,
+  getNotifs,
 };
