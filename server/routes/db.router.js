@@ -387,10 +387,28 @@ dbRouter.get('/deleteUser', () => {
 });
 
 // To be deleted
-dbRouter.get('/myFriends', () => {
+dbRouter.get('/myFriends', (req, res) => {
   User.User.update(
-    { _id: '5fd025f037590d281d0bf55e' },
-    { $push: { friends: '5fd0265137590d281d0bf560' } },
-  ).then(() => console.log('FRIEND ADDED'));
+    { _id: '5fd0940d3f236d120d4858cc' },
+    { $push: { friends: '5fd07864082c2c09056567ab' } },
+  ).then(() => res.send('FRIEND ADDED'));
 });
+
+dbRouter.get('/messages/:currentUser', (req, res) => {
+  User.User.findOne({ email: req.params.currentUser }).then((currentUser) => {
+    res.send(currentUser.messages);
+  });
+});
+// change it to pushing so you dont overwrite other data by: billy ... do later....
+dbRouter.post('/messages/:currentUser', (req, res) => {
+  User.User.updateOne({ email: req.params.currentUser }, { messages: req.body.message })
+    .then(() => {
+      const newMessage = req.body.message;
+      newMessage[req.body.from] = newMessage[req.body.to];
+      newMessage[req.body.to] = null;
+      return User.User.updateOne({ email: req.body.user }, { messages: newMessage });
+    })
+    .then((data) => res.send(data));
+});
+
 module.exports = dbRouter;

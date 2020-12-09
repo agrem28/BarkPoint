@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-console */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
@@ -9,31 +11,26 @@ import Sidebar from '../ProfileAndToys/Sidebar';
 require('./FriendsList.css');
 
 const FriendsList = () => {
-  console.log('Helllooo');
-  const [currentDms, setCurrentDms] = useState('Tee');
+  const [currentDms, setCurrentDms] = useState({});
   const [messageText, setMessageText] = useState('');
   const [friendToSearch, setFriendToSearch] = useState('');
   const [friendsList, setFriendsList] = useState([]);
-  let exampleMessage = {
-    Tee: [
-      { name: 'Tee', message: 'hey man how your day' },
-      { name: 'Billy', message: 'its been good' },
-    ],
-    Amber: [
-      { name: 'Amber', message: 'does the site looks good' },
-      { name: 'Billy', message: 'sure does' },
-    ],
-    Andrew: [
-      { name: 'Andrew', message: 'i like this youtube video' },
-      { name: 'Billy', message: 'same' },
-    ],
-  };
+  // let exampleMessage = {
+  //   Tee: [
+  //     { name: 'Tee', message: 'hey man how your day' },
+  //     { name: 'Billy', message: 'its been good' },
+  //   ],
+  //   Amber: [
+  //     { name: 'Amber', message: 'does the site looks good' },
+  //     { name: 'Billy', message: 'sure does' },
+  //   ],
+  //   Andrew: [
+  //     { name: 'Andrew', message: 'i like this youtube video' },
+  //     { name: 'Billy', message: 'same' },
+  //   ],
+  // };
 
-  useEffect(() => {
-    getFriendsList();
-  }, []);
-
-  const [messages, setMessages] = useState(exampleMessage);
+  const [messages, setMessages] = useState({});
   const friendSearchOnChange = (event) => {
     const friend = event.target.value;
     setFriendToSearch(friend);
@@ -61,6 +58,22 @@ const FriendsList = () => {
     });
   };
 
+  const getMessagesList = () => {
+    axios.get('/session').then(({ data }) => {
+      axios.get(`/messages/${data.email}`).then(({ data }) => {
+        setMessages(data);
+      });
+    });
+  };
+
+  useEffect(() => {
+    getFriendsList();
+  }, []);
+
+  useEffect(() => {
+    getMessagesList();
+  }, {});
+
   return (
     <div className="Profile">
       <Navbar />
@@ -76,39 +89,62 @@ const FriendsList = () => {
             <button onClick={sendFriendRequest}>Add Friend</button>
             {friendsList.map((friend) => (
               <div className="friendsList">
-                <h3>{friend.name}</h3>
+                <h3 onClick={() => setCurrentDms(friend)}>{friend.name}</h3>
               </div>
             ))}
           </div>
           <div className="messages">
-            {messages[currentDms].map(({ name, message }) => (
-              <div>
-                <h2>{name}</h2>
-                <div>{message}</div>
-              </div>
-            ))}
-            <input
-              placeholder="type a message"
-              value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
-            />
-            <button
-              onClick={() => {
-                const newMessage = {
-                  name: 'Billy',
-                  message: messageText,
-                };
-                exampleMessage = messages;
-                exampleMessage[currentDms] = [
-                  ...messages[currentDms],
-                  newMessage,
-                ];
-                setMessages(exampleMessage);
-                setMessageText('');
-              }}
-            >
-              send message
-            </button>
+            {messages[currentDms.name]
+              ? messages[currentDms.name].map(({ name, message, time }) => (
+                <div>
+                  <h2>{name}</h2>
+                  <div>{message}</div>
+                  <div>{time}</div>
+                </div>
+              )) : null}
+            <div>
+              { currentDms.name
+                ? (
+                  <div>
+                    <input
+                      placeholder="type a message"
+                      value={messageText}
+                      onChange={(e) => setMessageText(e.target.value)}
+                    />
+                    <button
+                      onClick={() => {
+                        axios.get('/session').then(({ data }) => {
+                          const time = new Date();
+                          const newMessage = {
+                            name: data.name,
+                            message: messageText,
+                            time: String(time),
+                          };
+                          const exampleMessage = messages;
+                          if (exampleMessage[currentDms.name]) {
+                            exampleMessage[currentDms.name] = [
+                              ...messages[currentDms.name],
+                              newMessage,
+                            ];
+                          } else {
+                            exampleMessage[currentDms.name] = [newMessage];
+                          }
+                          setMessages(exampleMessage);
+                          setMessageText('');
+                          axios.post(`/messages/${data.email}`, {
+                            message: exampleMessage,
+                            user: currentDms.email,
+                            from: data.name,
+                            to: currentDms.name,
+                          });
+                        });
+                      }}
+                    >
+                      send message
+                    </button>
+                  </div>
+                ) : null}
+            </div>
           </div>
         </div>
       </div>
