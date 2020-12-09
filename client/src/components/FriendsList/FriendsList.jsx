@@ -132,7 +132,7 @@ const FriendsList = () => {
                           setMessages(exampleMessage);
                           setMessageText('');
                           axios.post(`/messages/${data.email}`, {
-                            message: exampleMessage,
+                            message: newMessage,
                             user: currentDms.email,
                             from: data.name,
                             to: currentDms.name,

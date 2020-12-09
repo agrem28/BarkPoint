@@ -27,9 +27,9 @@ dbRouter.post('/data/user', (req, res) => User(req.body)
 /**
  * Finds all dogs whose user_email field matches the current sessions user's email
  */
-dbRouter.get('/data/dog', ({ user }, res) => {
-  const { _json } = user;
-  Dog.findDogs(_json.email)
+dbRouter.get('/data/dog', ({ cookies }, res) => {
+  // const { _json } = user;
+  Dog.findDogs(cookies.Barkpark._json.email)
     .then((dogs) => {
       if (dogs.length) {
         res.status(200).send(dogs);
@@ -399,16 +399,31 @@ dbRouter.get('/messages/:currentUser', (req, res) => {
     res.send(currentUser.messages);
   });
 });
-// change it to pushing so you dont overwrite other data by: billy ... do later....
+
 dbRouter.post('/messages/:currentUser', (req, res) => {
-  User.User.updateOne({ email: req.params.currentUser }, { messages: req.body.message })
-    .then(() => {
-      const newMessage = req.body.message;
-      newMessage[req.body.from] = newMessage[req.body.to];
-      newMessage[req.body.to] = null;
-      return User.User.updateOne({ email: req.body.user }, { messages: newMessage });
-    })
-    .then((data) => res.send(data));
+  User.User.findOne({ email: req.params.currentUser })
+    .then((data) => {
+      const newMessage = data.messages;
+      if (newMessage[req.body.to]) {
+        newMessage[req.body.to].push(req.body.message);
+      } else {
+        newMessage[req.body.to] = [req.body.message];
+      }
+      User.User.updateOne({ email: req.params.currentUser }, { messages: newMessage })
+        .then(() => {
+          User.User.findOne({ email: req.body.user })
+            .then((result) => {
+              const newMessage2 = result.messages;
+              if (newMessage2[req.body.from]) {
+                newMessage2[req.body.from].push(req.body.message);
+              } else {
+                newMessage2[req.body.from] = [req.body.message];
+              }
+              return User.User.updateOne({ email: req.body.user }, { messages: newMessage2 })
+                .then((data) => res.send(data));
+            });
+        });
+    });
 });
 
 module.exports = dbRouter;
