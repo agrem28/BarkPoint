@@ -23,7 +23,10 @@ const Notifications = () => {
     axios.get('/session').then(({ data }) => {
       axios.get(`/data/notifications/${data.email}`).then(({ data }) => {
         console.log('DATA', data.notifs);
-        setNotifs(data.notifs);
+        if (notifs.length === 0) {
+          setNotifs(data.notifs);
+        }
+        axios.delete(`/data/notifications/${data.email}`);
       });
     });
   };

@@ -99,7 +99,7 @@ dbRouter.post('/data/dog', (req, res) => {
 dbRouter.put('/data/notifications/:email', (req, res) => {
   const { email } = req.params;
   console.log(req.body, 'BODY');
-  const notif = 'Number changed';
+  const notif = `BarkPoint subscription number changed to ${req.body.number}.`;
   const newNum = req.body.number;
   console.log(notif, 'NOTIF');
   User.addNotif(email, notif)
@@ -130,6 +130,17 @@ dbRouter.get('/data/notifications/:email', (req, res) => {
       console.log(data, 'DATA');
       res.send(data);
     });
+});
+
+dbRouter.delete('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  User.User.update(
+    { email },
+    { notifs: [] },
+  ).then(() => {
+    console.log('NOTIFS DELETED');
+    res.send('NOTIFS DELETED');
+  });
 });
 
 /**
