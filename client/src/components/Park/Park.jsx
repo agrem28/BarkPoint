@@ -1,6 +1,9 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, {
+  useState, useCallback, useRef, useEffect,
+} from 'react';
 import axios from 'axios';
 // imports from GoogleMapsAPI package
 import {
@@ -61,8 +64,7 @@ const Park = () => {
   const [parkData, setParkData] = useState([]);
   const [favParks, setFavParks] = useState([]);
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const getVenues = async () => {
     const { data } = await axios.get(
@@ -77,7 +79,7 @@ const Park = () => {
           limit: 100,
           radius: 100000,
         },
-      }
+      },
     );
 
     const { data: parks } = await axios.get('/data/park');
@@ -238,12 +240,12 @@ const Park = () => {
             position={
               selected.venue
                 ? {
-                    lat: selected.venue.location.lat,
-                    lng: selected.venue.location.lng,
-                  }
+                  lat: selected.venue.location.lat,
+                  lng: selected.venue.location.lng,
+                }
                 : selected.long
-                ? { lat: selected.lat, lng: selected.long }
-                : { lat: selected.lat, lng: selected.lng }
+                  ? { lat: selected.lat, lng: selected.long }
+                  : { lat: selected.lat, lng: selected.lng }
             }
             onCloseClick={() => {
               setSelected(null);
@@ -292,12 +294,12 @@ const Park = () => {
                         fontSize="small"
                         style={{ color: '#e55812' }}
                       />
-                    ) : (
-                      <FavoriteIcon
-                        fontSize="small"
-                        style={{ color: '#e55812' }}
-                      />
-                    )}
+                      ) : (
+                        <FavoriteIcon
+                          fontSize="small"
+                          style={{ color: '#e55812' }}
+                        />
+                      )}
                   </IconButton>
                 </div>
               ) : (
