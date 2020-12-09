@@ -7,6 +7,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 const Sidebar = () => {
   const [notifs, setNotifs] = useState([]);
   const links = [
+    { title: 'My Dogs', path: '/profile' },
     { title: 'Friends List', path: '/friendsList' },
     { title: 'Calendar', path: '/calendar' },
   ];

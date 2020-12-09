@@ -20,7 +20,7 @@ const createUser = (body) => {
     email: body.email,
     name: body.name,
     friends: [],
-    messages: { test: '' },
+    messages: { test: [] },
     friendRequests: [],
     parks: [],
     notifs: [],
