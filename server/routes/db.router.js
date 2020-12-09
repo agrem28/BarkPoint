@@ -255,6 +255,8 @@ dbRouter.get('/findUsers', (req, res) => {
   });
 });
 
+//This route will find the user being searched for and add his/her
+//id to the current users "friendRequest" array.
 dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
   const currentUser = req.params.currentUser;
   User.User.findOne({ name: currentUser })
@@ -276,11 +278,26 @@ dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
     .catch();
 });
 
+dbRouter.get('/friends/:currentUser', (req, res) => {
+  User.User.findOne({ name: req.params.currentUser }).then((currentUser) => {
+    User.User.find()
+      .where('_id')
+      .in(currentUser.friends)
+      .exec((err, friends) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(friends);
+        }
+      });
+  });
+});
+
 //To be deleted
 dbRouter.get('/addUser', (req, res) => {
   User.User.create({
-    name: 'Fake User 1',
-    email: 'fakeuser1@gmail.com',
+    name: 'Fake User 999',
+    email: 'fakeuser2@gmail.com',
     friends: [],
     friendRequests: [],
     parks: [],
@@ -298,7 +315,7 @@ dbRouter.get('/deleteUser', (req, res) => {
 dbRouter.get('/myFriends', (req, res) => {
   User.User.update(
     { _id: '5fcfc37aeb85294b20b878cb' },
-    { $push: { friends: '5fcfec242e2d1d5abd4a18db' } }
+    { $push: { friends: '5fd00fbe262ad66a4aa0eecb' } }
   ).then(() => console.log('FRIEND ADDED'));
 });
 module.exports = dbRouter;

@@ -25,7 +25,6 @@ authRouter.get(
   passport.authenticate('google'),
   (req, res) => {
     const { _json } = req.user;
-    console.log('JSON', _json);
     User.findUser(_json.email)
       .then((result) => {
         if (result) {
