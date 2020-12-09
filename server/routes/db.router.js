@@ -91,59 +91,6 @@ dbRouter.post('/data/dog', (req, res) => {
 });
 
 /**
- * Changes a dog's number in the barkPoint database.
- *
- *
- */
-
-dbRouter.put('/data/notifications/:email', (req, res) => {
-  const { email } = req.params;
-  console.log(req.body, 'BODY');
-  const notif = `BarkPoint subscription number changed to ${req.body.number}.`;
-  const newNum = req.body.number;
-  console.log(notif, 'NOTIF');
-  User.addNotif(email, notif)
-    .then(() => Dog.changeNumber(email, newNum)).then(() => {
-      twilio.messages
-        .create({
-          body: 'BarkPoint subscription number changed. You will now recieve notifications at this number.',
-          from: '+12678677568',
-          statusCallback: 'http://postb.in/1234abcd',
-          to: `${newNum}`,
-        })
-        .then((message) => {
-          console.log(message, 'MESSAGE');
-          res.send(message);
-        })
-        .catch((err) => console.log('TWILIO error==>', err));
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-});
-
-dbRouter.get('/data/notifications/:email', (req, res) => {
-  const { email } = req.params;
-  User.User.findOne({ email })
-    .then((data) => {
-      console.log(data, 'DATA');
-      res.send(data);
-    });
-});
-
-dbRouter.delete('/data/notifications/:email', (req, res) => {
-  const { email } = req.params;
-  User.User.update(
-    { email },
-    { notifs: [] },
-  ).then(() => {
-    console.log('NOTIFS DELETED');
-    res.send('NOTIFS DELETED');
-  });
-});
-
-/**
  * Adds a new toy into a the currently selected dog's toy field (an array)
  *
  * @id is equal to the current dog's mongo-provided ObjectId
@@ -308,18 +255,61 @@ dbRouter.delete('/data/park/:id', (req, res) => {
 });
 
 /**
+ * Below is the getter for notifications. This request is made to
+ * retrieve the notifications from a specific user id @param {string} id .
+ *
+ * The request outputs the notifications object data in the form of an @array .
+ */
+// dbRouter.get('/data/notifications', (req, res) => {
+//   const { id } = req.query;
+//   User.getNotifs(id)
+//     .then((notifData) => {
+//       res.status(200).send(notifData);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       res.sendStatus(500);
+//     });
+// });
+
+/**
  * Adds a notification into the current users notifs array
  *
  * @id is equal to the current user's mongo-provided ObjectId
  * @body is equal to an object with the to be added park's info
  */
+// dbRouter.put('/data/notifications/:email', (req, res) => {
+//   const { email } = req.params;
+//   const { body } = req;
+//   console.warn('id in db router for notification', email);
+//   return User.addNotif(email, body)
+//     .then(() => {
+//       res.sendStatus(200);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       res.sendStatus(500);
+//     });
+// });
+
+// changes a dog's number in the barkPoint database and adds a notification to their user's notifs array
 dbRouter.put('/data/notifications/:email', (req, res) => {
   const { email } = req.params;
-  const { body } = req;
-  console.warn('id in db router for notification', email);
-  return User.addNotif(email, body)
-    .then(() => {
-      res.sendStatus(200);
+  const notif = `BarkPoint subscription number changed to ${req.body.number}.`;
+  const newNum = req.body.number;
+  User.addNotif(email, notif)
+    .then(() => Dog.changeNumber(email, newNum)).then(() => {
+      twilio.messages
+        .create({
+          body: 'BarkPoint subscription number changed. You will now recieve notifications at this number.',
+          from: '+12678677568',
+          statusCallback: 'http://postb.in/1234abcd',
+          to: `${newNum}`,
+        })
+        .then((message) => {
+          res.send(message);
+        })
+        .catch((err) => console.err(err));
     })
     .catch((err) => {
       console.error(err);
@@ -327,17 +317,50 @@ dbRouter.put('/data/notifications/:email', (req, res) => {
     });
 });
 
-/**
- * Below is the getter for notifications. This request is made to
- * retrieve the notifications from a specific user id @param {string} id .
- *
- * The request outputs the notifications object data in the form of an @array .
- */
-dbRouter.get('/data/notifications', (req, res) => {
-  const { id } = req.query;
-  User.getNotifs(id)
-    .then((notifData) => {
-      res.status(200).send(notifData);
+// gets the user's notifications array based on user's email
+dbRouter.get('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  User.User.findOne({ email })
+    .then((data) => {
+      console.log(data, 'DATA');
+      res.send(data);
+    });
+});
+
+// empties the user's notifications array, based on user's email
+dbRouter.delete('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  User.User.update(
+    { email },
+    { notifs: [] },
+  ).then(() => {
+    console.log('NOTIFS DELETED');
+    res.send('NOTIFS DELETED');
+  });
+});
+
+// adds a notification in user's notif array when another user messages them
+
+dbRouter.put('/data/notifications/:email', (req, res) => {
+  const { email } = req.params;
+  console.log(req.body, 'BODY');
+  const notif = ` ${req.body.number} has message you.`;
+  const newNum = req.body.number;
+  console.log(notif, 'NOTIF');
+  User.addNotif(email, notif)
+    .then(() => Dog.changeNumber(email, newNum)).then(() => {
+      twilio.messages
+        .create({
+          body: 'BarkPoint user has sent you a message',
+          from: '+12678677568',
+          statusCallback: 'http://postb.in/1234abcd',
+          to: `${newNum}`,
+        })
+        .then((message) => {
+          console.log(message, 'MESSAGE');
+          res.send(message);
+        })
+        .catch((err) => console.log('TWILIO error==>', err));
     })
     .catch((err) => {
       console.error(err);
