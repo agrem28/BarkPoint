@@ -16,14 +16,16 @@ const dbRouter = Router();
 /**
  * Adds a new user into the barkPoint database
  */
-dbRouter.post('/data/user', (req, res) => User(req.body)
-  .then(() => {
-    res.sendStatus(201);
-  })
-  .catch((err) => {
-    console.error(err);
-    res.sendStatus(500);
-  }));
+dbRouter.post('/data/user', (req, res) =>
+  User(req.body)
+    .then(() => {
+      res.sendStatus(201);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    })
+);
 /**
  * Finds all dogs whose user_email field matches the current sessions user's email
  */
@@ -69,7 +71,7 @@ dbRouter.post('/data/dog', (req, res) => {
     number,
     email,
     image,
-    personalitytypes,
+    personalitytypes
   )
     .then(() => {
       // Message.addMsg(dogname, breed, size, number, email, image,
@@ -105,10 +107,12 @@ dbRouter.put('/data/notifications/:email', (req, res) => {
   const notif = req.body.number;
   console.log(notif, 'NOTIF');
   User.addNotif(email, notif)
-    .then(() => Dog.changeNumber(email, notif)).then(() => {
+    .then(() => Dog.changeNumber(email, notif))
+    .then(() => {
       twilio.messages
         .create({
-          body: 'BarkPoint subscription number changed. You will now recieve notifications at this number.',
+          body:
+            'BarkPoint subscription number changed. You will now recieve notifications at this number.',
           from: '+12678677568',
           statusCallback: 'http://postb.in/1234abcd',
           to: `${notif}`,
@@ -187,9 +191,7 @@ dbRouter.get('/data/park', async (req, res) => {
  * Adds a park into the barkPoint database
  */
 dbRouter.post('/data/park', (req, res) => {
-  const {
-    name, lat, long, comments,
-  } = req.body;
+  const { name, lat, long, comments } = req.body;
   return Park.addPark(name, lat, long, comments)
     .then(() => {
       res.sendStatus(201);
@@ -344,7 +346,7 @@ dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
           if (!friend.friendRequests.includes(currentUser._id)) {
             User.User.updateOne(
               { _id: friend._id },
-              { $push: { friendRequests: currentUser._id } },
+              { $push: { friendRequests: currentUser._id } }
             )
               .then(() => res.end())
               .catch();
@@ -381,16 +383,26 @@ dbRouter.get('/addUser', (req, res) => {
   }).then(() => res.send('User Added'));
 });
 
-// To be deleted
+// To be deleted - deletes a user from the database...hardcoded.
 dbRouter.get('/deleteUser', () => {
-  User.User.remove({ name: 'Fake User 1' }).then(() => console.log('Successfully deleted.'));
+  User.User.remove({ name: 'Fake User 1' }).then(() =>
+    console.log('Successfully deleted.')
+  );
 });
 
-// To be deleted
+//To be deleted - will remove a friend from your friends list...hardcoded.
+dbRouter.get('/deleteUser', (req, res) => {
+  User.User.updateOne(
+    { _id: '5fd10978a7ac2b7f3ce6566e' },
+    { $pull: { friends: '5fd10303c79fab1c58a1c313' } }
+  ).then(() => res.send('Successfully deleted.'));
+});
+
+// To be deleted - manually adds a friend to your friends list...hardcoded.
 dbRouter.get('/myFriends', (req, res) => {
   User.User.update(
-    { _id: '5fd0940d3f236d120d4858cc' },
-    { $push: { friends: '5fd07864082c2c09056567ab' } },
+    { _id: '5fd10978a7ac2b7f3ce6566e' },
+    { $push: { friends: '5fd10359c79fab1c58a1c314' } }
   ).then(() => res.send('FRIEND ADDED'));
 });
 
@@ -401,29 +413,31 @@ dbRouter.get('/messages/:currentUser', (req, res) => {
 });
 
 dbRouter.post('/messages/:currentUser', (req, res) => {
-  User.User.findOne({ email: req.params.currentUser })
-    .then((data) => {
-      const newMessage = data.messages;
-      if (newMessage[req.body.to]) {
-        newMessage[req.body.to].push(req.body.message);
-      } else {
-        newMessage[req.body.to] = [req.body.message];
-      }
-      User.User.updateOne({ email: req.params.currentUser }, { messages: newMessage })
-        .then(() => {
-          User.User.findOne({ email: req.body.user })
-            .then((result) => {
-              const newMessage2 = result.messages;
-              if (newMessage2[req.body.from]) {
-                newMessage2[req.body.from].push(req.body.message);
-              } else {
-                newMessage2[req.body.from] = [req.body.message];
-              }
-              return User.User.updateOne({ email: req.body.user }, { messages: newMessage2 })
-                .then((data) => res.send(data));
-            });
-        });
+  User.User.findOne({ email: req.params.currentUser }).then((data) => {
+    const newMessage = data.messages;
+    if (newMessage[req.body.to]) {
+      newMessage[req.body.to].push(req.body.message);
+    } else {
+      newMessage[req.body.to] = [req.body.message];
+    }
+    User.User.updateOne(
+      { email: req.params.currentUser },
+      { messages: newMessage }
+    ).then(() => {
+      User.User.findOne({ email: req.body.user }).then((result) => {
+        const newMessage2 = result.messages;
+        if (newMessage2[req.body.from]) {
+          newMessage2[req.body.from].push(req.body.message);
+        } else {
+          newMessage2[req.body.from] = [req.body.message];
+        }
+        return User.User.updateOne(
+          { email: req.body.user },
+          { messages: newMessage2 }
+        ).then((data) => res.send(data));
+      });
     });
+  });
 });
 
 module.exports = dbRouter;
