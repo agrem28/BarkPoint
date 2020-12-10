@@ -13,10 +13,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 const localizer = momentLocalizer(moment);
 
 const CalendarView = () => {
-  // const [calendar, setCalendar] = useState('');
   const [events, setEvents] = useState([]);
-  // const [email, setEmail] = useState('');
-  // const [date, setDate] = useState(new Date());
   const [sign, setSign] = useState(ApiCalendar.sign);
 
   // const testEvent = {
@@ -38,10 +35,7 @@ const CalendarView = () => {
   // };
 
   const getEvents = () => {
-    console.info(ApiCalendar);
     if (ApiCalendar.sign) {
-      console.info('worked');
-      setSign(true);
       ApiCalendar.listUpcomingEvents()
         .then(({ result }) => {
           console.info(result.items);
@@ -56,57 +50,38 @@ const CalendarView = () => {
     }
   };
 
-  // const updateSign = () => console.info('listened');
-
-  ApiCalendar.onLoad(() => {
-    console.info('loaded');
-    // getEvents();
-  });
-
   const signInOrOut = (name) => {
-    // console.info(ApiCalendar);
     if (name === 'sign-in') {
       ApiCalendar.handleAuthClick();
-      console.info('signed in');
-      // while (!sign) {
-      //   getEvents();
-      // }
-      // setSign(true);
     } else if (name === 'sign-out') {
       ApiCalendar.handleSignoutClick();
     }
+    setSign(ApiCalendar.sign);
   };
 
-  // const onChange = () => {
-  //   ApiCalendar.listenSign(getEvents);
-  // };
-
-  // const getUserEmail = () => {
-  //   if (!email) {
-  //     // console.log('getting email');
-  //     axios.get('/session')
-  //       .then(({ data }) => setEmail(data.email))
-  //       .catch();
-  //   }
-  // };
-
-  // const getCalendar = () => {
-  //   axios.get(`https://www.googleapis.com/calendar/v3/calendars/${email}`,
-  //     {
-  //       params: {
-  //         Authorization: process.env.GOOGLE_MAPS_KEY,
-  //       },
-  //     })
-  //     .then((result) => console.info(result))
-  //     .catch();
-  // };
-
-  useEffect(() => signInOrOut('sign-in'), []);
+  useEffect(() => getEvents(), [sign]);
 
   return (
     <div className="Profile">
       <Navbar />
       <Sidebar />
+      {sign ? (
+        <button
+          className="google-calendar"
+          type="button"
+          onClick={() => signInOrOut('sign-out')}
+        >
+          Unlink Calendar
+        </button>
+      ) : (
+        <button
+          className="google-calendar"
+          type="button"
+          onClick={() => signInOrOut('sign-in')}
+        >
+          Link with Your Google Calendar
+        </button>
+      )}
       <div className="calendar">
         <Calendar
           localizer={localizer}
@@ -116,16 +91,13 @@ const CalendarView = () => {
           style={{ height: 500 }}
         />
       </div>
-      <button
+      {/* <button
         className="google-calendar"
         type="button"
-        onClick={() => {
-          getEvents();
-        }}
+        onClick={() => getEvents()}
       >
         {sign.toString()}
-      </button>
-      {/* {onChange()} */}
+      </button> */}
     </div>
   );
 };
