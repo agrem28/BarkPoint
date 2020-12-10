@@ -354,7 +354,7 @@ dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
           if (!friend.friendRequests.includes(currentUser._id)) {
             User.User.updateOne(
               { _id: friend._id },
-              { $push: { friendRequests: currentUser._id } },
+              { $push: { friendRequests: String(currentUser._id) } },
             )
               .then(() => res.end())
               .catch();
@@ -403,9 +403,11 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
   const userId = req.body.id;
   const currentUser = req.body.user;
   const { response } = req.body;
-  User.User.updateOne(
+  console.log(userId, response);
+  User.User.findOneAndUpdate(
     { name: currentUser },
     { $pull: { friendRequests: userId } },
+    { multi: true },
   )
     .then(() => {
       if (response === 'Accepted') {
@@ -416,12 +418,11 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
           User.User.findOneAndUpdate(
             { _id: userId },
             { $push: { friends: data._id } },
-          ).then((data) => {
-            console.log('LOOK AT ME', data);
+          ).then(() => {
+            res.send(`Friend Request ${response}`);
           });
         });
       }
-      res.send(`Friend Request ${response}`);
     })
     .catch((err) => console.warn(err));
 });
