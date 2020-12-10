@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const { Router } = require('express');
 const passport = require('passport');
 const { User } = require('../db/models/models');
@@ -70,8 +69,9 @@ authRouter.get('/session', ({ cookies }, res) => {
   // console.log('here', _json);
   // console.log('two', cookies.Barkpark._json);
   // res.status(200).send(cookies.Barkpark._json);
+  const { _json } = cookies.Barkpark;
   if (cookies.Barkpark) {
-    res.status(200).send(cookies.Barkpark._json);
+    res.status(200).send(_json);
   } else {
     res.sendStatus(500);
   }
