@@ -28,8 +28,14 @@
 }
 
 .change-num-input{
+  margin-left: 40%;
 }
 
 .change-num-btn{
  display: grid;
+}
+
+.img{
+  margin-top: 10%;
+  width: 20%;
 }

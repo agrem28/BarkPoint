@@ -7,11 +7,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
 import './Notifications.css';
+import notifImg from './notif3.png';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     textAlign: 'center',
+    alignItems: 'center',
+    justify: 'center',
   },
 }));
 
@@ -22,22 +25,30 @@ const Notifications = () => {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleNumChange = async () => {
-    const { data } = await axios.get('/session');
-    const { email } = data;
-    await axios.put(`/data/notifications/${email}`, { number: form.changeNum });
-  };
-
   const getNotifs = () => {
     axios.get('/session').then(({ data }) => {
       axios.get(`/data/notifications/${data.email}`).then(({ data }) => {
-        console.log('DATA.NOTIFS', data.notifs);
         if (notifs.length === 0) {
           setNotifs(data.notifs);
         }
         axios.delete(`/data/notifications/${data.email}`);
       });
     });
+  };
+
+  const updateNotifs = () => {
+    axios.get('/session').then(({ data }) => {
+      axios.get(`/data/notifications/${data.email}`).then(({ data }) => {
+        setNotifs(data.notifs);
+      });
+    });
+  };
+
+  const handleNumChange = async () => {
+    const { data } = await axios.get('/session');
+    const { email } = data;
+    await axios.put(`/data/notifications/${email}`, { number: form.changeNum });
+    updateNotifs();
   };
 
   useEffect(() => {
@@ -59,6 +70,7 @@ const Notifications = () => {
         <Typography className={classes.title} id="change-number-msg"> want to change phone number currently receiving notifications? </Typography>
         <TextField id="standard-basic" className={classes.title} placeholder="ex:12345678901" onChange={handleChange} name="changeNum" />
         <Button className="change-num-btn" variant="text" color="primary" onClick={handleNumChange}>change number</Button>
+        <img alt="" src={notifImg} className="img" />
       </div>
     </div>
   );

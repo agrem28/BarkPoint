@@ -81,7 +81,7 @@ dbRouter.post('/data/dog', (req, res) => {
           to: `${number}`,
         })
         .then((message) => res.json(message.sid))
-        .catch((err) => console.log('TWILIO ERROR==>', err));
+        .catch((err) => console.error('TWILIO ERROR==>', err));
       res.sendStatus(201);
     })
     .catch((err) => {
@@ -101,7 +101,6 @@ dbRouter.put('/data/dog/:id', (req, res) => {
   const { body } = req;
   return Dog.addToy(id, body)
     .then(() => {
-      // console.log('aanythinh');
       res.sendStatus(200);
     })
     .catch((err) => {
@@ -322,7 +321,6 @@ dbRouter.get('/data/notifications/:email', (req, res) => {
   const { email } = req.params;
   User.User.findOne({ email })
     .then((data) => {
-      console.log(data, 'DATA');
       res.send(data);
     });
 });
@@ -334,38 +332,8 @@ dbRouter.delete('/data/notifications/:email', (req, res) => {
     { email },
     { notifs: [] },
   ).then(() => {
-    console.log('NOTIFS DELETED');
     res.send('NOTIFS DELETED');
   });
-});
-
-// adds a notification in user's notif array when another user messages them
-
-dbRouter.put('/data/notifications/:email', (req, res) => {
-  const { email } = req.params;
-  console.log(req.body, 'BODY');
-  const notif = ` ${req.body.number} has message you.`;
-  const newNum = req.body.number;
-  console.log(notif, 'NOTIF');
-  User.addNotif(email, notif)
-    .then(() => Dog.changeNumber(email, newNum)).then(() => {
-      twilio.messages
-        .create({
-          body: 'BarkPoint user has sent you a message',
-          from: '+12678677568',
-          statusCallback: 'http://postb.in/1234abcd',
-          to: `${newNum}`,
-        })
-        .then((message) => {
-          console.log(message, 'MESSAGE');
-          res.send(message);
-        })
-        .catch((err) => console.log('TWILIO error==>', err));
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
 });
 
 dbRouter.get('/findUsers', (req, res) => {
@@ -404,7 +372,7 @@ dbRouter.get('/friends/:currentUser', (req, res) => {
       .in(currentUser.friends)
       .exec((err, friends) => {
         if (err) {
-          console.log(err);
+          console.error(err);
         } else {
           res.send(friends);
         }
@@ -425,14 +393,14 @@ dbRouter.get('/addUser', (req, res) => {
 
 // To be deleted
 dbRouter.get('/deleteUser', () => {
-  User.User.remove({ name: 'Fake User 1' }).then(() => console.log('Successfully deleted.'));
+  User.User.remove({ name: 'Fake User 1' }).then(() => console.warn('Successfully deleted.'));
 });
 
 // To be deleted
 dbRouter.get('/myFriends', (req, res) => {
   User.User.update(
-    { _id: '5fd0940d3f236d120d4858cc' },
-    { $push: { friends: '5fd07864082c2c09056567ab' } },
+    { _id: '5fd182610a5c0378d695496a' },
+    { $push: { friends: '5fd1861b8d6230001f3dc593' } },
   ).then(() => res.send('FRIEND ADDED'));
 });
 
@@ -443,6 +411,7 @@ dbRouter.get('/messages/:currentUser', (req, res) => {
 });
 
 dbRouter.post('/messages/:currentUser', (req, res) => {
+  const notif = `${req.body.to} user messaged you.`;
   User.User.findOne({ email: req.params.currentUser })
     .then((data) => {
       const newMessage = data.messages;
@@ -451,6 +420,7 @@ dbRouter.post('/messages/:currentUser', (req, res) => {
       } else {
         newMessage[req.body.to] = [req.body.message];
       }
+      // updates sender's messages
       User.User.updateOne({ email: req.params.currentUser }, { messages: newMessage })
         .then(() => {
           User.User.findOne({ email: req.body.user })
@@ -461,9 +431,32 @@ dbRouter.post('/messages/:currentUser', (req, res) => {
               } else {
                 newMessage2[req.body.from] = [req.body.message];
               }
+              // updates receiver's messages
               return User.User.updateOne({ email: req.body.user }, { messages: newMessage2 })
                 .then((data) => res.send(data));
             });
+        }).then(() => {
+          Dog.findDogs(req.body.user)
+            .then((result) => {
+              User.addNotif(req.body.user, notif).then(() => {
+                twilio.messages
+                  .create({
+                    body: 'BarkPoint user messaged you.',
+                    from: '+12678677568',
+                    statusCallback: 'http://postb.in/1234abcd',
+                    to: result[0].number,
+                  })
+                  .then((message) => {
+                    res.send(message);
+                  })
+                  .catch((err) => console.err(err));
+              });
+            })
+            .catch((err) => console.error(err));
+        })
+        .catch((err) => {
+          console.error(err);
+          res.sendStatus(500);
         });
     });
 });
