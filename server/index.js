@@ -36,9 +36,5 @@ app.use(express.static(distPath));
 app.use('/', authRouter);
 app.use('/', dbRouter);
 app.use(apiRouter);
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distPath, 'index.html'));
-});
-server.listen(PORT, () => {
-  console.error(`http://localhost:${PORT}`);
-});
+app.get('*', (req, res) => res.sendFile(path.join(distPath, 'index.html')));
+server.listen(PORT, () => console.error(`http://localhost:${PORT}`));

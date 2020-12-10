@@ -389,15 +389,14 @@ dbRouter.get('/deleteUser', () => {
 // To be deleted
 dbRouter.get('/myFriends', (req, res) => {
   User.User.update(
-    { _id: '5fd0940d3f236d120d4858cc' },
-    { $push: { friends: '5fd07864082c2c09056567ab' } },
+    { _id: '5fd1861b8d6230001f3dc593' },
+    { $push: { friends: '5fd182610a5c0378d695496a' } },
   ).then(() => res.send('FRIEND ADDED'));
 });
 
 dbRouter.get('/messages/:currentUser', (req, res) => {
-  User.User.findOne({ email: req.params.currentUser }).then((currentUser) => {
-    res.send(currentUser.messages);
-  });
+  User.User.findOne({ email: req.params.currentUser })
+    .then((currentUser) => res.send(currentUser.messages));
 });
 
 dbRouter.post('/messages/:currentUser', (req, res) => {
@@ -409,21 +408,19 @@ dbRouter.post('/messages/:currentUser', (req, res) => {
       } else {
         newMessage[req.body.to] = [req.body.message];
       }
-      User.User.updateOne({ email: req.params.currentUser }, { messages: newMessage })
-        .then(() => {
-          User.User.findOne({ email: req.body.user })
-            .then((result) => {
-              const newMessage2 = result.messages;
-              if (newMessage2[req.body.from]) {
-                newMessage2[req.body.from].push(req.body.message);
-              } else {
-                newMessage2[req.body.from] = [req.body.message];
-              }
-              return User.User.updateOne({ email: req.body.user }, { messages: newMessage2 })
-                .then((data) => res.send(data));
-            });
-        });
-    });
+      return User.User.updateOne({ email: req.params.currentUser }, { messages: newMessage });
+    })
+    .then(() => User.User.findOne({ email: req.body.user }))
+    .then((result) => {
+      const newMessage2 = result.messages;
+      if (newMessage2[req.body.from]) {
+        newMessage2[req.body.from].push(req.body.message);
+      } else {
+        newMessage2[req.body.from] = [req.body.message];
+      }
+      return User.User.updateOne({ email: req.body.user }, { messages: newMessage2 });
+    })
+    .then((data) => res.send(data));
 });
 
 module.exports = dbRouter;
