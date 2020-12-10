@@ -354,7 +354,7 @@ dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
           if (!friend.friendRequests.includes(currentUser._id)) {
             User.User.updateOne(
               { _id: friend._id },
-              { $push: { friendRequests: currentUser._id } },
+              { $push: { friendRequests: String(currentUser._id) } },
             )
               .then(() => res.end())
               .catch();
