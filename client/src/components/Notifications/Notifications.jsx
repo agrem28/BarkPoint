@@ -1,15 +1,14 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Typography, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
+import FriendRequests from './FriendRequests.jsx';
 import './Notifications.css';
 import notifImg from './notif3.png';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   title: {
     flexGrow: 1,
     textAlign: 'center',
@@ -32,22 +31,22 @@ const Notifications = () => {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const getNotifs = () => {
-    axios.get('/session').then(({ data }) => {
-      axios.get(`/data/notifications/${data.email}`).then(({ data }) => {
+    axios.get('/session')
+      .then(({ data }) => axios.get(`/data/notifications/${data.email}`))
+      .then(({ data }) => {
         if (notifs.length === 0) {
           setNotifs(data.notifs);
         }
         axios.delete(`/data/notifications/${data.email}`);
       });
-    });
   };
 
   const updateNotifs = () => {
-    axios.get('/session').then(({ data }) => {
-      axios.get(`/data/notifications/${data.email}`).then(({ data }) => {
+    axios.get('/session')
+      .then(({ data }) => axios.get(`/data/notifications/${data.email}`))
+      .then(({ data }) => {
         setNotifs(data.notifs);
       });
-    });
   };
 
   const handleNumChange = async () => {
@@ -73,6 +72,7 @@ const Notifications = () => {
             <h3>{notif}</h3>
           </div>
         ))}
+        <FriendRequests />
         <Typography className={classes.title} id="change-number-msg"> want to change phone number currently receiving notifications? </Typography>
         <TextField id="standard-basic" className={classes.inputField} placeholder="ex:12345678901" onChange={handleChange} name="changeNum" />
         <Button className={classes.inputField} variant="text" color="primary" onClick={handleNumChange}>change number</Button>
