@@ -1,13 +1,21 @@
-button {
+.google-calendar {
   position: relative;
-  left: 16vw;
+  top: 3vw;
+  left: 18vw;
   border: 0;
 }
 
-iframe {
+.calendar {
+  background-color: white;
   position: relative;
-  left: 16vw;
+  top: 3vw;
+  left: 18vw;
   border: 0;
   width: 800px;
-  height: 600px;
+  height: 500px;
 }
+
+/* .calendar > * {
+  width: 110%;
+  height: 110%;
+} */

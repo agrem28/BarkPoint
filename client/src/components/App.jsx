@@ -9,7 +9,7 @@ import LogOut from './LoginLogout/LogOut';
 import './App.css';
 import NotFound from './LoginLogout/FourOhFour';
 import FriendsList from './FriendsList/FriendsList';
-import Calendar from './Calendar/Calendar';
+import CalendarView from './Calendar/Calendar';
 import Notifications from './Notifications/Notifications';
 
 import Park from './Park/Park';
@@ -87,7 +87,7 @@ const App = () => {
           <FriendsList />
         </Route>
         <Route path="/calendar">
-          <Calendar />
+          <CalendarView />
         </Route>
         <Route path="/notifications">
           <Notifications />
