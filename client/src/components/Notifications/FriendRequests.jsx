@@ -24,17 +24,15 @@ const FriendRequests = () => {
     });
   };
 
-  const acceptFriendRequest = () => {
-    console.log('ACCEPTED FRIEND REQUEST');
-  };
-  const declineFriendRequest = (id) => {
-    axios.put('/declineFriendRequest', { id, user }).then(({ data }) => {
-      setFriendRequestResponse(data);
-      setTimeout(() => {
-        setFriendRequestResponse('');
-      }, 2000);
-    });
-    console.log('DECLINED FRIEND REQUEST');
+  const responseToFriendRequest = (id, response) => {
+    axios
+      .put('/responseToFriendRequest', { id, user, response })
+      .then(({ data }) => {
+        setFriendRequestResponse(data);
+        setTimeout(() => {
+          setFriendRequestResponse('');
+        }, 2000);
+      });
   };
 
   return (
@@ -47,11 +45,21 @@ const FriendRequests = () => {
         return (
           <div>
             <div>{friendRequest.name}</div>
-            <button onClick={acceptFriendRequest.bind(this, friendRequest._id)}>
+            <button
+              onClick={responseToFriendRequest.bind(
+                this,
+                friendRequest._id,
+                'Accepted'
+              )}
+            >
               Accept
             </button>
             <button
-              onClick={declineFriendRequest.bind(this, friendRequest._id)}
+              onClick={responseToFriendRequest.bind(
+                this,
+                friendRequest._id,
+                'Declined'
+              )}
             >
               Decline
             </button>

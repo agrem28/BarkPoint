@@ -406,15 +406,24 @@ dbRouter.get('/friendRequests/:user', (req, res) => {
   );
 });
 
-dbRouter.put('/declineFriendRequest', (req, res) => {
+dbRouter.put('/responseToFriendRequest', (req, res) => {
   const userId = req.body.id;
   const currentUser = req.body.user;
+  const response = req.body.response;
   User.User.updateOne(
     { name: currentUser },
     { $pull: { friendRequests: userId } }
   )
     .then(() => {
-      res.send('Friend Request Declined');
+      if (response === 'Accepted') {
+        User.User.findOneAndUpdate(
+          { name: currentUser },
+          { $push: { friends: userId } }
+        ).then((data) => {
+          console.log('DATA', data);
+        });
+      }
+      res.send(`Friend Request ${response}`);
     })
     .catch((err) => console.warn(err));
 });
@@ -441,7 +450,7 @@ dbRouter.get('/deleteUser', () => {
 dbRouter.get('/removeFriend', (req, res) => {
   User.User.updateOne(
     { _id: '5fd10978a7ac2b7f3ce6566e' },
-    { $pull: { friends: '5fd11a35d65978454b6c765f' } }
+    { $pull: { friends: '5fd158c646df7a9ed979456d' } }
   ).then(() => res.send('Successfully deleted.'));
 });
 
@@ -449,7 +458,7 @@ dbRouter.get('/removeFriend', (req, res) => {
 dbRouter.get('/removeFriendRequest', (req, res) => {
   User.User.updateOne(
     { _id: '5fd10978a7ac2b7f3ce6566e' },
-    { $pull: { friendRequests: '5fd11a35d65978454b6c765f' } }
+    { $pull: { friendRequests: '5fd158c646df7a9ed979456d' } }
   ).then(() => res.send('Successfully removed friend request.'));
 });
 
@@ -457,7 +466,7 @@ dbRouter.get('/removeFriendRequest', (req, res) => {
 dbRouter.get('/addFriend', (req, res) => {
   User.User.update(
     { _id: '5fd10978a7ac2b7f3ce6566e' },
-    { $push: { friends: 'firnenlakdf' } }
+    { $push: { friends: '5fd11a35d65978454b6c765f' } }
   ).then(() => res.send('FRIEND ADDED'));
 });
 
@@ -465,7 +474,7 @@ dbRouter.get('/addFriend', (req, res) => {
 dbRouter.get('/addFriendRequest', (req, res) => {
   User.User.updateOne(
     { _id: '5fd10978a7ac2b7f3ce6566e' },
-    { $push: { friendRequests: '5fd10359c79fab1c58a1c314' } }
+    { $push: { friendRequests: '5fd10880a1029bba1f87d37a' } }
   ).then(() => res.send('Successfully added friend request.'));
 });
 
