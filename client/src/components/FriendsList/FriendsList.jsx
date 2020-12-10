@@ -1,13 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  Typography, TextField, Button,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
-
-require('./FriendsList.css');
+import friendpic from './friendpic3.png';
+import './FriendsList.css';
 
 const socket = io();
 
+const useStyles = makeStyles(() => ({
+  marginAutoContainer: {
+    display: 'flex',
+  },
+  marginAutoItem: {
+    margin: 'auto',
+  },
+  alignItemsAndJustifyContent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'right',
+  },
+  pupBudzHeader: {
+    color: 'white',
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '15%',
+    marginTop: '5%',
+  },
+  addFriendButton: {
+    textAlign: 'left',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: '30%',
+    marginTop: '5%',
+    padding: '10px',
+  },
+}));
+
 const FriendsList = () => {
+  const classes = useStyles();
   const [currentDms, setCurrentDms] = useState({});
   const [messageText, setMessageText] = useState('');
   const [friendToSearch, setFriendToSearch] = useState('');
@@ -83,17 +121,36 @@ const FriendsList = () => {
 
   return (
     <div className="Profile">
+      <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@300&display=swap" rel="stylesheet" />
       <Navbar />
       <Sidebar />
-      <div className="center">
-        <h1>Pup Budz</h1>
+      <div className="friends-container">
         <div className="main">
           <div className="friends">
-            <input
+            <Typography component="h1" variant="h4" className={classes.pupBudzHeader}>Pup Budz</Typography>
+            <TextField
+              className={classes.alignItemsAndJustifyContent}
+              id="standard-basic"
               placeholder="Search for Budz"
               onChange={friendSearchOnChange}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+
             />
-            <button onClick={sendFriendRequest}>Add Friend</button>
+            {/* <Box> */}
+            <Button
+              className={classes.addFriendButton}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              variant="text"
+              color="primary"
+              onClick={sendFriendRequest}
+            >
+              Add Friend
+            </Button>
+            {/* </Box> */}
             {friendsList.map((friend) => (
               <div className="friendsList">
                 <h3 onClick={() => setCurrentDms(friend)}>{friend.name}</h3>
@@ -113,18 +170,22 @@ const FriendsList = () => {
               { currentDms.name
                 ? (
                   <div>
-                    <input
+                    <TextField
+                      id="standard-basic"
                       placeholder="type a message"
                       value={messageText}
                       onChange={(e) => setMessageText(e.target.value)}
                     />
-                    <button
+                    <Button
+                      variant="text"
+                      color="primary"
                       onClick={clickHandler}
                     >
                       send message
-                    </button>
+                    </Button>
                   </div>
                 ) : null}
+              <img alt="" className="friend-pic" src={friendpic} />
             </div>
           </div>
         </div>
