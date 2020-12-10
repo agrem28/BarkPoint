@@ -28,7 +28,6 @@
 }
 
 .change-num-input{
-  margin-left: 40%;
 }
 
 .change-num-btn{
@@ -36,6 +35,6 @@
 }
 
 .img{
-  margin-top: 10%;
-  width: 20%;
-}
+  width: 30%;
+  margin-left: 3%;
+} 

@@ -16,6 +16,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justify: 'center',
   },
+  inputField: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // textAlign: 'right',
+  },
 }));
 
 const Notifications = () => {
@@ -68,8 +74,8 @@ const Notifications = () => {
           </div>
         ))}
         <Typography className={classes.title} id="change-number-msg"> want to change phone number currently receiving notifications? </Typography>
-        <TextField id="standard-basic" className={classes.title} placeholder="ex:12345678901" onChange={handleChange} name="changeNum" />
-        <Button className="change-num-btn" variant="text" color="primary" onClick={handleNumChange}>change number</Button>
+        <TextField id="standard-basic" className={classes.inputField} placeholder="ex:12345678901" onChange={handleChange} name="changeNum" />
+        <Button className={classes.inputField} variant="text" color="primary" onClick={handleNumChange}>change number</Button>
         <img alt="" src={notifImg} className="img" />
       </div>
     </div>
