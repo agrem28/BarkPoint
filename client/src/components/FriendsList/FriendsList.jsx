@@ -16,6 +16,7 @@ const FriendsList = () => {
   const [friendToSearch, setFriendToSearch] = useState('');
   const [friendsList, setFriendsList] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   let users;
 
   const [messages, setMessages] = useState({});
@@ -36,6 +37,7 @@ const FriendsList = () => {
   });
 
   const friendSearchOnChange = (event) => {
+    setShowSuggestions(true);
     const value = event.target.value;
 
     let sortedSuggestions = [];
@@ -85,7 +87,8 @@ const FriendsList = () => {
   };
 
   const handleSuggestionChoice = (suggestion) => {
-    const input = document.getElementById('friendInput').value;
+    setShowSuggestions(false);
+    const input = document.getElementById('friendInput');
     input.value = suggestion;
     setFriendToSearch(input.value);
     console.log('SUGGESTION CHOICE', suggestion);
@@ -123,16 +126,18 @@ const FriendsList = () => {
                 value="Add Friend"
                 onClick={sendFriendRequest}
               />
-              {suggestions.map((suggestion) => {
-                return (
-                  <div
-                    className="suggestions"
-                    onClick={handleSuggestionChoice.bind(this, suggestion)}
-                  >
-                    {suggestion}
-                  </div>
-                );
-              })}
+              {showSuggestions
+                ? suggestions.map((suggestion) => {
+                    return (
+                      <div
+                        className="suggestions"
+                        onClick={handleSuggestionChoice.bind(this, suggestion)}
+                      >
+                        {suggestion}
+                      </div>
+                    );
+                  })
+                : null}
             </div>
             <div className="listOfFriends">
               {friendsList.map((friend) => (
