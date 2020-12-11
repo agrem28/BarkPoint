@@ -24,15 +24,13 @@ const FriendsList = () => {
 
   const getUsers = () => {
     axios.get('/findUsers').then(({ data }) => {
-      data = data.map((user) => user.name);
-      users = data;
+      users = data.map((user) => user.name);
     });
   };
 
   useLayoutEffect(() => {
     axios.get('/session').then(({ data }) => {
       user = data.name;
-      console.log('USER', user);
     });
   });
 
