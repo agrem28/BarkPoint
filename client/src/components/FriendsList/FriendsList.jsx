@@ -50,14 +50,14 @@ const FriendsList = () => {
   const [friendsList, setFriendsList] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  let users;
+  let [users, setUsers] = useState([]);
 
   const [messages, setMessages] = useState({});
   let user;
 
   const getUsers = () => {
     axios.get('/findUsers').then(({ data }) => {
-      users = data.map((user) => user.name);
+      setUsers(data.map((user) => user.name));
     });
   };
 
@@ -70,6 +70,7 @@ const FriendsList = () => {
   const friendSearchOnChange = (event) => {
     setShowSuggestions(true);
     const value = event.target.value;
+    console.log('INSIDEEEEE', value);
 
     let sortedSuggestions = [];
     if (value.length > 0) {
@@ -163,6 +164,7 @@ const FriendsList = () => {
 
   return (
     <div className="Profile">
+      {suggestions.length === 0 ? getUsers() : null}
       <link
         href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@300&display=swap"
         rel="stylesheet"
