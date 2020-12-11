@@ -1,11 +1,31 @@
 import React, { useState, useLayoutEffect } from 'react';
 import axios from 'axios';
 import './FriendRequests.css';
+import { Typography, TextField, Button, Container } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(() => ({
+  requestContainer: {
+    flexGrow: 1,
+    textAlign: 'center',
+    alignItems: 'center',
+    justify: 'center',
+  },
+  requestResponse: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: "center",
+    justify: "center",
+    marginTop: "2%",
+  },
+}));
 
 const FriendRequests = () => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [friendRequestResponse, setFriendRequestResponse] = useState('');
   let user;
+  const classes = useStyles();
 
   const getFriendRequests = () => {
     axios.get(`/friendRequests/${user}`).then(({ data }) => {
@@ -36,15 +56,15 @@ const FriendRequests = () => {
   };
 
   return (
-    <div className="friendRequests">
-      <h1>Friend Requests</h1>
+    <div className="friend-requests-container">
+      <Typography Component="h1" variant="h6" className={classes.requestContainer} id="friend-req-header" >Friend Requests</Typography>
       {friendRequestResponse ? (
-        <div className="requestResponse">{friendRequestResponse}</div>
+        <Typography Component="h1" variant="h6" className={classes.requestResponse} id="request-response">{friendRequestResponse}</Typography>
       ) : null}
       {friendRequests.map((friendRequest) => (
         <div>
           <div>{friendRequest.name}</div>
-          <button
+          <Button
             onClick={responseToFriendRequest.bind(
               this,
               friendRequest._id,
@@ -52,8 +72,8 @@ const FriendRequests = () => {
             )}
           >
             Accept
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={responseToFriendRequest.bind(
               this,
               friendRequest._id,
@@ -61,7 +81,7 @@ const FriendRequests = () => {
             )}
           >
             Decline
-          </button>
+          </Button>
         </div>
       ))}
     </div>

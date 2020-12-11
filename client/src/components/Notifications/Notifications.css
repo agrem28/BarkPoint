@@ -1,6 +1,6 @@
 .notif-container{
   border-color: #35200b;
-  height: 20%;
+  height: 40%;
   margin-top: 5%;
   margin-right: 10%;
   margin-left: 25%;
@@ -8,9 +8,13 @@
   border-style: solid;
 }
 
-.MuiTypography-h2 {
+/* .MuiTypography-h2 {
   font-weight: 300;
   margin-left: 30%;
+} */
+
+#notifs-header{
+  margin-top: 3%;
 }
 
 .all-notif{
@@ -22,7 +26,6 @@
 }
 
 #change-number-msg{
-  color: blue;
   margin-top: 10%;
   font-weight: 800;
 }
@@ -30,11 +33,12 @@
 .change-num-input{
 }
 
-.change-num-btn{
- display: grid;
+#change-num-btn{
+  margin-left: 40%;
 }
 
 .img{
-  width: 30%;
-  margin-left: 3%;
-} 
+  width: 35%;
+  margin-top: 10%;
+  margin-left: 33%;
+}

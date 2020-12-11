@@ -9,7 +9,7 @@ import Sidebar from '../ProfileAndToys/Sidebar';
 import friendpic from './friendpic3.png';
 import './FriendsList.css';
 
-const socket = io();
+// const socket = io();
 
 const useStyles = makeStyles(() => ({
   marginAutoContainer: {
@@ -108,12 +108,13 @@ const FriendsList = () => {
           user: currentDms.email,
           from: data.name,
           to: currentDms.name,
-        }).then(() => socket.emit('sent'))
-          .catch((err) => console.warn(err));
+        })
+        // .then(() => socket.emit('sent'))
+          // .catch((err) => console.warn(err));
       });
   };
 
-  socket.on('recived', () => getMessagesList());
+  // socket.on('recived', () => getMessagesList());
 
   useEffect(() => getFriendsList(), []);
 
