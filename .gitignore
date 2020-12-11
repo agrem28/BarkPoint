@@ -103,3 +103,6 @@ app.yaml
 
 # TernJS port file
 .tern-port
+
+# Google Calendar Api Credentials
+apiGoogleconfig.json

@@ -1,0 +1,21 @@
+.google-calendar {
+  position: relative;
+  top: 3vw;
+  left: 18vw;
+  border: 0;
+}
+
+.calendar {
+  background-color: white;
+  position: relative;
+  top: 3vw;
+  left: 18vw;
+  border: 0;
+  width: 800px;
+  height: 500px;
+}
+
+/* .calendar > * {
+  width: 110%;
+  height: 110%;
+} */

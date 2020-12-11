@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FriendRequests.css';
 
@@ -43,31 +43,29 @@ const FriendRequests = () => {
       {friendRequestResponse ? (
         <div className="requestResponse">{friendRequestResponse}</div>
       ) : null}
-      {friendRequests.map((friendRequest) => {
-        return (
-          <div>
-            <div>{friendRequest.name}</div>
-            <button
-              onClick={responseToFriendRequest.bind(
-                this,
-                friendRequest._id,
-                'Accepted'
-              )}
-            >
-              Accept
-            </button>
-            <button
-              onClick={responseToFriendRequest.bind(
-                this,
-                friendRequest._id,
-                'Declined'
-              )}
-            >
-              Decline
-            </button>
-          </div>
-        );
-      })}
+      {friendRequests.map((friendRequest) => (
+        <div>
+          <div>{friendRequest.name}</div>
+          <button
+            onClick={responseToFriendRequest.bind(
+              this,
+              friendRequest._id,
+              'Accepted'
+            )}
+          >
+            Accept
+          </button>
+          <button
+            onClick={responseToFriendRequest.bind(
+              this,
+              friendRequest._id,
+              'Declined'
+            )}
+          >
+            Decline
+          </button>
+        </div>
+      ))}
     </div>
   );
 };

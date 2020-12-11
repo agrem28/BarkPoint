@@ -1,31 +1,51 @@
-.center {
+.friends-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* border-color: #35200b;
+  margin-top: 5%;
+  margin-right: 10%;
+  margin-left: 25%;
+  border-style: solid; */
 }
 
 .main {
   display: flex;
   flex-wrap: wrap;
   width: 60%;
-  /* border: 5px solid purple; */
+}
+
+.friendslist-header {
+  font-family: 'Roboto', sans-serif;
+  color: white;
 }
 
 .friends {
+  margin-top: 5%;
+  font-family: 'Roboto', sans-serif;
   flex: 0 0 27.15%;
-  border: 5px solid purple;
+  border: 5px solid #ac4f22;
   flex-direction: column;
-  background-color: purple;
+  background-color: #ac4f22;
+}
+
+.friend-search-box {
+  color: white;
+  margin-left: 5%;
 }
 
 .messages {
+  margin-top: 5%;
+  font-family: 'Roboto', sans-serif;
   flex: 1;
-  border: 5px solid blue;
+  border: 5px solid #f5ebda;
   flex-direction: column;
+  background-color: #f5ebda;
 }
 
 .friendsList {
+  font-family: 'Roboto', sans-serif;
   margin: 10px 0 10px 0;
   padding: 1.5px;
   background-color: white;
@@ -66,4 +86,10 @@
 .addFriendButton {
   display: inline;
   float: right;
+}
+
+.friend-pic {
+  margin-left: 15%;
+  margin-bottom: 15%;
+  width: 70%;
 }

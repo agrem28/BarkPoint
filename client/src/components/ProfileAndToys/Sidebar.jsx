@@ -13,15 +13,14 @@ const Sidebar = () => {
   ];
 
   const getNotifsNumber = () => {
-    axios.get('/session').then(({ data }) => {
-      axios.get(`/data/notifications/${data.email}`).then(({ data }) => {
+    axios.get('/session').then(({ data }) => axios.get(`/data/notifications/${data.email}`))
+      .then(({ data }) => {
         console.info('DATA', data.notifs);
         setNotifs(data.notifs);
         if (notifs.length > 0) {
           axios.delete(`/data/notifications/${data.email}`);
         }
       });
-    });
   };
 
   useEffect(() => {

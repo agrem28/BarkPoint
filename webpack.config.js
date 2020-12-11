@@ -27,7 +27,10 @@ module.exports = {
         test: /\.(css)$/,
         use: ['style-loader', 'css-loader'],
       },
-    ],
+      {
+        test: /\.(gif|svg|jpg|png)$/,
+        loader: 'file-loader',
+      }],
   },
   devtool: 'eval-source-map',
   resolve: {
