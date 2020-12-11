@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
-import {
-  Typography, TextField, Button,
-} from '@material-ui/core';
+import { Typography, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
@@ -50,69 +48,115 @@ const FriendsList = () => {
   const [messageText, setMessageText] = useState('');
   const [friendToSearch, setFriendToSearch] = useState('');
   const [friendsList, setFriendsList] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  let [users, setUsers] = useState([]);
 
   const [messages, setMessages] = useState({});
+  let user;
+
+  const getUsers = () => {
+    axios.get('/findUsers').then(({ data }) => {
+      setUsers(data.map((user) => user.name));
+    });
+  };
+
+  useLayoutEffect(() => {
+    axios.get('/session').then(({ data }) => {
+      user = data.name;
+    });
+  });
+
   const friendSearchOnChange = (event) => {
-    const friend = event.target.value;
-    setFriendToSearch(friend);
+    setShowSuggestions(true);
+    const value = event.target.value;
+    console.log('INSIDEEEEE', value);
+
+    let sortedSuggestions = [];
+    if (value.length > 0) {
+      const regex = new RegExp(`${value}`, 'i');
+      sortedSuggestions = users.sort().filter((v) => regex.test(v));
+    }
+    setSuggestions(sortedSuggestions);
+    setFriendToSearch(value);
   };
 
   // Sends friend request to user being searched...
   const sendFriendRequest = () => {
+    console.log('SUCCESS');
     axios.get('/session').then(({ data }) => {
       axios
         .get(`/findFriend/${friendToSearch}/${data.name}`)
         .then(() => {})
         .catch((err) => console.info(err));
-      console.info('FRIEND', friendToSearch);
     });
   };
 
   // Grabs the current users friendsList...
   const getFriendsList = () => {
-    console.info('outside');
-    axios.get('/session').then(({ data }) => axios.get(`/friends/${data.name}`))
-      .then(({ data }) => {
-        console.info('DATA', data);
+    axios.get('/session').then(({ data }) => {
+      axios.get(`/friends/${data.name}`).then(({ data }) => {
         setFriendsList(data);
       });
+    });
   };
 
   const getMessagesList = () => {
-    axios.get('/session')
+    axios
+      .get('/session')
       .then(({ data }) => axios.get(`/messages/${data.email}`))
       .then(({ data }) => setMessages(data));
   };
 
   const clickHandler = () => {
-    axios.get('/session')
-      .then(({ data }) => {
-        const time = new Date();
-        const newMessage = {
-          name: data.name,
-          message: messageText,
-          time: String(time).replace('GMT-0600 (Central Standard Time)', ''),
-        };
-        const exampleMessage = messages;
-        if (exampleMessage[currentDms.name]) {
-          exampleMessage[currentDms.name] = [
-            ...messages[currentDms.name],
-            newMessage,
-          ];
-        } else {
-          exampleMessage[currentDms.name] = [newMessage];
-        }
-        setMessageText('');
-        axios.post(`/messages/${data.email}`, {
+    axios.get('/session').then(({ data }) => {
+      const time = new Date();
+      const newMessage = {
+        name: data.name,
+        message: messageText,
+        time: String(time).replace('GMT-0600 (Central Standard Time)', ''),
+      };
+      const exampleMessage = messages;
+      if (exampleMessage[currentDms.name]) {
+        exampleMessage[currentDms.name] = [
+          ...messages[currentDms.name],
+          newMessage,
+        ];
+      } else {
+        exampleMessage[currentDms.name] = [newMessage];
+      }
+      setMessageText('');
+      axios
+        .post(`/messages/${data.email}`, {
           message: newMessage,
           user: currentDms.email,
           from: data.name,
           to: currentDms.name,
         })
+
         // .then(() => socket.emit('sent'))
           // .catch((err) => console.warn(err));
       });
   };
+
+
+  const handleUnfriend = (id) => {
+    axios.put('/unfriend', { user, id }).then(({ data }) => {
+      // setFriendsList(data);
+      getFriendsList();
+    });
+  };
+
+  const handleSuggestionChoice = (suggestion) => {
+    setShowSuggestions(false);
+    const input = document.getElementById('friendInput');
+    input.value = suggestion;
+    setFriendToSearch(input.value);
+  };
+
+  useEffect(() => {
+    getFriendsList();
+  }, []);
 
   // socket.on('recived', () => getMessagesList());
 
@@ -122,70 +166,79 @@ const FriendsList = () => {
 
   return (
     <div className="Profile">
-      <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@300&display=swap" rel="stylesheet" />
+      {suggestions.length === 0 ? getUsers() : null}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@300&display=swap"
+        rel="stylesheet"
+      />
       <Navbar />
       <Sidebar />
       <div className="friends-container">
         <div className="main">
           <div className="friends">
-            <Typography component="h1" variant="h4" className={classes.pupBudzHeader}>Pup Budz</Typography>
-            <TextField
-              className={classes.alignItemsAndJustifyContent}
-              id="standard-basic"
-              placeholder="Search for Budz"
-              onChange={friendSearchOnChange}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-
-            />
-            {/* <Box> */}
-            <Button
-              className={classes.addFriendButton}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              variant="text"
-              color="primary"
-              onClick={sendFriendRequest}
-            >
-              Add Friend
-            </Button>
-            {/* </Box> */}
-            {friendsList.map((friend) => (
-              <div className="friendsList">
-                <h3 onClick={() => setCurrentDms(friend)}>{friend.name}</h3>
-              </div>
-            ))}
+            <div className="inputAndSuggestions">
+              <input
+                id="friendInput"
+                type="text"
+                placeholder="Search for Budz"
+                onChange={friendSearchOnChange}
+                className="addFriendInput"
+                autoComplete="off"
+              />
+              <input
+                type="submit"
+                className="addFriendButton"
+                value="Add Friend"
+                onClick={sendFriendRequest}
+              />
+              {showSuggestions
+                ? suggestions.map((suggestion) => (
+                    <div
+                      className="suggestions"
+                      onClick={handleSuggestionChoice.bind(this, suggestion)}
+                    >
+                      {suggestion}
+                    </div>
+                  ))
+                : null}
+            </div>
+            <div className="listOfFriends">
+              {friendsList.map((friend) => (
+                <div className="friendsList">
+                  <h3 onClick={() => setCurrentDms(friend)}>{friend.name}</h3>
+                  <button
+                    onClick={handleUnfriend.bind(this, String(friend._id))}
+                  >
+                    Unfriend
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="messages">
             {messages[currentDms.name]
               ? messages[currentDms.name].map(({ name, message, time }) => (
-                <div>
-                  <h2>{name}</h2>
-                  <div>{message}</div>
-                  <div>{time}</div>
-                </div>
-              )) : null}
-            <div>
-              { currentDms.name
-                ? (
                   <div>
-                    <TextField
-                      id="standard-basic"
-                      placeholder="type a message"
-                      value={messageText}
-                      onChange={(e) => setMessageText(e.target.value)}
-                    />
-                    <Button
-                      variant="text"
-                      color="primary"
-                      onClick={clickHandler}
-                    >
-                      send message
-                    </Button>
+                    <h2>{name}</h2>
+                    <div>{message}</div>
+                    <div>{time}</div>
                   </div>
-                ) : null}
+                ))
+              : null}
+            <div>
+              {currentDms.name ? (
+                <div>
+                  <TextField
+                    id="standard-basic"
+                    placeholder="type a message"
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                  />
+                  <Button variant="text" color="primary" onClick={clickHandler}>
+                    send message
+                  </Button>
+                </div>
+              ) : null}
               <img alt="" className="friend-pic" src={friendpic} />
             </div>
           </div>

@@ -61,6 +61,7 @@ const Profile = ({ dogs, getDogs }) => {
 
   const history = useHistory();
   const classes = useStyles();
+  let userPicture = '';
 
   const deleteDog = (dog) => {
     // eslint-disable-next-line no-underscore-dangle
@@ -105,7 +106,6 @@ const Profile = ({ dogs, getDogs }) => {
 
   useEffect(() => {
     getDogs();
-    // console.log(dogs);
   }, []);
 
   return (
@@ -121,14 +121,14 @@ const Profile = ({ dogs, getDogs }) => {
             <CardHeader
               title={dog.name}
               style={{ color: '#e55812', fontFamily: 'Fredoka One' }}
-              action={(
+              action={
                 <IconButton aria-label="delete dogs">
                   <DeleteIcon
                     style={{ color: '#2CDA9D' }}
                     onClick={() => deleteDog(dog)}
                   />
                 </IconButton>
-              )}
+              }
             />
             <CardMedia className={classes.media} image={dog.image} />
             <CardActions disableSpacing>
@@ -155,8 +155,8 @@ const Profile = ({ dogs, getDogs }) => {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <CardContent>
-                {dog.toys
-                  && dog.toys.map((toys) => (
+                {dog.toys &&
+                  dog.toys.map((toys) => (
                     <div className="">
                       <IconButton
                         onClick={() => {
@@ -194,7 +194,7 @@ Profile.propTypes = {
       image: PropTypes.string,
       size: PropTypes.string,
       toys: PropTypes.arrayOf,
-    }),
+    })
   ).isRequired,
   getDogs: PropTypes.func.isRequired,
 };

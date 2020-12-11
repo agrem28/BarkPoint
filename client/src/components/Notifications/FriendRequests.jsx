@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FriendRequests.css';
 import { Typography, TextField, Button, Container } from '@material-ui/core';
@@ -24,35 +24,38 @@ const useStyles = makeStyles(() => ({
 const FriendRequests = () => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [friendRequestResponse, setFriendRequestResponse] = useState('');
-  let user;
   const classes = useStyles();
 
+  //Refactor code to not use state to get the user. Instead call the "/session" route every time you need it.
+  useEffect(() => {
+    getFriendRequests();
+  }, []);
+
+
   const getFriendRequests = () => {
-    axios.get(`/friendRequests/${user}`).then(({ data }) => {
-      setFriendRequests(data);
+    axios.get('/session').then(({ data }) => {
+      axios.get(`/friendRequests/${data.name}`).then(({ data }) => {
+        console.log('WEIRD', data);
+        setFriendRequests(data);
+      });
     });
   };
 
-  useLayoutEffect(() => {
-    axios
-      .get('/session')
-      .then(({ data }) => {
-        user = data.name;
-      })
-      .then(() => {
-        getFriendRequests();
-      });
-  });
-
   const responseToFriendRequest = (id, response) => {
-    axios
-      .put('/responseToFriendRequest', { id, user, response })
-      .then(({ data }) => {
-        setFriendRequestResponse(data);
-        setTimeout(() => {
-          setFriendRequestResponse('');
-        }, 2000);
-      });
+    axios.get('/session').then(({ data }) => {
+      axios
+        .put('/responseToFriendRequest', { id, user: data.name, response })
+        .then(({ data }) => {
+          console.log(data, '-----');
+          setFriendRequestResponse(data);
+
+          setTimeout(() => {
+            console.log('set timeout');
+            setFriendRequestResponse('');
+            getFriendRequests();
+          }, 2000);
+        });
+    });
   };
 
   return (
@@ -68,7 +71,7 @@ const FriendRequests = () => {
             onClick={responseToFriendRequest.bind(
               this,
               friendRequest._id,
-              'Accepted',
+              'Accepted'
             )}
           >
             Accept
@@ -77,7 +80,7 @@ const FriendRequests = () => {
             onClick={responseToFriendRequest.bind(
               this,
               friendRequest._id,
-              'Declined',
+              'Declined'
             )}
           >
             Decline

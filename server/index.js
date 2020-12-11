@@ -19,12 +19,16 @@ const PORT = process.env.PORT || '8080';
 const distPath = path.join(__dirname, '../client/dist');
 app.use(express.json());
 app.use(cookieParser());
-app.use(session({
-  secret: 'dog',
-  resave: 'false',
-  keys: ['key1', 'key2'],
-  maxAge: 3600000,
-}));
+
+app.use(
+  session({
+    secret: 'dog',
+    resave: 'false',
+    keys: ['key1', 'key2'],
+    maxAge: 3600000,
+  })
+);
+
 // io.on('connection', (socket) => {
 //   socket.on('sent', () => {
 //     io.emit('recived');
