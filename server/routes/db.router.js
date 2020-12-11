@@ -358,7 +358,6 @@ dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
       const { friend } = req.params;
       User.User.findOne({ name: friend })
         .then((friend) => {
-          console.log('FRIEND', friend);
           if (
             !friend.friendRequests.includes(currentUser._id) &&
             !friend.friends.includes(currentUser._id)
@@ -368,7 +367,9 @@ dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
               { $push: { friendRequests: String(currentUser._id) } }
             )
               .then(() => res.end())
-              .catch();
+              .catch((err) => {
+                console.warn(err);
+              });
           }
         })
         .catch();
@@ -383,7 +384,7 @@ dbRouter.get('/friends/:currentUser', (req, res) => {
       .in(currentUser.friends)
       .exec((err, friends) => {
         if (err) {
-          console.log(err);
+          console.warn(err);
         } else {
           res.send(friends);
         }
@@ -393,7 +394,6 @@ dbRouter.get('/friends/:currentUser', (req, res) => {
 
 dbRouter.get('/friendRequests/:user', (req, res) => {
   const user = req.params.user;
-
   User.User.findOne({ name: user }, 'friendRequests').then(
     ({ friendRequests }) => {
       User.User.find()
@@ -412,30 +412,29 @@ dbRouter.get('/friendRequests/:user', (req, res) => {
 
 dbRouter.put('/responseToFriendRequest', (req, res) => {
   const userId = req.body.id;
-  console.log('USER ID', typeof userId);
   const currentUser = req.body.user;
-  console.log('CURRENT USER', currentUser);
-  const response = req.body.response;
-  console.log('RESPONSE', response);
+  const { response } = req.body;
   User.User.findOneAndUpdate(
     { name: currentUser },
-    { $pull: { friendRequests: userId } }
+    { $pull: { friendRequests: userId } },
+    { multi: true }
   )
-    .then((data) => {
+    .then(() => {
       if (response === 'Accepted') {
         User.User.findOneAndUpdate(
           { name: currentUser },
-          { $push: { friends: userId } }
+          { $push: { friends: String(userId) } }
         ).then((data) => {
           User.User.findOneAndUpdate(
             { _id: userId },
-            { $push: { friends: data._id } }
-          ).then((user) => {
-            console.log('RIGHT HERE', user);
+            { $push: { friends: String(data._id) } }
+          ).then(() => {
+            res.send(`Friend Request ${response}`);
           });
         });
+      } else {
+        res.send(`Friend Request ${response}`);
       }
-      res.send(`Friend Request ${response}`);
     })
     .catch((err) => console.warn(err));
 });
@@ -443,7 +442,6 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
 //Unfriend user
 dbRouter.put('/unfriend', (req, res) => {
   const friendID = req.body.id;
-  console.log('FRIEND ID', friendID);
   const currentUser = req.body.user;
   User.User.findOneAndUpdate(
     { name: currentUser },
@@ -451,7 +449,7 @@ dbRouter.put('/unfriend', (req, res) => {
   ).then((user) => {
     User.User.findOneAndUpdate(
       { _id: friendID },
-      { $pull: { friends: user._id } }
+      { $pull: { friends: String(user._id) } }
     ).then(() => {
       res.send(user);
     });
@@ -506,7 +504,7 @@ dbRouter.put('/unfriend', (req, res) => {
 //     { _id: '5fd28a829e01adc94f1c96a1' },
 //     {
 //       $push: {
-//         friendRequests: '5fd2c2d0a98722e8c8a2600d',
+//         friendRequests: '5fd2a3bc0955a22d0734cb76',
 //       },
 //     }
 //   ).then(() => res.send('Successfully added friend request.'));

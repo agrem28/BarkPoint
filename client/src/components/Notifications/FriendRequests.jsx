@@ -5,34 +5,36 @@ import './FriendRequests.css';
 const FriendRequests = () => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [friendRequestResponse, setFriendRequestResponse] = useState('');
-  let user;
 
-  useLayoutEffect(() => {
-    axios
-      .get('/session')
-      .then(({ data }) => {
-        user = data.name;
-      })
-      .then(() => {
-        getFriendRequests();
-      });
-  });
+  //Refactor code to not use state to get the user. Instead call the "/session" route every time you need it.
+  useEffect(() => {
+    getFriendRequests();
+  }, []);
 
   const getFriendRequests = () => {
-    axios.get(`/friendRequests/${user}`).then(({ data }) => {
-      setFriendRequests(data);
+    axios.get('/session').then(({ data }) => {
+      axios.get(`/friendRequests/${data.name}`).then(({ data }) => {
+        console.log('WEIRD', data);
+        setFriendRequests(data);
+      });
     });
   };
 
   const responseToFriendRequest = (id, response) => {
-    axios
-      .put('/responseToFriendRequest', { id, user, response })
-      .then(({ data }) => {
-        setFriendRequestResponse(data);
-        setTimeout(() => {
-          setFriendRequestResponse('');
-        }, 2000);
-      });
+    axios.get('/session').then(({ data }) => {
+      axios
+        .put('/responseToFriendRequest', { id, user: data.name, response })
+        .then(({ data }) => {
+          console.log(data, '-----');
+          setFriendRequestResponse(data);
+
+          setTimeout(() => {
+            console.log('set timeout');
+            setFriendRequestResponse('');
+            getFriendRequests();
+          }, 2000);
+        });
+    });
   };
 
   return (
