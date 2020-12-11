@@ -358,10 +358,14 @@ dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
       const { friend } = req.params;
       User.User.findOne({ name: friend })
         .then((friend) => {
-          if (!friend.friendRequests.includes(currentUser._id)) {
+          console.log('FRIEND', friend);
+          if (
+            !friend.friendRequests.includes(currentUser._id) &&
+            !friend.friends.includes(currentUser._id)
+          ) {
             User.User.updateOne(
               { _id: friend._id },
-              { $push: { friendRequests: currentUser._id } }
+              { $push: { friendRequests: String(currentUser._id) } }
             )
               .then(() => res.end())
               .catch();
@@ -408,19 +412,27 @@ dbRouter.get('/friendRequests/:user', (req, res) => {
 
 dbRouter.put('/responseToFriendRequest', (req, res) => {
   const userId = req.body.id;
+  console.log('USER ID', typeof userId);
   const currentUser = req.body.user;
+  console.log('CURRENT USER', currentUser);
   const response = req.body.response;
-  User.User.updateOne(
+  console.log('RESPONSE', response);
+  User.User.findOneAndUpdate(
     { name: currentUser },
     { $pull: { friendRequests: userId } }
   )
-    .then(() => {
+    .then((data) => {
       if (response === 'Accepted') {
         User.User.findOneAndUpdate(
           { name: currentUser },
           { $push: { friends: userId } }
         ).then((data) => {
-          console.log('DATA', data);
+          User.User.findOneAndUpdate(
+            { _id: userId },
+            { $push: { friends: data._id } }
+          ).then((user) => {
+            console.log('RIGHT HERE', user);
+          });
         });
       }
       res.send(`Friend Request ${response}`);
@@ -428,16 +440,34 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
     .catch((err) => console.warn(err));
 });
 
+//Unfriend user
+dbRouter.put('/unfriend', (req, res) => {
+  const friendID = req.body.id;
+  console.log('FRIEND ID', friendID);
+  const currentUser = req.body.user;
+  User.User.findOneAndUpdate(
+    { name: currentUser },
+    { $pull: { friends: friendID } }
+  ).then((user) => {
+    User.User.findOneAndUpdate(
+      { _id: friendID },
+      { $pull: { friends: user._id } }
+    ).then(() => {
+      res.send(user);
+    });
+  });
+});
+
 // // To be deleted
-// dbRouter.get('/addUser', (req, res) => {
-//   User.User.create({
-//     name: 'Best User Ever',
-//     email: 'fakeuser2@gmail.com',
-//     friends: [],
-//     friendRequests: [],
-//     parks: [],
-//   }).then(() => res.send('User Added'));
-// });
+dbRouter.get('/addUser', (req, res) => {
+  User.User.create({
+    name: 'New User',
+    email: 'fakeuser2@gmail.com',
+    friends: [],
+    friendRequests: [],
+    parks: [],
+  }).then(() => res.send('User Added'));
+});
 
 // // To be deleted - deletes a user from the database...hardcoded.
 // dbRouter.get('/deleteUser', () => {
@@ -446,37 +476,41 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
 //   );
 // });
 
-// //To be deleted - will remove a friend from your friends list...hardcoded.
-// dbRouter.get('/removeFriend', (req, res) => {
-//   User.User.updateOne(
-//     { _id: '5fd181cbd6991aac90738533' },
-//     { $pull: { friends: '5fd1861b8d6230001f3dc593' } }
-//   ).then(() => res.send('Successfully deleted.'));
-// });
+//To be deleted - will remove a friend from your friends list...hardcoded.
+dbRouter.get('/removeFriend', (req, res) => {
+  User.User.updateOne(
+    { _id: '5fd2920e359cca2868eb686e' },
+    { $pull: { friends: '5fd28a829e01adc94f1c96a1' } }
+  ).then(() => res.send('Successfully deleted.'));
+});
 
-// //To be deleted - will remove a user from your friend requests list...hardcoded.
-// dbRouter.get('/removeFriendRequest', (req, res) => {
-//   User.User.updateOne(
-//     { _id: '5fd181cbd6991aac90738533' },
-//     { $pull: { friendRequests: '5fd181cd239c3c781c7ba7ad' } }
-//   ).then(() => res.send('Successfully removed friend request.'));
-// });
+//To be deleted - will remove a user from your friend requests list...hardcoded.
+dbRouter.get('/removeFriendRequest', (req, res) => {
+  User.User.updateOne(
+    { _id: '5fd1861b8d6230001f3dc593' },
+    { $pull: { friendRequests: '5fd181cd239c3c781c7ba7ad' } }
+  ).then(() => res.send('Successfully removed friend request.'));
+});
 
-// // To be deleted - will add a friend to your friends list...hardcoded.
-// dbRouter.get('/addFriend', (req, res) => {
-//   User.User.update(
-//     { _id: '5fd10978a7ac2b7f3ce6566e' },
-//     { $push: { friends: '5fd11a35d65978454b6c765f' } }
-//   ).then(() => res.send('FRIEND ADDED'));
-// });
+// To be deleted - will add a friend to your friends list...hardcoded.
+dbRouter.get('/addFriend', (req, res) => {
+  User.User.update(
+    { _id: '5fd28a829e01adc94f1c96a1' },
+    { $push: { friends: '5fd28f1dcc09ef1efc1e92e3' } }
+  ).then(() => res.send('FRIEND ADDED'));
+});
 
 // //To be deleted - will add a user to your friend request list...hardcoded.
-// dbRouter.get('/addFriendRequest', (req, res) => {
-//   User.User.updateOne(
-//     { _id: '5fd181cbd6991aac90738533' },
-//     { $push: { friendRequests: '5fd182aa122666791c49f899' } }
-//   ).then(() => res.send('Successfully added friend request.'));
-// });
+dbRouter.get('/addFriendRequest', (req, res) => {
+  User.User.updateOne(
+    { _id: '5fd28a829e01adc94f1c96a1' },
+    {
+      $push: {
+        friendRequests: '5fd2c0fc0c5f6ce689cff0ba',
+      },
+    }
+  ).then(() => res.send('Successfully added friend request.'));
+});
 
 dbRouter.get('/messages/:currentUser', (req, res) => {
   User.User.findOne({ email: req.params.currentUser }).then((currentUser) => {
