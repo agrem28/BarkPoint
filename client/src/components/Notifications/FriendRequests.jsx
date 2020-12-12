@@ -4,6 +4,8 @@ import './FriendRequests.css';
 import { Typography, TextField, Button, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+const socket = io();
+
 const useStyles = makeStyles(() => ({
   requestContainer: {
     flexGrow: 1,
@@ -49,11 +51,12 @@ const FriendRequests = () => {
           console.log(data, '-----');
           setFriendRequestResponse(data);
 
+          socket.emit('Accepted')
           setTimeout(() => {
             console.log('set timeout');
             setFriendRequestResponse('');
             getFriendRequests();
-          }, 2000);
+          }, 500);
         });
     });
   };

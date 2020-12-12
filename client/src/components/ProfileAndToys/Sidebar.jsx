@@ -4,6 +4,8 @@ import axios from 'axios';
 import { List, ListItem, ListItemText } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
+const socket = io();
+
 const Sidebar = () => {
   const [notifs, setNotifs] = useState([]);
   const links = [
@@ -26,6 +28,8 @@ const Sidebar = () => {
   useEffect(() => {
     getNotifsNumber();
   }, []);
+
+  socket.on('waiting', () => getNotifsNumber());
 
   return (
     <div className="SidebarProfile">

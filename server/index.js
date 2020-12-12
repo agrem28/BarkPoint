@@ -33,6 +33,12 @@ io.on('connection', (socket) => {
   socket.on('sent', () => {
     io.emit('recived');
   });
+  socket.on('request', () => {
+    io.emit('waiting');
+  })
+  socket.on('Accepted', () => {
+    io.emit('approved');
+  })
 });
 app.use(passport.initialize());
 app.use(passport.session());

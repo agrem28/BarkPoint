@@ -138,7 +138,6 @@ const FriendsList = () => {
       });
   };
 
-
   const handleUnfriend = (id) => {
     axios.put('/unfriend', { user, id }).then(({ data }) => {
       // setFriendsList(data);
@@ -156,6 +155,8 @@ const FriendsList = () => {
   useEffect(() => {
     getFriendsList();
   }, []);
+
+  socket.on('approved', () => getFriendsList());
 
   socket.on('recived', () => getMessagesList());
 
@@ -180,6 +181,7 @@ const FriendsList = () => {
                 id="friendInput"
                 type="text"
                 placeholder="Search for Budz"
+                value={friendToSearch}
                 onChange={(e) => { friendSearchOnChange(e); getUsers()}}
                 className="addFriendInput"
                 autoComplete="off"
@@ -188,7 +190,7 @@ const FriendsList = () => {
                 type="submit"
                 className="addFriendButton"
                 value="Add Friend"
-                onClick={sendFriendRequest}
+                onClick={() => {sendFriendRequest(); setFriendToSearch(''); socket.emit('request')}}
               />
               {showSuggestions
                 ? suggestions.map((suggestion) => (

@@ -501,6 +501,7 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
             { _id: userId },
             { $push: { friends: String(data._id) } },
           ).then((data) => {
+            console.log(data)
             User.addNotif(data.email, notif).then(()=>{
               Dog.findDogs(data.email)
               .then((result) => {
@@ -513,7 +514,7 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
                       to: result[0].number,
                     })
                     .then((message) => {
-                      res.send(message);
+                      res.send(data.friendRequests);
                     })
                     .catch((err) => console.err(err));
                  });
