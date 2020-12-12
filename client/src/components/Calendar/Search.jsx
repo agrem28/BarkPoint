@@ -8,6 +8,7 @@ import {
   ComboboxList,
   ComboboxOption,
 } from '@reach/combobox';
+import './Calendar.css';
 
 const Search = ({ setEventLocation }) => {
   const {
@@ -25,7 +26,7 @@ const Search = ({ setEventLocation }) => {
 
   // combox Input will change on type and once enter is pressed
   // data will be iterated through and displayed in combolist
-    <div className="search">
+    <div className="event-location">
       <Combobox
         // onSelect={async (address) => {
         //   setValue(address, false);
