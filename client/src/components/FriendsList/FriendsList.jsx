@@ -177,20 +177,23 @@ const FriendsList = () => {
         <div className="main">
           <div className="friends">
             <div className="inputAndSuggestions">
-              <input
-                id="friendInput"
+              <TextField
+                id="standard-basic"
                 type="text"
                 placeholder="Search for Budz"
                 onChange={friendSearchOnChange}
-                className="addFriendInput"
+                // className="addFriendInput"
                 autoComplete="off"
               />
-              <input
+              <Button
+                variant="contained"
+                color="primary"
                 type="submit"
-                className="addFriendButton"
+                // className="addFriendButton"
                 value="Add Friend"
                 onClick={sendFriendRequest}
-              />
+              >
+              </Button>
               {showSuggestions
                 ? suggestions.map((suggestion) => (
                     <div
@@ -206,11 +209,13 @@ const FriendsList = () => {
               {friendsList.map((friend) => (
                 <div className="friendsList">
                   <h3 onClick={() => setCurrentDms(friend)}>{friend.name}</h3>
-                  <button
+                  <Button
+                    variant="outlined"
+                    color="primary"
                     onClick={handleUnfriend.bind(this, String(friend._id))}
                   >
                     Unfriend
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>

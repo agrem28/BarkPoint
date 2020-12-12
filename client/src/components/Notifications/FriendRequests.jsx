@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FriendRequests.css';
-import { Typography, TextField, Button, Container } from '@material-ui/core';
+import { Typography, TextField, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -60,14 +60,17 @@ const FriendRequests = () => {
 
   return (
     <div className="friend-requests-container">
-      <Typography Component="h1" variant="h6" className={classes.requestContainer} id="friend-req-header" >Friend Requests</Typography>
+      <Typography Component="h1" variant="h6" className={classes.requestContainer} id="friend-req-header" >Friend Requests:</Typography>
       {friendRequestResponse ? (
         <Typography Component="h1" variant="h6" className={classes.requestResponse} id="request-response">{friendRequestResponse}</Typography>
       ) : null}
       {friendRequests.map((friendRequest) => (
         <div>
-          <div>{friendRequest.name}</div>
+          <Typography Component="h3" variant="h6" className={classes.requestResponse}>{friendRequest.name}</Typography>
+          <Grid container direction="row">
           <Button
+            id="req-btns"
+            justify="center"
             onClick={responseToFriendRequest.bind(
               this,
               friendRequest._id,
@@ -85,6 +88,7 @@ const FriendRequests = () => {
           >
             Decline
           </Button>
+          </Grid>
         </div>
       ))}
     </div>

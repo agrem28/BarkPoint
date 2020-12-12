@@ -496,15 +496,16 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
         User.User.findOneAndUpdate(
           { name: currentUser },
           { $push: { friends: String(userId) } }
-        ).then((data) => {
+          ).then((data) => {
+            console.log(data._id, 'DATAHDIHDHE')
           User.User.findOneAndUpdate(
             { _id: userId },
             { $push: { friends: String(data._id) } },
-          ).then((data) => {
-            User.addNotif(data.email, notif).then(()=>{
+            ).then((data) => {
+            User.User.addNotif(data.email, notif).then(()=>{
               Dog.findDogs(data.email)
               .then((result) => {
-                 User.addNotif(data.email, notif).then(() => {
+                 User.User.addNotif(data.email, notif).then(() => {
                   twilio.messages
                     .create({
                       body: 'BarkPoint user has accepted your friend request.',

@@ -1,6 +1,5 @@
 .notif-container{
   border-color: #35200b;
-  height: 40%;
   margin-top: 5%;
   margin-right: 10%;
   margin-left: 25%;
@@ -26,7 +25,7 @@
 }
 
 #change-number-msg{
-  margin-top: 10%;
+  margin-top: 5%;
   font-weight: 800;
 }
 
@@ -39,6 +38,6 @@
 
 .img{
   width: 35%;
-  margin-top: 10%;
+  margin-top: 3%;
   margin-left: 33%;
 }
