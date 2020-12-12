@@ -1,63 +1,63 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
-import { Typography, TextField, Button } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
 import friendpic from './friendpic3.png';
 import './FriendsList.css';
 
-// const socket = io();
+const socket = io();
 
-const useStyles = makeStyles(() => ({
-  marginAutoContainer: {
-    display: 'flex',
-  },
-  marginAutoItem: {
-    margin: 'auto',
-  },
-  alignItemsAndJustifyContent: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'right',
-  },
-  pupBudzHeader: {
-    color: 'white',
-    textAlign: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '15%',
-    marginTop: '5%',
-  },
-  addFriendButton: {
-    textAlign: 'left',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: '30%',
-    marginTop: '5%',
-    padding: '10px',
-  },
-}));
+// const useStyles = makeStyles(() => ({
+//   marginAutoContainer: {
+//     display: 'flex',
+//   },
+//   marginAutoItem: {
+//     margin: 'auto',
+//   },
+//   alignItemsAndJustifyContent: {
+//     display: 'flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     textAlign: 'right',
+//   },
+//   pupBudzHeader: {
+//     color: 'white',
+//     textAlign: 'center',
+//     display: 'flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     marginBottom: '15%',
+//     marginTop: '5%',
+//   },
+//   addFriendButton: {
+//     textAlign: 'left',
+//     display: 'flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     marginLeft: '30%',
+//     marginTop: '5%',
+//     padding: '10px',
+//   },
+// }));
 
 const FriendsList = () => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const [currentDms, setCurrentDms] = useState({});
   const [messageText, setMessageText] = useState('');
   const [friendToSearch, setFriendToSearch] = useState('');
   const [friendsList, setFriendsList] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  let [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const [messages, setMessages] = useState({});
   let user;
 
   const getUsers = () => {
     axios.get('/findUsers').then(({ data }) => {
-      setUsers(data.map((user) => user.name));
+      setUsers(data.map((profile) => profile.name));
     });
   };
 
@@ -134,8 +134,7 @@ const FriendsList = () => {
           to: currentDms.name,
         })
 
-        // .then(() => socket.emit('sent'))
-          // .catch((err) => console.warn(err));
+        .then(() => socket.emit('sent'))
       });
   };
 
@@ -158,7 +157,7 @@ const FriendsList = () => {
     getFriendsList();
   }, []);
 
-  // socket.on('recived', () => getMessagesList());
+  socket.on('recived', () => getMessagesList());
 
   useEffect(() => getFriendsList(), []);
 
@@ -166,7 +165,7 @@ const FriendsList = () => {
 
   return (
     <div className="Profile">
-      {suggestions.length === 0 ? getUsers() : null}
+      {/* {suggestions.length === 0 ? getUsers() : null} */}
       <link
         href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@300&display=swap"
         rel="stylesheet"
@@ -181,7 +180,7 @@ const FriendsList = () => {
                 id="friendInput"
                 type="text"
                 placeholder="Search for Budz"
-                onChange={friendSearchOnChange}
+                onChange={(e) => { friendSearchOnChange(e); getUsers()}}
                 className="addFriendInput"
                 autoComplete="off"
               />
