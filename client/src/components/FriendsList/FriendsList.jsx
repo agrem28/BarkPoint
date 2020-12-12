@@ -51,6 +51,7 @@ const FriendsList = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [users, setUsers] = useState([]);
+  const [warnMessage, setWarnMessage] = useState('');
 
   const [messages, setMessages] = useState({});
   let user;
@@ -82,10 +83,15 @@ const FriendsList = () => {
 
   // Sends friend request to user being searched...
   const sendFriendRequest = () => {
+    document.getElementById('friendInput').value = '';
+    setShowSuggestions(false);
     axios.get('/session').then(({ data }) => {
       axios
         .get(`/findFriend/${friendToSearch}/${data.name}`)
-        .then(() => {})
+        .then(({ data }) => {
+          setWarnMessage(data);
+          setTimeout(() => setWarnMessage(''), 3000);
+        })
         .catch((err) => console.info(err));
     });
   };
@@ -138,10 +144,9 @@ const FriendsList = () => {
 
   const handleUnfriend = (id) => {
     axios.get('/session').then(({ data }) => {
-      axios.put('/unfriend', { user: data.name, id }).then(({ data }) => {
-        // setFriendsList(data);
-        getFriendsList();
-      });
+      axios
+        .put('/unfriend', { user: data.name, id })
+        .then(() => getFriendsList());
     });
   };
 
@@ -169,6 +174,7 @@ const FriendsList = () => {
       <Sidebar />
       <div className="friends-container">
         <div className="main">
+          {warnMessage ? <div id="warnMessage">{warnMessage}</div> : null}
           <div className="friends">
             <div className="inputAndSuggestions">
               <input

@@ -342,14 +342,16 @@ dbRouter.get('/findUsers', (req, res) => {
 
 // This route will find the user being searched for and add his/her
 // id to the current users "friendRequest" array.
-dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
+dbRouter.get('/findFriend/:friendToSearch/:currentUser', (req, res) => {
   const { currentUser } = req.params;
+  const { friendToSearch } = req.params;
   User.User.findOne({ name: currentUser })
     .then((currentUser) => {
-      const { friend } = req.params;
-      User.User.findOne({ name: friend })
+      User.User.findOne({ name: friendToSearch })
         .then((friend) => {
-          if (
+          if (!friend) {
+            res.send(`Looks like ${friendToSearch} isn't a user.`);
+          } else if (
             !friend.friendRequests.includes(currentUser._id) &&
             !friend.friends.includes(currentUser._id)
           ) {
@@ -357,10 +359,14 @@ dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
               { _id: friend._id },
               { $push: { friendRequests: String(currentUser._id) } }
             )
-              .then(() => res.end())
+              .then(() => res.send(`Friend Request sent to ${friendToSearch}!`))
               .catch((err) => {
                 console.warn(err);
               });
+          } else if (friend.friendRequests.includes(currentUser._id)) {
+            res.send(`You've already sent ${friendToSearch} a request.`);
+          } else if (friend.friends.includes(currentUser._id)) {
+            res.send(`You're already friends with ${friendToSearch}.`);
           }
         })
         .catch();
@@ -443,7 +449,7 @@ dbRouter.put('/unfriend', (req, res) => {
       { _id: friendID },
       { $pull: { friends: String(user._id) } }
     ).then(() => {
-      res.send(user);
+      res.send();
     });
   });
 });
@@ -467,26 +473,26 @@ dbRouter.put('/unfriend', (req, res) => {
 // // });
 
 // //To be deleted - will remove a friend from your friends list...hardcoded.
-// dbRouter.get('/removeFriend', (req, res) => {
-//   User.User.updateOne(
-//     { _id: '5fd2920e359cca2868eb686e' },
-//     { $pull: { friends: '5fd28a829e01adc94f1c96a1' } }
-//   ).then(() => res.send('Successfully deleted.'));
-// });
+dbRouter.get('/removeFriend', (req, res) => {
+  User.User.updateOne(
+    { _id: '5fd28a829e01adc94f1c96a1' },
+    { $pull: { friends: '5fd28f1dcc09ef1efc1e92e3' } }
+  ).then(() => res.send('Successfully deleted.'));
+});
 
 // //To be deleted - will remove a user from your friend requests list...hardcoded.
-// dbRouter.get('/removeFriendRequest', (req, res) => {
-//   User.User.updateOne(
-//     { _id: '5fd2c2d0a98722e8c8a2600d' },
-//     { $pull: { friendRequests: '5fd28a829e01adc94f1c96a1' } }
-//   ).then(() => res.send('Successfully removed friend request.'));
-// });
+dbRouter.get('/removeFriendRequest', (req, res) => {
+  User.User.updateOne(
+    { _id: '5fd28a829e01adc94f1c96a1' },
+    { $pull: { friendRequests: '5fd28a829e01adc94f1c96a1' } }
+  ).then(() => res.send('Successfully removed friend request.'));
+});
 
 // // To be deleted - will add a friend to your friends list...hardcoded.
 dbRouter.get('/addFriend', (req, res) => {
   User.User.update(
-    { _id: '5fd28a829e01adc94f1c96a1' },
-    { $push: { friends: '5fd28babe7a42227efa82eff' } }
+    { _id: '5fd2920e359cca2868eb686e' },
+    { $push: { friends: '5fd28a829e01adc94f1c96a1' } }
   ).then(() => res.send('FRIEND ADDED'));
 });
 
