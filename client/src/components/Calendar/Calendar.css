@@ -15,7 +15,14 @@
   height: 500px;
 }
 
-/* .calendar > * {
-  width: 110%;
-  height: 110%;
-} */
+#create-event-form {
+  background-color: white;
+  position: relative;
+  top: 3vw;
+  left: 18vw;
+  width: fit-content;
+}
+
+.time {
+  width: 120px;
+}
