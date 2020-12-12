@@ -39,6 +39,9 @@ io.on('connection', (socket) => {
   socket.on('Accepted', () => {
     io.emit('approved');
   })
+  socket.on('delete', () => {
+    io.emit('update');
+  })
 });
 app.use(passport.initialize());
 app.use(passport.session());

@@ -142,6 +142,7 @@ const FriendsList = () => {
     axios.put('/unfriend', { user, id }).then(({ data }) => {
       // setFriendsList(data);
       getFriendsList();
+      socket.emit('delete')
     });
   };
 
@@ -159,6 +160,8 @@ const FriendsList = () => {
   socket.on('approved', () => getFriendsList());
 
   socket.on('recived', () => getMessagesList());
+  socket.on('update', () => getFriendsList());
+
 
   useEffect(() => getFriendsList(), []);
 
