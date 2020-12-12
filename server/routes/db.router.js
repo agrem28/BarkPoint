@@ -342,6 +342,13 @@ dbRouter.get('/findUsers', (req, res) => {
   });
 });
 
+dbRouter.get('/userEmail/:name', (req, res) => {
+  const { name } = req.params;
+  User.User.findOne({ name })
+    .then((user) => res.send(user))
+    .catch();
+});
+
 // This route will find the user being searched for and add his/her
 // id to the current users "friendRequest" array.
 dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
