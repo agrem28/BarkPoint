@@ -366,6 +366,7 @@ const CalendarView = () => {
             />
           </div>
           <Search setEventLocation={setEventLocation} />
+          {eventLocation !== '' ? <div>{eventLocation}</div> : null}
           <button
             type="submit"
             onClick={createEvent}
