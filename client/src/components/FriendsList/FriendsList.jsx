@@ -50,7 +50,7 @@ const FriendsList = () => {
   const [friendsList, setFriendsList] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  let [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const [messages, setMessages] = useState({});
   let user;
@@ -61,16 +61,15 @@ const FriendsList = () => {
     });
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     axios.get('/session').then(({ data }) => {
       user = data.name;
     });
-  });
+  }, []);
 
   const friendSearchOnChange = (event) => {
     setShowSuggestions(true);
     const value = event.target.value;
-    console.log('INSIDEEEEE', value);
 
     let sortedSuggestions = [];
     if (value.length > 0) {
@@ -83,7 +82,6 @@ const FriendsList = () => {
 
   // Sends friend request to user being searched...
   const sendFriendRequest = () => {
-    console.log('SUCCESS');
     axios.get('/session').then(({ data }) => {
       axios
         .get(`/findFriend/${friendToSearch}/${data.name}`)
@@ -139,9 +137,11 @@ const FriendsList = () => {
   };
 
   const handleUnfriend = (id) => {
-    axios.put('/unfriend', { user, id }).then(({ data }) => {
-      // setFriendsList(data);
-      getFriendsList();
+    axios.get('/session').then(({ data }) => {
+      axios.put('/unfriend', { user: data.name, id }).then(({ data }) => {
+        // setFriendsList(data);
+        getFriendsList();
+      });
     });
   };
 
@@ -152,10 +152,6 @@ const FriendsList = () => {
     setFriendToSearch(input.value);
   };
 
-  useEffect(() => {
-    getFriendsList();
-  }, []);
-
   // socket.on('recived', () => getMessagesList());
 
   useEffect(() => getFriendsList(), []);
@@ -164,7 +160,7 @@ const FriendsList = () => {
 
   return (
     <div className="Profile">
-      {suggestions.length === 0 ? getUsers() : null}
+      {!users.length ? getUsers() : null}
       <link
         href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@300&display=swap"
         rel="stylesheet"

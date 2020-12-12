@@ -14,7 +14,6 @@ const FriendRequests = () => {
   const getFriendRequests = () => {
     axios.get('/session').then(({ data }) => {
       axios.get(`/friendRequests/${data.name}`).then(({ data }) => {
-        console.log('WEIRD', data);
         setFriendRequests(data);
       });
     });
@@ -25,11 +24,9 @@ const FriendRequests = () => {
       axios
         .put('/responseToFriendRequest', { id, user: data.name, response })
         .then(({ data }) => {
-          console.log(data, '-----');
           setFriendRequestResponse(data);
 
           setTimeout(() => {
-            console.log('set timeout');
             setFriendRequestResponse('');
             getFriendRequests();
           }, 2000);
