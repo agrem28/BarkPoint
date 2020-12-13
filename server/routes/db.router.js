@@ -1,6 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable max-len */
 /* eslint-disable no-console */
 const { Router } = require('express');
 // const axios = require('axios');
@@ -291,7 +288,8 @@ dbRouter.delete('/data/park/:id', (req, res) => {
 //     });
 // });
 
-// changes a dog's number in the barkPoint database and adds a notification to their user's notifs array
+// changes a dog's number in the barkPoint
+// database and adds a notification to their user's notifs array
 dbRouter.put('/data/notifications/:email', (req, res) => {
   const { email } = req.params;
   const notif = `BarkPoint subscription number changed to ${req.body.number}.`;
@@ -340,9 +338,10 @@ dbRouter.get('/findUsers', (req, res) => {
   });
 });
 
-/*  This route will update a user's messages array when that user sends
-    another user a message, send text notifications to the recipient user, and update the recipient user's
-*   notification's array
+/* This route will update a user's messages array when that user sends
+*  another user a message, send text notifications to the recipient
+*  user, and update the recipient user's
+*  notification's array
 */
 dbRouter.post('/messages/:currentUser', (req, res) => {
   User.User.findOne({ email: req.params.currentUser })
@@ -396,7 +395,8 @@ dbRouter.post('/messages/:currentUser', (req, res) => {
 });
 
 /*  This route will find the user being searched for and add his/her
-*   id to the current users "friendRequest" array, send a text notification to that user, and update that user's
+*   id to the current users "friendRequest" array, send a text
+*   notification to that user, and update that user's
 *   notification's array
 */
 
@@ -612,7 +612,8 @@ dbRouter.put('/unfriend', (req, res) => {
 // });
 
 dbRouter.get('/messages/:currentUser', (req, res) => {
-  User.User.findOne({ email: req.params.currentUser }).then((currentUser) => res.send(currentUser.messages));
+  User.User.findOne({ email: req.params.currentUser })
+    .then((currentUser) => res.send(currentUser.messages));
 });
 
 dbRouter.post('/messages/:currentUser', (req, res) => {

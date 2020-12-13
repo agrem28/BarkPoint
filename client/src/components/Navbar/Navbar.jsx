@@ -57,7 +57,14 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar style={{ background: '#0e4749' }} position="static">
+    <AppBar
+      style={{
+        background: '#0e4749',
+        position: 'fixed',
+        top: '0',
+      }}
+      position="static"
+    >
       <Toolbar>
         <div>
           <img
@@ -75,6 +82,7 @@ const Navbar = () => {
         <div id="greeting">
           <Typography component="h1" variant="h5">
             Hey,
+            {' '}
             {userName}
             !
           </Typography>

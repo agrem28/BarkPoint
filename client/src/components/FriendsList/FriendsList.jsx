@@ -6,6 +6,7 @@ import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
 import friendpic from './friendpic.png';
 import './FriendsList.css';
+import SearchFriend from './Search.jsx';
 
 const socket = io();
 const useStyles = makeStyles(() => ({
@@ -22,24 +23,23 @@ const useStyles = makeStyles(() => ({
     textAlign: 'right',
   },
   pupBudzHeader: {
-    color: 'white',
-    textAlign: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '10%',
-    marginTop: '5%',
+    // color: 'white',
+    // textAlign: 'center',
+    // display: 'flex',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // marginBottom: '10%',
+    // marginTop: '5%',
   },
 }));
 const FriendsList = () => {
   const classes = useStyles();
   const [currentDms, setCurrentDms] = useState({});
   const [messageText, setMessageText] = useState('');
-  const [friendToSearch, setFriendToSearch] = useState('');
   const [friendsList, setFriendsList] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+
   const [users, setUsers] = useState([]);
+
   const [messages, setMessages] = useState({});
   const [user, setUser] = useState('');
 
@@ -57,28 +57,28 @@ const FriendsList = () => {
 
   useEffect(() => getUser(), []);
 
-  const friendSearchOnChange = (event) => {
-    setShowSuggestions(true);
-    const { value } = event.target;
-    console.info('INSIDEEEEE', value);
-    let sortedSuggestions = [];
-    if (value.length > 0) {
-      const regex = new RegExp(`${value}`, 'i');
-      sortedSuggestions = users.sort().filter((v) => regex.test(v));
-    }
-    setSuggestions(sortedSuggestions);
-    setFriendToSearch(value);
-  };
+  // const friendSearchOnChange = (event) => {
+  //   setShowSuggestions(true);
+  //   const { value } = event.target;
+  //   console.info('INSIDEEEEE', value);
+  //   let sortedSuggestions = [];
+  //   if (value.length > 0) {
+  //     const regex = new RegExp(`${value}`, 'i');
+  //     sortedSuggestions = users.sort().filter((v) => regex.test(v));
+  //   }
+  //   setSuggestions(sortedSuggestions);
+  //   setFriendToSearch(value);
+  // };
   // Sends friend request to user being searched...
-  const sendFriendRequest = () => {
-    console.info('SUCCESS');
-    axios.get('/session').then(({ data }) => {
-      axios
-        .get(`/findFriend/${friendToSearch}/${data.name}`)
-        .then(() => socket.emit('request'))
-        .catch((err) => console.info(err));
-    });
-  };
+  // const sendFriendRequest = () => {
+  //   console.info('SUCCESS');
+  //   axios.get('/session').then(({ data }) => {
+  //     axios
+  //       .get(`/findFriend/${friendToSearch}/${data.name}`)
+  //       .then(() => socket.emit('request'))
+  //       .catch((err) => console.info(err));
+  //   });
+  // };
   // Grabs the current users friendsList...
   const getFriendsList = () => {
     axios.get('/session').then(({ data }) => {
@@ -129,12 +129,12 @@ const FriendsList = () => {
       socket.emit('delete');
     });
   };
-  const handleSuggestionChoice = (suggestion) => {
-    setShowSuggestions(false);
-    const input = document.getElementById('friendInput');
-    input.value = suggestion;
-    setFriendToSearch(input.value);
-  };
+  // const handleSuggestionChoice = (suggestion) => {
+  //   setShowSuggestions(false);
+  //   const input = document.getElementById('friendInput');
+  //   input.value = suggestion;
+  //   setFriendToSearch(input.value);
+  // };
   useEffect(() => {
     getFriendsList();
   }, []);
@@ -146,9 +146,10 @@ const FriendsList = () => {
 
   useEffect(() => getFriendsList(), []);
   useEffect(() => getMessagesList(), {});
+
   return (
     <div className="Profile">
-      {/* {suggestions.length === 0 ? getUsers() : null} */}
+      {!users.length ? getUsers() : null}
       <link
         href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@300&display=swap"
         rel="stylesheet"
@@ -158,45 +159,27 @@ const FriendsList = () => {
       <div className="friends-container">
         <div className="main">
           <div className="friends">
-            <Typography Component="h1" variant="h2" class={classes.pupBudzHeader} id="pupBudzHeader"> Pup Budz</Typography>
-            <div className="inputAndSuggestions">
-              <TextField
-                id="friendInput"
-                type="text"
-                placeholder="Search for Budz"
-                value={friendToSearch}
-                onChange={(e) => { friendSearchOnChange(e); getUsers(); }}
-                className="addFriendInput"
-                autoComplete="off"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                size="medium"
-                id="addFriendButton"
-                onClick={() => {
-                  sendFriendRequest(); setFriendToSearch('');
-                  socket.emit('request');
-                }}
+            <div id="search-and-header">
+              <Typography
+                Component="h1"
+                variant="h2"
+                class={classes.pupBudzHeader}
+                id="pupBudzHeader"
               >
                 {' '}
-                Add Friend
-              </Button>
-              {showSuggestions
-                ? suggestions.map((suggestion) => (
-                  <div
-                    className="suggestions"
-                    onClick={handleSuggestionChoice.bind(this, suggestion)}
-                  >
-                    {suggestion}
-                  </div>
-                ))
-                : null}
+                Pup Budz
+              </Typography>
+              <SearchFriend />
             </div>
             <div className="listOfFriends">
               {friendsList.map((friend) => (
                 <div className="friendsList">
-                  <h4 className="friendName" onClick={() => setCurrentDms(friend)}>{friend.name}</h4>
+                  <h4
+                    className="friendName"
+                    onClick={() => setCurrentDms(friend)}
+                  >
+                    {friend.name}
+                  </h4>
                   <Button
                     className="unfriendBtn"
                     variant="outlined"
@@ -210,15 +193,27 @@ const FriendsList = () => {
               ))}
             </div>
           </div>
+          <div id="helper-div" />
           <div className="messages">
-            <Typography Component="h3" variant="h4" className={classes.alignItemsAndJustifyContent} id="msg-receiver-header">{currentDms.name}</Typography>
+            <Typography
+              Component="h3"
+              variant="h4"
+              className={classes.alignItemsAndJustifyContent}
+              id="msg-receiver-header"
+            >
+              {currentDms.name}
+            </Typography>
             {messages[currentDms.name]
               ? messages[currentDms.name].map(({ name, message, time }) => (
-                <div>
-                  <div className={(name === user) ? 'sender' : 'reciever'}>
+                <div style={{ marginTop: '30px' }}>
+                  <div className={name === user ? 'sender' : 'reciever'}>
                     <div id="msgText">{message}</div>
                   </div>
-                  <div className={(name === user) ? 'senderTime' : 'recieverTime'}>
+                  <div
+                    className={
+                          name === user ? 'senderTime' : 'recieverTime'
+                        }
+                  >
                     <div>{time}</div>
                   </div>
                 </div>

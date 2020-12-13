@@ -1,0 +1,70 @@
+.combobox {
+  position: relative;
+  top: -15px;
+  left: 8px;
+}
+
+#warnMessage {
+  z-index: 3;
+  position: absolute;
+  top: 195px;
+  left: 300px;
+  font-size: 13px;
+  text-align: center;
+}
+
+#friendInput{
+  margin-top: 5%;
+  background-color: #ac4f22;
+  border-color: #eadaa0;
+  border-radius: 15px;
+  border-style: solid;
+  color: #eadaa0;
+  padding: 8px;
+  margin-left: 23%;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #eadaa0;
+}
+
+#searchFriend{
+  display: block;
+  margin-top: 5%;
+  margin-left: 45%;
+  background-color: #ac4f22;
+  border-color: #eadaa0;
+  border-radius: 15px;
+  border-style: solid;
+  color: #eadaa0;
+  padding: 8px;
+}
+
+.addFriendInput {
+  display: inline;
+  float: left;
+}
+
+.addFriendButton {
+  display: inline;
+  float: right;
+  transition: background-color 0.3s;
+}
+
+.addFriendButton:hover {
+  cursor: pointer;
+}
+
+.suggestions {
+  background-color: white;
+  padding: 5px;
+  color: black;
+  text-align: center;
+  border: 1px solid lightgrey;
+}
+
+.suggestions:hover {
+  background-color: lightgrey;
+  cursor: pointer;
+  margin: 4px 0 4px 0;
+}

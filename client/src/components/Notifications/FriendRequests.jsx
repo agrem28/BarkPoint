@@ -49,13 +49,11 @@ const FriendRequests = () => {
       axios
         .put('/responseToFriendRequest', { id, user: data.name, response })
         .then(({ data }) => {
-          console.info(data, '-----');
           setFriendRequestResponse(data);
 
           socket.emit('Accepted');
 
           setTimeout(() => {
-            console.info('set timeout');
             setFriendRequestResponse('');
             getFriendRequests();
           }, 500);
