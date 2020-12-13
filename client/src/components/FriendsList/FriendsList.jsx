@@ -69,7 +69,7 @@ const FriendsList = () => {
 
   const friendSearchOnChange = (event) => {
     setShowSuggestions(true);
-    const value = event.target.value;
+    const { value } = event.target;
     console.log('INSIDEEEEE', value);
 
     let sortedSuggestions = [];
@@ -87,7 +87,7 @@ const FriendsList = () => {
     axios.get('/session').then(({ data }) => {
       axios
         .get(`/findFriend/${friendToSearch}/${data.name}`)
-        .then(() => {})
+        .then(() => socket.emit('request'))
         .catch((err) => console.info(err));
     });
   };
@@ -134,15 +134,15 @@ const FriendsList = () => {
           to: currentDms.name,
         })
 
-        .then(() => socket.emit('sent'))
-      });
+        .then(() => socket.emit('sent'));
+    });
   };
 
   const handleUnfriend = (id) => {
     axios.put('/unfriend', { user, id }).then(({ data }) => {
       // setFriendsList(data);
       getFriendsList();
-      socket.emit('delete')
+      socket.emit('delete');
     });
   };
 
@@ -161,7 +161,6 @@ const FriendsList = () => {
 
   socket.on('recived', () => getMessagesList());
   socket.on('update', () => getFriendsList());
-
 
   useEffect(() => getFriendsList(), []);
 
@@ -185,7 +184,7 @@ const FriendsList = () => {
                 type="text"
                 placeholder="Search for Budz"
                 value={friendToSearch}
-                onChange={(e) => { friendSearchOnChange(e); getUsers()}}
+                onChange={(e) => { friendSearchOnChange(e); getUsers(); }}
                 className="addFriendInput"
                 autoComplete="off"
               />
@@ -193,17 +192,17 @@ const FriendsList = () => {
                 type="submit"
                 className="addFriendButton"
                 value="Add Friend"
-                onClick={() => {sendFriendRequest(); setFriendToSearch(''); socket.emit('request')}}
+                onClick={() => { sendFriendRequest(); setFriendToSearch(''); }}
               />
               {showSuggestions
                 ? suggestions.map((suggestion) => (
-                    <div
-                      className="suggestions"
-                      onClick={handleSuggestionChoice.bind(this, suggestion)}
-                    >
-                      {suggestion}
-                    </div>
-                  ))
+                  <div
+                    className="suggestions"
+                    onClick={handleSuggestionChoice.bind(this, suggestion)}
+                  >
+                    {suggestion}
+                  </div>
+                ))
                 : null}
             </div>
             <div className="listOfFriends">
@@ -222,12 +221,12 @@ const FriendsList = () => {
           <div className="messages">
             {messages[currentDms.name]
               ? messages[currentDms.name].map(({ name, message, time }) => (
-                  <div>
-                    <h2>{name}</h2>
-                    <div>{message}</div>
-                    <div>{time}</div>
-                  </div>
-                ))
+                <div>
+                  <h2>{name}</h2>
+                  <div>{message}</div>
+                  <div>{time}</div>
+                </div>
+              ))
               : null}
             <div>
               {currentDms.name ? (

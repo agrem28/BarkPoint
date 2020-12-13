@@ -26,7 +26,7 @@ app.use(
     resave: 'false',
     keys: ['key1', 'key2'],
     maxAge: 3600000,
-  })
+  }),
 );
 
 io.on('connection', (socket) => {
@@ -35,13 +35,13 @@ io.on('connection', (socket) => {
   });
   socket.on('request', () => {
     io.emit('waiting');
-  })
+  });
   socket.on('Accepted', () => {
     io.emit('approved');
-  })
+  });
   socket.on('delete', () => {
     io.emit('update');
-  })
+  });
 });
 app.use(passport.initialize());
 app.use(passport.session());

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Typography, TextField, Button, Container } from '@material-ui/core';
+import {
+  Typography, TextField, Button,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
@@ -19,9 +21,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    textAlign: "center",
-    justify: "center",
-    marginTop: "2%",
+    textAlign: 'center',
+    justify: 'center',
+    marginTop: '2%',
   },
 }));
 
@@ -67,22 +69,21 @@ const Notifications = () => {
       <Navbar />
       <Sidebar />
       <div className="notif-container">
-        <Typography component="h1" variant="h2" className={classes.title} id="notifs-header" >Notifications</Typography>
+        <Typography component="h1" variant="h2" className={classes.title} id="notifs-header">Notifications</Typography>
         <Typography component="h1" variant="h5" className={classes.title}> All notifications:</Typography>
         {notifs.map((notif) => {
-          console.log(notif, 'NOTIF')
-          if (typeof notif === 'object'){
+          if (typeof notif === 'object') {
             return (
-            <div className="notif-list">
-            <h3>{notif.body}</h3>
-            </div>
-            )
+              <div className="notif-list">
+                <Typography component="h6" variant="h6" className={classes.title}>{notif.body}</Typography>
+              </div>
+            );
           }
           return (
-          <div className="notif-list">
-            <h3>{notif}</h3>
-          </div>
-          )
+            <div className="notif-list">
+              <Typography component="h6" variant="h6" className={classes.title}>{notif}</Typography>
+            </div>
+          );
         })}
         <FriendRequests />
         <Typography className={classes.title} id="change-number-msg"> want to change phone number currently receiving notifications? </Typography>
