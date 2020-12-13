@@ -568,15 +568,15 @@ dbRouter.put('/unfriend', (req, res) => {
 });
 
 // // // To be deleted
-// dbRouter.get('/addUser', (req, res) => {
-//   User.User.create({
-//     name: 'Look at the new guy!',
-//     email: 'fakeuser2@gmail.com',
-//     friends: [],
-//     friendRequests: [],
-//     parks: [],
-//   }).then(() => res.send('User Added'));
-// });
+dbRouter.get('/addUser', (req, res) => {
+  User.User.create({
+    name: 'John McClain!',
+    email: 'fakeuser2@gmail.com',
+    friends: [],
+    friendRequests: [],
+    parks: [],
+  }).then(() => res.send('User Added'));
+});
 
 // // // To be deleted - deletes a user from the database...hardcoded.
 // dbRouter.get('/deleteUser', () => {
@@ -605,7 +605,7 @@ dbRouter.put('/unfriend', (req, res) => {
 dbRouter.get('/addFriend', (req, res) => {
   User.User.update(
     { _id: '5fd59d73f7f87778cfaaaa50' },
-    { $push: { friends: '5fd59d0d1d444e001f66dea1' } }
+    { $push: { friends: '5fd654df9da815a9c7cd5db1' } }
   ).then(() => res.send('FRIEND ADDED'));
 });
 

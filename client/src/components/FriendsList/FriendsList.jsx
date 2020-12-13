@@ -153,17 +153,18 @@ const FriendsList = () => {
       <div className="friends-container">
         <div className="main">
           <div className="friends">
-            <SearchFriend />
-            <Typography
-              Component="h1"
-              variant="h2"
-              class={classes.pupBudzHeader}
-              id="pupBudzHeader"
-            >
-              {' '}
-              Pup Budz
-            </Typography>
-
+            <div id="search-and-header">
+              <Typography
+                Component="h1"
+                variant="h2"
+                class={classes.pupBudzHeader}
+                id="pupBudzHeader"
+              >
+                {' '}
+                Pup Budz
+              </Typography>
+              <SearchFriend />
+            </div>
             <div className="listOfFriends">
               {friendsList.map((friend) => (
                 <div className="friendsList">
