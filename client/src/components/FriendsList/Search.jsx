@@ -14,6 +14,7 @@ const SearchFriend = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [friendToSearch, setFriendToSearch] = useState('');
   const [warnMessage, setWarnMessage] = useState('');
+  const [value, setValue] = useState('');
 
   const [users, setUsers] = useState([]);
   const getUsers = () => {
@@ -36,7 +37,8 @@ const SearchFriend = () => {
   };
 
   const sendFriendRequest = () => {
-    document.getElementById('friendInput').value = '';
+    // document.getElementById('friendInput').value = '';
+    setFriendToSearch('');
     setShowSuggestions(false);
     axios.get('/session').then(({ data }) => {
       axios

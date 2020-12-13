@@ -84,6 +84,7 @@ const defaultStartTime = () => {
       }
     }
   }
+  console.log(currentTime)
   return currentTime;
 };
 

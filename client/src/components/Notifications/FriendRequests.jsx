@@ -1,14 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FriendRequests.css';
+import { Typography, Button, Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
+// const socket = io();
+
+const useStyles = makeStyles(() => ({
+  requestContainer: {
+    flexGrow: 1,
+    textAlign: 'center',
+    alignItems: 'center',
+    justify: 'center',
+  },
+  requestResponse: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: "center",
+    justify: "center",
+    marginTop: "2%",
+  },
+}));
 
 const FriendRequests = () => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [friendRequestResponse, setFriendRequestResponse] = useState('');
+  const classes = useStyles();
 
   useEffect(() => {
     getFriendRequests();
   }, []);
+
 
   const getFriendRequests = () => {
     axios.get('/session').then(({ data }) => {
@@ -25,24 +48,28 @@ const FriendRequests = () => {
         .then(({ data }) => {
           setFriendRequestResponse(data);
 
+          // socket.emit('Accepted')
           setTimeout(() => {
             setFriendRequestResponse('');
             getFriendRequests();
-          }, 2000);
+          }, 500);
         });
     });
   };
 
   return (
-    <div className="friendRequests">
-      <h1>Friend Requests</h1>
+    <div className="friend-requests-container">
+      <Typography Component="h1" variant="h6" className={classes.requestContainer} id="friend-req-header" >Friend Requests:</Typography>
       {friendRequestResponse ? (
-        <div className="requestResponse">{friendRequestResponse}</div>
+        <Typography Component="h1" variant="h6" className={classes.requestResponse} id="request-response">{friendRequestResponse}</Typography>
       ) : null}
       {friendRequests.map((friendRequest) => (
         <div>
-          <div>{friendRequest.name}</div>
-          <button
+          <Typography Component="h3" variant="h6" className={classes.requestResponse}>{friendRequest.name}</Typography>
+          <Grid container direction="row">
+          <Button
+            id="req-btns"
+            justify="center"
             onClick={responseToFriendRequest.bind(
               this,
               friendRequest._id,
@@ -50,8 +77,8 @@ const FriendRequests = () => {
             )}
           >
             Accept
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={responseToFriendRequest.bind(
               this,
               friendRequest._id,
@@ -59,7 +86,8 @@ const FriendRequests = () => {
             )}
           >
             Decline
-          </button>
+          </Button>
+          </Grid>
         </div>
       ))}
     </div>
