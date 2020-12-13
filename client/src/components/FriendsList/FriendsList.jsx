@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Typography, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -57,27 +57,26 @@ const FriendsList = () => {
 
   useEffect(() => getUser(), []);
 
-  const friendSearchOnChange = (event) => {
-    setShowSuggestions(true);
-    const value = event.target.value;
-    let sortedSuggestions = [];
-    if (value.length > 0) {
-      const regex = new RegExp(`${value}`, 'i');
-      sortedSuggestions = users.sort().filter((v) => regex.test(v));
-    }
-    setSuggestions(sortedSuggestions);
-    setFriendToSearch(value);
-  };
+  // const friendSearchOnChange = (event) => {
+  //   setShowSuggestions(true);
+  //   const { value } = event.target;
+  //   let sortedSuggestions = [];
+  //   if (value.length > 0) {
+  //     const regex = new RegExp(`${value}`, 'i');
+  //     sortedSuggestions = users.sort().filter((v) => regex.test(v));
+  //   }
+  //   setSuggestions(sortedSuggestions);
+  //   setFriendToSearch(value);
+  // };
   // Sends friend request to user being searched...
-  const sendFriendRequest = () => {
-    console.log('SUCCESS');
-    axios.get('/session').then(({ data }) => {
-      axios
-        .get(`/findFriend/${friendToSearch}/${data.name}`)
-        .then(() => {})
-        .catch((err) => console.info(err));
-    });
-  };
+  // const sendFriendRequest = () => {
+  //   axios.get('/session').then(({ data }) => {
+  //     axios
+  //       .get(`/findFriend/${friendToSearch}/${data.name}`)
+  //       .then(() => {})
+  //       .catch((err) => console.info(err));
+  //   });
+  // };
   // Grabs the current users friendsList...
   const getFriendsList = () => {
     axios.get('/session').then(({ data }) => {
@@ -126,12 +125,12 @@ const FriendsList = () => {
         .then(() => getFriendsList());
     });
   };
-  const handleSuggestionChoice = (suggestion) => {
-    setShowSuggestions(false);
-    const input = document.getElementById('friendInput');
-    input.value = suggestion;
-    setFriendToSearch(input.value);
-  };
+  // const handleSuggestionChoice = (suggestion) => {
+  //   setShowSuggestions(false);
+  //   const input = document.getElementById('friendInput');
+  //   input.value = suggestion;
+  //   setFriendToSearch(input.value);
+  // };
   useEffect(() => {
     getFriendsList();
   }, []);
@@ -187,7 +186,7 @@ const FriendsList = () => {
               ))}
             </div>
           </div>
-          <div id="helper-div"></div>
+          <div id="helper-div" />
           <div className="messages">
             <Typography
               Component="h3"
@@ -198,22 +197,20 @@ const FriendsList = () => {
               {currentDms.name}
             </Typography>
             {messages[currentDms.name]
-              ? messages[currentDms.name].map(({ name, message, time }) => {
-                  return (
-                    <div style={{ marginTop: '30px' }}>
-                      <div className={name === user ? 'sender' : 'reciever'}>
-                        <div id="msgText">{message}</div>
-                      </div>
-                      <div
-                        className={
+              ? messages[currentDms.name].map(({ name, message, time }) => (
+                <div style={{ marginTop: '30px' }}>
+                  <div className={name === user ? 'sender' : 'reciever'}>
+                    <div id="msgText">{message}</div>
+                  </div>
+                  <div
+                    className={
                           name === user ? 'senderTime' : 'recieverTime'
                         }
-                      >
-                        <div>{time}</div>
-                      </div>
-                    </div>
-                  );
-                })
+                  >
+                    <div>{time}</div>
+                  </div>
+                </div>
+              ))
               : null}
             <div>
               {currentDms.name ? (
@@ -224,7 +221,6 @@ const FriendsList = () => {
                     label="what's on your mind?"
                     variant="outlined"
                     value={messageText}
-                    className="msgInputBox"
                     onChange={(e) => setMessageText(e.target.value)}
                   />
                   <Button
