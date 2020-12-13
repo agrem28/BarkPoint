@@ -345,7 +345,7 @@ dbRouter.get('/findUsers', (req, res) => {
 *   notification's array
 */
 dbRouter.post('/messages/:currentUser', (req, res) => {
-  const notif = `${req.body.to} user messaged you.`;
+  const notif = `BarkPoint user messaged you.`;
   User.User.findOne({ email: req.params.currentUser })
     .then((data) => {
       const newMessage = data.messages;
@@ -501,8 +501,9 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
           User.User.findOneAndUpdate(
             { _id: userId },
             { $push: { friends: String(data._id) } },
-            ).then((data) => {
-            User.User.addNotif(data.email, notif).then(()=>{
+          ).then((data) => {
+            console.log(data)
+            User.addNotif(data.email, notif).then(()=>{
               Dog.findDogs(data.email)
               .then((result) => {
                  User.User.addNotif(data.email, notif).then(() => {
@@ -514,7 +515,7 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
                       to: result[0].number,
                     })
                     .then((message) => {
-                      res.send(message);
+                      res.send(data.friendRequests);
                     })
                     .catch((err) => console.err(err));
                  });
