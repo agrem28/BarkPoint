@@ -9,6 +9,7 @@ import axios from 'axios';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
 import Search from './Search';
+import Popup from './Popup';
 
 import './Calendar.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -99,6 +100,8 @@ const CalendarView = () => {
   const [attendeeName, setAttendeeName] = useState('');
   const [attendees, setAttendees] = useState([{ email: '', displayName: '', responseStatus: 'accepted' }]);
   const [eventLocation, setEventLocation] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [clickedEvent, setClickedEvent] = useState({});
 
   const getEmail = (name = 'self') => {
     if (name === 'self') {
@@ -184,9 +187,10 @@ const CalendarView = () => {
       attendees,
       location: eventLocation,
     };
-    console.info(event);
+    // console.info(event);
     ApiCalendar.createEvent(event)
-      .then(() => {
+      .then((result) => {
+        console.info(result);
         setTrigger(!trigger);
         setShowCreateEventForm(false);
         setEventTitle('');
@@ -202,7 +206,6 @@ const CalendarView = () => {
     if (ApiCalendar.sign) {
       ApiCalendar.listUpcomingEvents()
         .then(({ result }) => {
-          console.info(result);
           setEvents(result.items.map((event) => ({
             title: event.summary,
             start: new Date(event.start.dateTime),
@@ -212,7 +215,6 @@ const CalendarView = () => {
           })));
         }).catch((err) => console.warn(err));
     } else {
-      console.info("didn't work");
       setEvents([]);
     }
   };
@@ -227,7 +229,6 @@ const CalendarView = () => {
   };
 
   const predictEndTime = () => {
-    console.info('predictEndTime');
     if (start.value.slice(start.value.length - 2).toLowerCase() === 'am') {
       for (let i = 0; i < times.length / 2; i += 1) {
         if (start.value === times[i].value) {
@@ -251,6 +252,11 @@ const CalendarView = () => {
         setEventDate(slotInfo.start);
       }
     }
+  };
+
+  const handleSelectEvent = (eventInfo) => {
+    setClickedEvent(eventInfo);
+    setShowPopup(true);
   };
 
   useLoadScript({
@@ -290,7 +296,7 @@ const CalendarView = () => {
           startAccessor="start"
           endAccessor="end"
           style={{ height: 500 }}
-          onSelectEvent={(event, e) => console.info(event, e)}
+          onSelectEvent={handleSelectEvent}
           onSelectSlot={handleSelectSlot}
           selectable
         />
@@ -302,7 +308,6 @@ const CalendarView = () => {
       >
         Create Event
       </button>
-      <button className="google-calendar" onClick={() => console.info(eventLocation)}>Test Location</button>
       {showCreateEventForm ? (
         <div id="create-event-form">
           <label htmlFor="title">
@@ -316,7 +321,7 @@ const CalendarView = () => {
           {eventDate !== ''
             ? (
               <div>
-                {eventDate.toLocaleDateString()}
+                {eventDate.toDateString()}
               </div>
             ) : (
               <div>
@@ -375,6 +380,7 @@ const CalendarView = () => {
           </button>
         </div>
       ) : null}
+      {showPopup ? <Popup event={clickedEvent} setShowPopup={setShowPopup} /> : null}
     </div>
   );
 };

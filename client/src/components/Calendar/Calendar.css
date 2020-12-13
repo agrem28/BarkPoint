@@ -26,3 +26,39 @@
 .time {
   width: 120px;
 }
+
+.calendar-popup {
+  background-color: white;
+  border: solid 3px black;
+  padding: 25px;
+  width: 400;
+  position: absolute;
+  top: 23vw;
+  left: 25vw;
+  z-index: 10;
+}
+
+#popup-title {
+  font-size: larger;
+  font-weight: bold;
+}
+
+#popup-time {
+  margin-bottom: 15px;
+}
+
+#guest-count {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.guestList {
+  margin-left: 10px;
+  padding: 5px;
+}
+
+#close {
+  position: absolute;
+  top: 0rem;
+  right: 0rem;
+}
