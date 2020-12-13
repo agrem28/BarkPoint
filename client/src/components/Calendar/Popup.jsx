@@ -7,31 +7,31 @@ import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import './Calendar.css';
 
 const Popup = ({ event, setShowPopup }) => (
-  <div className="calendar-popup">
-    <Typography id="popup-title">{event.title}</Typography>
-    <Typography id="popup-time">
+  <Typography className="calendar-popup">
+    <div id="popup-title">{event.title}</div>
+    <div id="popup-time">
       {`${event.start.toDateString()} * ${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()}`}
-    </Typography>
+    </div>
     <div>
-      <Typography id="popup-location">
+      <div id="popup-location">
         <LocationOnOutlinedIcon color="action" />
         {`   ${event.location}`}
-      </Typography>
+      </div>
     </div>
-    <Typography id="guest-count">
+    <div id="guest-count">
       <PeopleAltOutlinedIcon color="action" />
       {`   ${event.attendees.length} guest${event.attendees.length > 1 ? 's' : ''}`}
-    </Typography>
-    <Typography>
+    </div>
+    <div>
       {event.attendees.map((attendee) => (
-        <Typography key={attendee} className="guestList">
+        <div key={attendee} className="guestList">
           {attendee.email}
-        </Typography>
+        </div>
       ))}
-    </Typography>
+    </div>
     {/* <Button id="close" onClick={() => setShowPopup(false)}>X</Button> */}
     <CloseIcon id="close" onClick={() => setShowPopup(false)} />
-  </div>
+  </Typography>
 );
 
 Popup.propTypes = {
