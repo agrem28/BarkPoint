@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FriendRequests.css';
-import {
-  Typography, Button, Grid,
-} from '@material-ui/core';
+import { Typography, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
-const socket = io();
 
 const useStyles = makeStyles(() => ({
   requestContainer: {
@@ -30,11 +26,6 @@ const FriendRequests = () => {
   const [friendRequestResponse, setFriendRequestResponse] = useState('');
   const classes = useStyles();
 
-  // Refactor code to not use state to get the user. Instead call the "/session" route every time you need it.
-  useEffect(() => {
-    getFriendRequests();
-  }, []);
-
   const getFriendRequests = () => {
     axios.get('/session').then(({ data }) => {
       axios.get(`/friendRequests/${data.name}`).then(({ data }) => {
@@ -44,6 +35,13 @@ const FriendRequests = () => {
     });
   };
 
+  // Refactor code to not use state to get the user.
+  // Instead call the "/session" route every time you need it.
+
+  useEffect(() => {
+    getFriendRequests();
+  }, []);
+
   const responseToFriendRequest = (id, response) => {
     axios.get('/session').then(({ data }) => {
       axios
@@ -52,7 +50,6 @@ const FriendRequests = () => {
           console.info(data, '-----');
           setFriendRequestResponse(data);
 
-          socket.emit('Accepted');
           setTimeout(() => {
             console.info('set timeout');
             setFriendRequestResponse('');

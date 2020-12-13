@@ -8,7 +8,7 @@ import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
 import FriendRequests from './FriendRequests.jsx';
 import './Notifications.css';
-import notifImg from './notif3.png';
+import notifImg from './notifpic.png';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -26,14 +26,11 @@ const useStyles = makeStyles(() => ({
     marginTop: '2%',
   },
 }));
-
 const Notifications = () => {
   const [notifs, setNotifs] = useState([]);
   const [form, setForm] = useState({ number: '' });
   const classes = useStyles();
-
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
   const getNotifs = () => {
     axios.get('/session')
       .then(({ data }) => axios.get(`/data/notifications/${data.email}`))
@@ -44,7 +41,6 @@ const Notifications = () => {
         axios.delete(`/data/notifications/${data.email}`);
       });
   };
-
   const updateNotifs = () => {
     axios.get('/session')
       .then(({ data }) => axios.get(`/data/notifications/${data.email}`))
@@ -52,18 +48,15 @@ const Notifications = () => {
         setNotifs(data.notifs);
       });
   };
-
   const handleNumChange = async () => {
     const { data } = await axios.get('/session');
     const { email } = data;
     await axios.put(`/data/notifications/${email}`, { number: form.changeNum });
     updateNotifs();
   };
-
   useEffect(() => {
     getNotifs();
   }, []);
-
   return (
     <div className="Profile">
       <Navbar />
@@ -94,5 +87,4 @@ const Notifications = () => {
     </div>
   );
 };
-
 export default Notifications;

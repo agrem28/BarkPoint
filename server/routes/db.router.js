@@ -345,7 +345,7 @@ dbRouter.get('/findUsers', (req, res) => {
 *   notification's array
 */
 dbRouter.post('/messages/:currentUser', (req, res) => {
-  const notif = `${req.body.to} user messaged you.`;
+  const notif = 'BarkPoint user messaged you.';
   User.User.findOne({ email: req.params.currentUser })
     .then((data) => {
       const newMessage = data.messages;
@@ -399,6 +399,17 @@ dbRouter.post('/messages/:currentUser', (req, res) => {
 *   id to the current users "friendRequest" array, send a text notification to that user, and update that user's
 *   notification's array
 */
+
+dbRouter.get('/userEmail/:name', (req, res) => {
+  const { name } = req.params;
+  User.User.findOne({ name })
+    .then((user) => res.send(user))
+    .catch();
+});
+
+// This route will find the user being searched for and add his/her
+// id to the current users "friendRequest" array.
+
 dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
   const notif = 'BarkPoint user has sent a friend request.';
   const { currentUser } = req.params;
@@ -501,8 +512,8 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
             { _id: userId },
             { $push: { friends: String(data._id) } },
           ).then((data) => {
-            console.log(data);
             User.addNotif(data.email, notif).then(() => {
+              console.log('data');
               Dog.findDogs(data.email)
                 .then((result) => {
                   User.addNotif(data.email, notif).then(() => {
@@ -516,12 +527,12 @@ dbRouter.put('/responseToFriendRequest', (req, res) => {
                       .then(() => {
                         res.send(data.friendRequests);
                       })
-                      .catch((err) => console.err(err));
-                  });
-                });
-            });
-          });
-        });
+                      .catch(() => res.send(data.friendRequests));
+                  }).catch(() => res.send(data.friendRequests));
+                }).catch(() => res.send(data.friendRequests));
+            }).catch(() => res.send(data.friendRequests));
+          }).catch(() => res.send(data.friendRequests));
+        }).catch(() => res.send(data.friendRequests));
       } else {
         res.send(`Friend Request ${response}`);
       }

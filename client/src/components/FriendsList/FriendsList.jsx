@@ -1,49 +1,38 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button } from '@material-ui/core';
+import { Typography, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
-import friendpic from './friendpic3.png';
+import friendpic from './friendpic.png';
 import './FriendsList.css';
 
 const socket = io();
-
-// const useStyles = makeStyles(() => ({
-//   marginAutoContainer: {
-//     display: 'flex',
-//   },
-//   marginAutoItem: {
-//     margin: 'auto',
-//   },
-//   alignItemsAndJustifyContent: {
-//     display: 'flex',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     textAlign: 'right',
-//   },
-//   pupBudzHeader: {
-//     color: 'white',
-//     textAlign: 'center',
-//     display: 'flex',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginBottom: '15%',
-//     marginTop: '5%',
-//   },
-//   addFriendButton: {
-//     textAlign: 'left',
-//     display: 'flex',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginLeft: '30%',
-//     marginTop: '5%',
-//     padding: '10px',
-//   },
-// }));
-
+const useStyles = makeStyles(() => ({
+  marginAutoContainer: {
+    display: 'flex',
+  },
+  marginAutoItem: {
+    margin: 'auto',
+  },
+  alignItemsAndJustifyContent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'right',
+  },
+  pupBudzHeader: {
+    color: 'white',
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '10%',
+    marginTop: '5%',
+  },
+}));
 const FriendsList = () => {
-  // const classes = useStyles();
+  const classes = useStyles();
   const [currentDms, setCurrentDms] = useState({});
   const [messageText, setMessageText] = useState('');
   const [friendToSearch, setFriendToSearch] = useState('');
@@ -51,9 +40,8 @@ const FriendsList = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [users, setUsers] = useState([]);
-
   const [messages, setMessages] = useState({});
-  let user;
+  const [user, setUser] = useState('');
 
   const getUsers = () => {
     axios.get('/findUsers').then(({ data }) => {
@@ -61,17 +49,18 @@ const FriendsList = () => {
     });
   };
 
-  useLayoutEffect(() => {
+  const getUser = () => {
     axios.get('/session').then(({ data }) => {
-      user = data.name;
+      setUser(data.name);
     });
-  });
+  };
+
+  useEffect(() => getUser(), []);
 
   const friendSearchOnChange = (event) => {
     setShowSuggestions(true);
     const { value } = event.target;
-    console.log('INSIDEEEEE', value);
-
+    console.info('INSIDEEEEE', value);
     let sortedSuggestions = [];
     if (value.length > 0) {
       const regex = new RegExp(`${value}`, 'i');
@@ -80,10 +69,9 @@ const FriendsList = () => {
     setSuggestions(sortedSuggestions);
     setFriendToSearch(value);
   };
-
   // Sends friend request to user being searched...
   const sendFriendRequest = () => {
-    console.log('SUCCESS');
+    console.info('SUCCESS');
     axios.get('/session').then(({ data }) => {
       axios
         .get(`/findFriend/${friendToSearch}/${data.name}`)
@@ -91,7 +79,6 @@ const FriendsList = () => {
         .catch((err) => console.info(err));
     });
   };
-
   // Grabs the current users friendsList...
   const getFriendsList = () => {
     axios.get('/session').then(({ data }) => {
@@ -100,14 +87,12 @@ const FriendsList = () => {
       });
     });
   };
-
   const getMessagesList = () => {
     axios
       .get('/session')
       .then(({ data }) => axios.get(`/messages/${data.email}`))
       .then(({ data }) => setMessages(data));
   };
-
   const clickHandler = () => {
     axios.get('/session').then(({ data }) => {
       const time = new Date();
@@ -137,22 +122,19 @@ const FriendsList = () => {
         .then(() => socket.emit('sent'));
     });
   };
-
   const handleUnfriend = (id) => {
-    axios.put('/unfriend', { user, id }).then(({ data }) => {
+    axios.put('/unfriend', { user, id }).then(() => {
       // setFriendsList(data);
       getFriendsList();
       socket.emit('delete');
     });
   };
-
   const handleSuggestionChoice = (suggestion) => {
     setShowSuggestions(false);
     const input = document.getElementById('friendInput');
     input.value = suggestion;
     setFriendToSearch(input.value);
   };
-
   useEffect(() => {
     getFriendsList();
   }, []);
@@ -163,9 +145,7 @@ const FriendsList = () => {
   socket.on('update', () => getFriendsList());
 
   useEffect(() => getFriendsList(), []);
-
   useEffect(() => getMessagesList(), {});
-
   return (
     <div className="Profile">
       {/* {suggestions.length === 0 ? getUsers() : null} */}
@@ -178,8 +158,9 @@ const FriendsList = () => {
       <div className="friends-container">
         <div className="main">
           <div className="friends">
+            <Typography Component="h1" variant="h2" class={classes.pupBudzHeader} id="pupBudzHeader"> Pup Budz</Typography>
             <div className="inputAndSuggestions">
-              <input
+              <TextField
                 id="friendInput"
                 type="text"
                 placeholder="Search for Budz"
@@ -188,12 +169,19 @@ const FriendsList = () => {
                 className="addFriendInput"
                 autoComplete="off"
               />
-              <input
-                type="submit"
-                className="addFriendButton"
-                value="Add Friend"
-                onClick={() => { sendFriendRequest(); setFriendToSearch(''); }}
-              />
+              <Button
+                variant="contained"
+                color="primary"
+                size="medium"
+                id="addFriendButton"
+                onClick={() => {
+                  sendFriendRequest(); setFriendToSearch('');
+                // socket.emit('request')
+                }}
+              >
+                {' '}
+                Add Friend
+              </Button>
               {showSuggestions
                 ? suggestions.map((suggestion) => (
                   <div
@@ -208,37 +196,55 @@ const FriendsList = () => {
             <div className="listOfFriends">
               {friendsList.map((friend) => (
                 <div className="friendsList">
-                  <h3 onClick={() => setCurrentDms(friend)}>{friend.name}</h3>
-                  <button
+                  <h4 className="friendName" onClick={() => setCurrentDms(friend)}>{friend.name}</h4>
+                  <Button
+                    className="unfriendBtn"
+                    variant="outlined"
+                    color="primary"
+                    size="small"
                     onClick={handleUnfriend.bind(this, String(friend._id))}
                   >
                     Unfriend
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
           </div>
           <div className="messages">
+            <Typography Component="h3" variant="h4" className={classes.alignItemsAndJustifyContent} id="msg-receiver-header">{currentDms.name}</Typography>
             {messages[currentDms.name]
               ? messages[currentDms.name].map(({ name, message, time }) => (
                 <div>
-                  <h2>{name}</h2>
-                  <div>{message}</div>
-                  <div>{time}</div>
+                  <div className={(name === user) ? 'sender' : 'reciever'}>
+                    <div id="msgText">{message}</div>
+                  </div>
+                  <div className={(name === user) ? 'senderTime' : 'recieverTime'}>
+                    <div>{time}</div>
+                  </div>
                 </div>
               ))
               : null}
             <div>
               {currentDms.name ? (
-                <div>
+                <div className="sendMsgContainer">
                   <TextField
-                    id="standard-basic"
-                    placeholder="type a message"
+                    className={classes.alignItemsAndJustifyContent}
+                    id="outlined-basic"
+                    label="what's on your mind?"
+                    variant="outlined"
                     value={messageText}
+                    className="msgInputBox"
                     onChange={(e) => setMessageText(e.target.value)}
                   />
-                  <Button variant="text" color="primary" onClick={clickHandler}>
-                    send message
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.alignItemsAndJustifyContent}
+                    size="small"
+                    id="sendMsgButton"
+                    onClick={clickHandler}
+                  >
+                    send
                   </Button>
                 </div>
               ) : null}
@@ -250,5 +256,4 @@ const FriendsList = () => {
     </div>
   );
 };
-
 export default FriendsList;

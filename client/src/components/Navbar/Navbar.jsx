@@ -7,7 +7,7 @@ import {
   ListItem,
   ListItemText,
   Container,
-  Avatar,
+  Typography,
 } from '@material-ui/core';
 
 import { Link } from 'react-router-dom';
@@ -72,9 +72,13 @@ const Navbar = () => {
             <img id="avatarProfile" src={userPicture} />
           </div>
         ) : null}
-        <h4 id="greeting">
-          <em>Hey, {userName}!</em>
-        </h4>
+        <div id="greeting">
+          <Typography component="h1" variant="h5">
+            Hey,
+            {userName}
+            !
+          </Typography>
+        </div>
         <Container maxWidth="md">
           <List
             component="nav"

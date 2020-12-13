@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import {
+  List, ListItem, ListItemText,
+} from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const socket = io();
@@ -49,7 +51,10 @@ const Sidebar = () => {
           <ListItem button className="sideBarRow">
             <ListItemText primary="Notifications" />
             <NotificationsIcon />
-            <div onClick={() => console.info(notifs)}>
+            <div
+              style={{ color: (notifs.length > 0) ? 'red' : '#012626' }}
+              onClick={() => console.info(notifs)}
+            >
               {' '}
               {notifs.length}
               {' '}
