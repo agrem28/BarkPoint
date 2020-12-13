@@ -48,7 +48,7 @@ const Sidebar = () => {
         <Link to="/notifications" key="Notifications" notifs={notifs}>
           <ListItem button className="sideBarRow">
             <ListItemText primary="Notifications" />
-            <NotificationsIcon style={{color: (notifs.length > 0) ? "red" : "#012626"}}/>
+            <NotificationsIcon/>
             <div
             style={{color: (notifs.length > 0) ? "red" : "#012626"}}
             onClick={() => console.info(notifs)}>

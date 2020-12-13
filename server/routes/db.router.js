@@ -340,6 +340,7 @@ dbRouter.get('/findUsers', (req, res) => {
   });
 });
 
+
 /*  This route will update a user's messages array when that user sends
     another user a message, send text notifications to the recipient user, and update the recipient user's
 *   notification's array
@@ -399,6 +400,17 @@ dbRouter.post('/messages/:currentUser', (req, res) => {
 *   id to the current users "friendRequest" array, send a text notification to that user, and update that user's
 *   notification's array
 */
+
+dbRouter.get('/userEmail/:name', (req, res) => {
+  const { name } = req.params;
+  User.User.findOne({ name })
+    .then((user) => res.send(user))
+    .catch();
+});
+
+// This route will find the user being searched for and add his/her
+// id to the current users "friendRequest" array.
+
 dbRouter.get('/findFriend/:friend/:currentUser', (req, res) => {
   const notif = 'BarkPoint user has sent a friend request.'
   const { currentUser } = req.params;
