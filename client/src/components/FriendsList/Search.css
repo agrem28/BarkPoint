@@ -1,3 +1,9 @@
+.combobox {
+  position: relative;
+  top: -15px;
+  left: 8px;
+}
+
 #warnMessage {
   z-index: 3;
   position: absolute;

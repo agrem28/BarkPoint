@@ -7,13 +7,6 @@ import Sidebar from '../ProfileAndToys/Sidebar';
 import friendpic from './friendpic.png';
 import './FriendsList.css';
 import SearchFriend from './Search.jsx';
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopover,
-  ComboboxList,
-  ComboboxOption,
-} from '@reach/combobox';
 
 // const socket = io();
 const useStyles = makeStyles(() => ({

@@ -62,7 +62,7 @@ const SearchFriend = () => {
   return (
     <div>
       {warnMessage ? <div id="warnMessage">{warnMessage}</div> : null}
-      <Combobox>
+      <Combobox className="combobox">
         <ComboboxInput
           onChange={friendSearchOnChange}
           placeholder="Find A Pup Bud!"
