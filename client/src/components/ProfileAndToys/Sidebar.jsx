@@ -4,8 +4,6 @@ import axios from 'axios';
 import { List, ListItem, ListItemText } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
-// const socket = io();
-
 const Sidebar = () => {
   const [notifs, setNotifs] = useState([]);
   const links = [
@@ -29,8 +27,6 @@ const Sidebar = () => {
     getNotifsNumber();
   }, []);
 
-  // socket.on('waiting', () => getNotifsNumber());
-
   return (
     <div className="SidebarProfile">
       <List
@@ -48,13 +44,12 @@ const Sidebar = () => {
         <Link to="/notifications" key="Notifications" notifs={notifs}>
           <ListItem button className="sideBarRow">
             <ListItemText primary="Notifications" />
-            <NotificationsIcon/>
-            <div
-            onClick={() => console.info(notifs)}>
+            <NotificationsIcon />
+            {/* <div onClick={() => console.info(notifs)}>
               {' '}
               {notifs.length}
               {' '}
-            </div>
+            </div> */}
           </ListItem>
         </Link>
       </List>
