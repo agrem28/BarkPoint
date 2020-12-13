@@ -28,7 +28,6 @@ const FriendRequests = () => {
   const [friendRequestResponse, setFriendRequestResponse] = useState('');
   const classes = useStyles();
 
-  //Refactor code to not use state to get the user. Instead call the "/session" route every time you need it.
   useEffect(() => {
     getFriendRequests();
   }, []);
@@ -37,7 +36,6 @@ const FriendRequests = () => {
   const getFriendRequests = () => {
     axios.get('/session').then(({ data }) => {
       axios.get(`/friendRequests/${data.name}`).then(({ data }) => {
-        console.log('WEIRD', data);
         setFriendRequests(data);
       });
     });
@@ -48,12 +46,10 @@ const FriendRequests = () => {
       axios
         .put('/responseToFriendRequest', { id, user: data.name, response })
         .then(({ data }) => {
-          console.log(data, '-----');
           setFriendRequestResponse(data);
 
           // socket.emit('Accepted')
           setTimeout(() => {
-            console.log('set timeout');
             setFriendRequestResponse('');
             getFriendRequests();
           }, 500);

@@ -1,7 +1,7 @@
 /* .google-calendar {
   position: relative;
-  top: 3vw;
-  left: 18vw;
+  top: 11vw;
+  left: 30vw;
   border: 0;
 } */
 
@@ -19,11 +19,10 @@
 }
 #calendar-container{
   border-color: #ac4f22;
-  margin-top: 3%;
+  margin-top: 5%;
   margin-right: 5%;
   margin-left: 20%;
   background-color: blanchedalmond;
-  border-style: solid;
 }
 
 #calendar-header{

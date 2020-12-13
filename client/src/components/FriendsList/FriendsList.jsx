@@ -6,6 +6,8 @@ import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
 import friendpic from './friendpic.png';
 import './FriendsList.css';
+import SearchFriend from './Search.jsx';
+
 // const socket = io();
 const useStyles = makeStyles(() => ({
   marginAutoContainer: {
@@ -21,24 +23,23 @@ const useStyles = makeStyles(() => ({
     textAlign: 'right',
   },
   pupBudzHeader: {
-    color: 'white',
-    textAlign: 'center',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '10%',
-    marginTop: '5%',
+    // color: 'white',
+    // textAlign: 'center',
+    // display: 'flex',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // marginBottom: '10%',
+    // marginTop: '5%',
   },
 }));
 const FriendsList = () => {
   const classes = useStyles();
   const [currentDms, setCurrentDms] = useState({});
   const [messageText, setMessageText] = useState('');
-  const [friendToSearch, setFriendToSearch] = useState('');
   const [friendsList, setFriendsList] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+
   const [users, setUsers] = useState([]);
+
   const [messages, setMessages] = useState({});
   const [user, setUser] = useState('');
 
@@ -52,14 +53,13 @@ const FriendsList = () => {
     axios.get('/session').then(({ data }) => {
       setUser(data.name);
     });
-  }
+  };
 
   useEffect(() => getUser(), []);
 
   const friendSearchOnChange = (event) => {
     setShowSuggestions(true);
     const value = event.target.value;
-    console.log('INSIDEEEEE', value);
     let sortedSuggestions = [];
     if (value.length > 0) {
       const regex = new RegExp(`${value}`, 'i');
@@ -110,21 +110,20 @@ const FriendsList = () => {
         exampleMessage[currentDms.name] = [newMessage];
       }
       setMessageText('');
-      axios
-        .post(`/messages/${data.email}`, {
-          message: newMessage,
-          user: currentDms.email,
-          from: data.name,
-          to: currentDms.name,
-        })
-        // .then(() => socket.emit('sent'))
+      axios.post(`/messages/${data.email}`, {
+        message: newMessage,
+        user: currentDms.email,
+        from: data.name,
+        to: currentDms.name,
       });
+      // .then(() => socket.emit('sent'))
+    });
   };
   const handleUnfriend = (id) => {
-    axios.put('/unfriend', { user, id }).then(({ data }) => {
-      // setFriendsList(data);
-      getFriendsList();
-      // socket.emit('delete')
+    axios.get('/session').then(({ data }) => {
+      axios
+        .put('/unfriend', { user: data.name, id })
+        .then(() => getFriendsList());
     });
   };
   const handleSuggestionChoice = (suggestion) => {
@@ -141,9 +140,10 @@ const FriendsList = () => {
   // socket.on('update', () => getFriendsList());
   useEffect(() => getFriendsList(), []);
   useEffect(() => getMessagesList(), {});
+
   return (
     <div className="Profile">
-      {/* {suggestions.length === 0 ? getUsers() : null} */}
+      {!users.length ? getUsers() : null}
       <link
         href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Roboto:wght@300&display=swap"
         rel="stylesheet"
@@ -153,42 +153,27 @@ const FriendsList = () => {
       <div className="friends-container">
         <div className="main">
           <div className="friends">
-            <Typography Component="h1" variant="h2" class={classes.pupBudzHeader} id="pupBudzHeader"> Pup Budz</Typography>
-            <div className="inputAndSuggestions">
-              <TextField
-                id="friendInput"
-                type="text"
-                placeholder="Search for Budz"
-                value={friendToSearch}
-                onChange={(e) => {  friendSearchOnChange(e); getUsers()}}
-                className="addFriendInput"
-                autoComplete="off"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                size="medium"
-                id="addFriendButton"
-                onClick={() => {sendFriendRequest(); setFriendToSearch('');
-                // socket.emit('request')
-              }}
-              > Add Friend
-              </Button>
-              {showSuggestions
-                ? suggestions.map((suggestion) => (
-                    <div
-                      className="suggestions"
-                      onClick={handleSuggestionChoice.bind(this, suggestion)}
-                    >
-                      {suggestion}
-                    </div>
-                  ))
-                : null}
+            <div id="search-and-header">
+              <Typography
+                Component="h1"
+                variant="h2"
+                class={classes.pupBudzHeader}
+                id="pupBudzHeader"
+              >
+                {' '}
+                Pup Budz
+              </Typography>
+              <SearchFriend />
             </div>
             <div className="listOfFriends">
               {friendsList.map((friend) => (
                 <div className="friendsList">
-                  <h4 className="friendName" onClick={() => setCurrentDms(friend)}>{friend.name}</h4>
+                  <h4
+                    className="friendName"
+                    onClick={() => setCurrentDms(friend)}
+                  >
+                    {friend.name}
+                  </h4>
                   <Button
                     className="unfriendBtn"
                     variant="outlined"
@@ -202,42 +187,54 @@ const FriendsList = () => {
               ))}
             </div>
           </div>
+          <div id="helper-div"></div>
           <div className="messages">
-          <Typography Component="h3" variant="h4" className={classes.alignItemsAndJustifyContent} id="msg-receiver-header">{currentDms.name}</Typography>
-          {messages[currentDms.name]
+            <Typography
+              Component="h3"
+              variant="h4"
+              className={classes.alignItemsAndJustifyContent}
+              id="msg-receiver-header"
+            >
+              {currentDms.name}
+            </Typography>
+            {messages[currentDms.name]
               ? messages[currentDms.name].map(({ name, message, time }) => {
-              return (
-                <div>
-                    <div className={(name === user) ? "sender" : "reciever"}>
-                      <div id="msgText">{message}</div>
-                  </div>
-                    <div className={(name === user) ? "senderTime" : "recieverTime"}>
-                      <div>{time}</div>
+                  return (
+                    <div style={{ marginTop: '30px' }}>
+                      <div className={name === user ? 'sender' : 'reciever'}>
+                        <div id="msgText">{message}</div>
+                      </div>
+                      <div
+                        className={
+                          name === user ? 'senderTime' : 'recieverTime'
+                        }
+                      >
+                        <div>{time}</div>
+                      </div>
                     </div>
-                </div>
-              );
-              })
+                  );
+                })
               : null}
             <div>
               {currentDms.name ? (
-                <div className= 'sendMsgContainer'>
+                <div className="sendMsgContainer">
                   <TextField
-                    className = {classes.alignItemsAndJustifyContent}
-                    id = "outlined-basic"
-                    label = "what's on your mind?"
-                    variant = "outlined"
-                    value = {messageText}
-                    className = "msgInputBox"
-                    onChange = {(e) => setMessageText(e.target.value)}
+                    className={classes.alignItemsAndJustifyContent}
+                    id="outlined-basic"
+                    label="what's on your mind?"
+                    variant="outlined"
+                    value={messageText}
+                    className="msgInputBox"
+                    onChange={(e) => setMessageText(e.target.value)}
                   />
                   <Button
-                    variant = "outlined"
-                    color = "primary"
-                    className = {classes.alignItemsAndJustifyContent}
-                    size='small'
-                    id = "sendMsgButton"
+                    variant="outlined"
+                    color="primary"
+                    className={classes.alignItemsAndJustifyContent}
+                    size="small"
+                    id="sendMsgButton"
                     onClick={clickHandler}
-                    >
+                  >
                     send
                   </Button>
                 </div>

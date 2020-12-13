@@ -173,7 +173,16 @@ const Profile = ({ dogs, getDogs }) => {
           </Card>
         ))}
       </div>
-      <div style={{ margin: 'auto', width: '50%', marginTop: '2rem' }}>
+      <div
+        style={{
+          margin: 'auto',
+          width: '50%',
+          marginTop: '2rem',
+          position: 'fixed',
+          top: '55px',
+          left: '360px',
+        }}
+      >
         <MyButton
           onClick={() => {
             history.push('/form');

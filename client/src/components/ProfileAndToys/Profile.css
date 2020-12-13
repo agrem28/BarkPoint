@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lato&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap');
 
-
 /*
 Div containing each dog and cleans up styling so we have 2 columns for all dogs
 and appropriate space around each container.
@@ -18,22 +17,22 @@ and appropriate space around each container.
 }
 
 .dogProfile {
-  max-width: 50%;
+  position: relative;
+  top: 100px;
+  /* max-width: auto; */
   flex-wrap: wrap;
-  column-count: 2;
+  column-count: 3;
   margin-left: 25%;
   margin-top: 2rem;
   justify-content: space-between;
   background-image: WHITE;
 }
 
-.dog-toys{
+.dog-toys {
   display: flex;
   max-height: 1%;
   flex-wrap: wrap;
   column-count: 2;
-
-
 }
 
 /*
@@ -44,11 +43,11 @@ reduce white space.
 .Profile {
   background-image: url(https://i.ibb.co/GkSs7N0/12820755.jpg);
   background-repeat: no-repeat;
-    height: 2000px;
-    width: 100vw;
-    background-size: cover;
-    background-position: bottom;
-
+  height: 2000px;
+  width: 100vw;
+  background-size: cover;
+  background-position: bottom;
+  overflow: auto;
 }
 
 /*
@@ -56,17 +55,17 @@ Div for our header to set the font family, color and adjust padding to create ap
 the header and card media.
 */
 
-.header{
+.header {
   font-family: 'Roboto', sans-serif;
   color: white;
   padding-bottom: '10px';
 }
 
-.toy-text{
+.toy-text {
   font-weight: bolder;
 }
 
-.toy-image{
+.toy-image {
   height: 10vh;
   width: 5vw;
 }
@@ -78,7 +77,7 @@ the header and card media.
   align-items: center;
 }
 
-.main{
+.main {
   display: flex;
   flex-wrap: wrap;
   width: 60%;
@@ -86,14 +85,13 @@ the header and card media.
 }
 
 .friends {
-  flex:0 0 25%;
+  flex: 0 0 25%;
   border: 5px solid purple;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .messages {
   flex: 1;
   border: 5px solid blue;
-  flex-direction: column
+  flex-direction: column;
 }
-

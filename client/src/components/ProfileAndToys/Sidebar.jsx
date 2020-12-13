@@ -13,7 +13,9 @@ const Sidebar = () => {
   ];
 
   const getNotifsNumber = () => {
-    axios.get('/session').then(({ data }) => axios.get(`/data/notifications/${data.email}`))
+    axios
+      .get('/session')
+      .then(({ data }) => axios.get(`/data/notifications/${data.email}`))
       .then(({ data }) => {
         console.info('DATA', data.notifs);
         setNotifs(data.notifs);
@@ -28,7 +30,10 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="SidebarProfile">
+    <div
+      className="SidebarProfile"
+      style={{ position: 'fixed', top: '65px', zIndex: '1' }}
+    >
       <List
         component="nav"
         aria-labelledby="side navigation"
@@ -45,11 +50,14 @@ const Sidebar = () => {
           <ListItem button className="sideBarRow">
             <ListItemText primary="Notifications" />
             <NotificationsIcon />
-            {/* <div onClick={() => console.info(notifs)}>
+            <div
+              style={{ color: 'white' }}
+              onClick={() => console.info(notifs)}
+            >
               {' '}
               {notifs.length}
               {' '}
-            </div> */}
+            </div>
           </ListItem>
         </Link>
       </List>
