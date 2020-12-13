@@ -61,6 +61,7 @@ const Profile = ({ dogs, getDogs }) => {
 
   const history = useHistory();
   const classes = useStyles();
+  // let userPicture = '';
 
   const deleteDog = (dog) => {
     // eslint-disable-next-line no-underscore-dangle
@@ -105,7 +106,6 @@ const Profile = ({ dogs, getDogs }) => {
 
   useEffect(() => {
     getDogs();
-    // console.log(dogs);
   }, []);
 
   return (
@@ -173,7 +173,16 @@ const Profile = ({ dogs, getDogs }) => {
           </Card>
         ))}
       </div>
-      <div style={{ margin: 'auto', width: '50%', marginTop: '2rem' }}>
+      <div
+        style={{
+          margin: 'auto',
+          width: '50%',
+          marginTop: '2rem',
+          position: 'fixed',
+          top: '55px',
+          left: '360px',
+        }}
+      >
         <MyButton
           onClick={() => {
             history.push('/form');

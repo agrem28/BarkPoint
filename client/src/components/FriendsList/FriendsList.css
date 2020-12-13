@@ -1,62 +1,176 @@
-
+.Profile {
+  height: 100vh;
+}
 
 .friends-container {
+  z-index: 0;
   display: flex;
+  position: relative;
+  top: 80px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* border-color: #35200b;
-  margin-top: 5%;
-  margin-right: 10%;
-  margin-left: 25%;
-  border-style: solid; */
+  padding: 0;
 }
 
 .main {
   display: flex;
   flex-wrap: wrap;
-  width: 60%;
+  width: 65%;
+  margin-left: 14%;
 }
 
-.friendslist-header{
-  font-family: 'Roboto', sans-serif;
+#pupBudzHeader {
   color: white;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 15%;
+  font-size: 32px;
+  font-weight: 400;
+  margin-left: 35%;
+  width: 100%;
 }
 
 .friends {
   margin-top: 5%;
   font-family: 'Roboto', sans-serif;
-  flex: 0 0 25%;
+  flex: 0 0 27.15%;
   border: 5px solid #ac4f22;
   flex-direction: column;
   background-color: #ac4f22;
+  padding-top: 5%;
+  overflow: scroll;
+  height: 556.5px;
+  z-index: 0;
 }
 
-.friend-search-box{
+.friend-search-box {
   color: white;
   margin-left: 5%;
 }
 
+#search-and-header {
+  position: fixed;
+  top: 130px;
+  background-color: #ac4f22;
+  z-index: 1;
+}
+
 .messages {
   margin-top: 5%;
-font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif;
   flex: 1;
   border: 5px solid #f5ebda;
   flex-direction: column;
   background-color: #f5ebda;
+  overflow: scroll;
+  height: 603px;
 }
 
 .friendsList {
-font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin: 10px 0 10px 0;
   padding: 1.5px;
-  background-color: white;
-  color: 'white';
+  color: white;
   text-align: center;
 }
 
-.friend-pic{
+.listOfFriends {
+  position: relative;
+  z-index: 0;
+  margin-top: 55%;
+}
+
+.friend-pic {
   margin-left: 15%;
   margin-bottom: 15%;
   width: 70%;
+  margin-top: -8%;
+}
+
+.friendName {
+  color: white;
+}
+
+.unfriendBtn {
+  position: inline;
+  color: #f5d594;
+}
+
+#msg-receiver-header {
+  margin-top: 4%;
+  margin-left: 2.5%;
+  margin-right: 20%;
+
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  background-color: #f4ebda;
+  padding: 15px 20px 3px 20px;
+  top: 70px;
+  width: 500px;
+  z-index: 20;
+  /* left: 800px; */
+}
+
+#helper-div {
+  position: fixed;
+  right: 150px;
+  top: 127px;
+  background-color: #f4ebda;
+  z-index: 19;
+  height: 60px;
+  width: 667px;
+}
+
+.sender {
+  color: white;
+  background-color: #0b88bd;
+  padding: 10px 20px 10px 20px;
+  border-radius: 25px;
+  margin-left: 50%;
+  margin-top: 5%;
+  width: fit-content;
+  margin-right: 3%;
+  float: right;
+  margin-bottom: 5px;
+}
+
+.reciever {
+  color: black;
+  background-color: white;
+  width: fit-content;
+  padding: 10px 20px 10px 20px;
+  border-radius: 25px;
+  margin-left: 3%;
+  margin-top: 5%;
+}
+
+.senderTime {
+  font-weight: 100;
+  margin-left: 70%;
+  font-size: 14px;
+  color: gray;
+  font-weight: 200;
+  margin-top: 5px;
+}
+
+.recieverTime {
+  font-weight: 100;
+  margin-left: 5%;
+  font-size: 14px;
+  color: gray;
+  font-weight: 200;
+  margin-top: 5px;
+}
+
+#sendMsgButton {
+  margin-top: 2%;
+  margin-left: 16%;
+}
+
+.sendMsgContainer {
+  margin-top: 14%;
+  margin-left: 33%;
 }

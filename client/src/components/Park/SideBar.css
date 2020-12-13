@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Sansita+Swashed:wght@300&display=swap');
 .Sidebar {
-  height: 100%;
+  height: calc(100% * 1.0);
   width: 15vw;
   background-color: #002626;
   position: absolute;

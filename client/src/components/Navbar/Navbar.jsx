@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Navbar.css';
 import {
   AppBar,
@@ -7,12 +7,14 @@ import {
   ListItem,
   ListItemText,
   Container,
-  Avatar,
+  Typography,
 } from '@material-ui/core';
 
 import { Link } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
+
+import axios from 'axios';
 
 const useStyles = makeStyles({
   navDisplayFlex: {
@@ -41,17 +43,50 @@ const navLinks = [
 
 const Navbar = () => {
   const classes = useStyles();
+  const [userPicture, setUserPicture] = useState('');
+  const [userName, setUserName] = useState('');
+
+  const getUserImage = () => {
+    axios
+      .get('/session')
+      .then(({ data }) => {
+        setUserPicture(data.picture);
+        setUserName(data.given_name);
+      })
+      .catch((err) => console.warn(err));
+  };
 
   return (
-    <AppBar style={{ background: '#0e4749' }} position="static">
+    <AppBar
+      style={{
+        background: '#0e4749',
+        position: 'fixed',
+        top: '0',
+      }}
+      position="static"
+    >
       <Toolbar>
-        <Avatar className={classes.avatar}>
+        <div>
           <img
-            className="avatar-logo"
+            className="avatarLogo"
             src="https://i.ibb.co/zRR5Nd4/barkpoint.png"
             alt=""
           />
-        </Avatar>
+        </div>
+        {getUserImage()}
+        {userPicture ? (
+          <div>
+            <img id="avatarProfile" src={userPicture} />
+          </div>
+        ) : null}
+        <div id="greeting">
+          <Typography component="h1" variant="h5">
+            Hey,
+            {' '}
+            {userName}
+            !
+          </Typography>
+        </div>
         <Container maxWidth="md">
           <List
             component="nav"
