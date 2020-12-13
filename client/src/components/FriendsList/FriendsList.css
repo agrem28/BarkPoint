@@ -55,6 +55,8 @@
   border: 5px solid #f5ebda;
   flex-direction: column;
   background-color: #f5ebda;
+  overflow: scroll;
+  height: 603px;
 }
 
 .friendsList {
