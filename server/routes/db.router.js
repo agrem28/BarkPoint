@@ -602,12 +602,12 @@ dbRouter.put('/unfriend', (req, res) => {
 // });
 
 // // To be deleted - will add a friend to your friends list...hardcoded.
-// dbRouter.get('/addFriend', (req, res) => {
-//   User.User.update(
-//     { _id: '5fd2920e359cca2868eb686e' },
-//     { $push: { friends: '5fd28a829e01adc94f1c96a1' } }
-//   ).then(() => res.send('FRIEND ADDED'));
-// });
+dbRouter.get('/addFriend', (req, res) => {
+  User.User.update(
+    { _id: '5fd59d73f7f87778cfaaaa50' },
+    { $push: { friends: '5fd59d0d1d444e001f66dea1' } }
+  ).then(() => res.send('FRIEND ADDED'));
+});
 
 // // //To be deleted - will add a user to your friend request list...hardcoded.
 // dbRouter.get('/addFriendRequest', (req, res) => {

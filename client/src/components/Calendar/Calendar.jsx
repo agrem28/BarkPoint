@@ -25,14 +25,14 @@ for (let hour = 0; hour < 24; hour += 1) {
   if (hour < 12) {
     amOrPm = 'am';
     if (hour === 0) {
-      timeString += (hour + 12);
+      timeString += hour + 12;
     } else {
       timeString += hour;
     }
   } else {
     amOrPm = 'pm';
     if (hour !== 12) {
-      timeString += (hour - 12);
+      timeString += hour - 12;
     } else {
       timeString += hour;
     }
@@ -51,14 +51,20 @@ for (let hour = 0; hour < 24; hour += 1) {
 }
 const defaultStartTime = () => {
   const currentTime = new Date().toLocaleTimeString();
-  const hour = currentTime.length > 10 ? currentTime.slice(0, 2) : currentTime[0];
-  const minutes = currentTime.length > 10 ? currentTime.slice(3, 5) : currentTime.slice(2, 4);
+  const hour =
+    currentTime.length > 10 ? currentTime.slice(0, 2) : currentTime[0];
+  const minutes =
+    currentTime.length > 10 ? currentTime.slice(3, 5) : currentTime.slice(2, 4);
   if (currentTime.slice(currentTime.length - 2).toLowerCase() === 'am') {
     for (let i = 0; i < times.length / 2; i += 1) {
-      const timesHour = times[i].value.length > 6 ? times[i].value.slice(0, 2) : times[i].value[0];
-      const timesMinutes = currentTime.length > 10
-        ? times[i].value.slice(3, 5)
-        : times[i].value.slice(2, 4);
+      const timesHour =
+        times[i].value.length > 6
+          ? times[i].value.slice(0, 2)
+          : times[i].value[0];
+      const timesMinutes =
+        currentTime.length > 10
+          ? times[i].value.slice(3, 5)
+          : times[i].value.slice(2, 4);
       if (minutes >= 45) {
         if (times[i].value === `${hour}:45am`) {
           return i + 1;
@@ -70,10 +76,14 @@ const defaultStartTime = () => {
     }
   } else {
     for (let i = times.length / 2; i < times.length; i += 1) {
-      const timesHour = times[i].value.length > 6 ? times[i].value.slice(0, 2) : times[i].value[0];
-      const timesMinutes = currentTime.length > 10
-        ? times[i].value.slice(3, 5)
-        : times[i].value.slice(2, 4);
+      const timesHour =
+        times[i].value.length > 6
+          ? times[i].value.slice(0, 2)
+          : times[i].value[0];
+      const timesMinutes =
+        currentTime.length > 10
+          ? times[i].value.slice(3, 5)
+          : times[i].value.slice(2, 4);
       if (minutes >= 45) {
         if (times[i].value === `${hour}:45pm`) {
           return i + 1;
@@ -84,7 +94,7 @@ const defaultStartTime = () => {
       }
     }
   }
-  console.log(currentTime)
+  console.log(currentTime);
   return currentTime;
 };
 
@@ -99,14 +109,17 @@ const CalendarView = () => {
   const [start, setStart] = useState(times[defaultStartTime()]);
   const [end, setEnd] = useState(times[defaultStartTime() + 4]);
   const [attendeeName, setAttendeeName] = useState('');
-  const [attendees, setAttendees] = useState([{ email: '', displayName: '', responseStatus: 'accepted' }]);
+  const [attendees, setAttendees] = useState([
+    { email: '', displayName: '', responseStatus: 'accepted' },
+  ]);
   const [eventLocation, setEventLocation] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [clickedEvent, setClickedEvent] = useState({});
 
   const getEmail = (name = 'self') => {
     if (name === 'self') {
-      axios.get('/session')
+      axios
+        .get('/session')
         .then(({ data }) => {
           const placeholder = [...attendees];
           placeholder[0].email = data.email;
@@ -116,7 +129,8 @@ const CalendarView = () => {
         })
         .catch();
     } else {
-      axios.get(`/userEmail/${name}`)
+      axios
+        .get(`/userEmail/${name}`)
         .then(({ data }) => {
           if (data !== '') {
             const alreadyInvited = attendees.reduce((acc, attendee) => {
@@ -127,10 +141,13 @@ const CalendarView = () => {
             }, false);
             if (!alreadyInvited) {
               console.info('fired');
-              setAttendees([...attendees, {
-                email: data.email,
-                displayName: data.name,
-              }]);
+              setAttendees([
+                ...attendees,
+                {
+                  email: data.email,
+                  displayName: data.name,
+                },
+              ]);
             }
           }
         })
@@ -140,8 +157,12 @@ const CalendarView = () => {
   };
 
   const removeAttendee = (emailToRemove) => {
-    console.info(attendees.filter((attendee) => attendee.email !== emailToRemove));
-    setAttendees(attendees.filter((attendee) => attendee.email !== emailToRemove));
+    console.info(
+      attendees.filter((attendee) => attendee.email !== emailToRemove)
+    );
+    setAttendees(
+      attendees.filter((attendee) => attendee.email !== emailToRemove)
+    );
   };
 
   const parseTime = (time) => {
@@ -180,10 +201,22 @@ const CalendarView = () => {
     const event = {
       summary: eventTitle,
       start: {
-        dateTime: new Date(date[2], Number(date[0]) - 1, date[1], startValues[0], startValues[1]),
+        dateTime: new Date(
+          date[2],
+          Number(date[0]) - 1,
+          date[1],
+          startValues[0],
+          startValues[1]
+        ),
       },
       end: {
-        dateTime: new Date(date[2], Number(date[0]) - 1, date[1], endValues[0], endValues[1]),
+        dateTime: new Date(
+          date[2],
+          Number(date[0]) - 1,
+          date[1],
+          endValues[0],
+          endValues[1]
+        ),
       },
       attendees,
       location: eventLocation,
@@ -198,7 +231,9 @@ const CalendarView = () => {
         setEventDate('');
         setStart(times[defaultStartTime()]);
         setEnd(times[defaultStartTime() + 4]);
-        setAttendees([{ email: '', displayName: '', responseStatus: 'accepted' }]);
+        setAttendees([
+          { email: '', displayName: '', responseStatus: 'accepted' },
+        ]);
       })
       .catch((err) => console.warn(err));
   };
@@ -207,14 +242,17 @@ const CalendarView = () => {
     if (ApiCalendar.sign) {
       ApiCalendar.listUpcomingEvents()
         .then(({ result }) => {
-          setEvents(result.items.map((event) => ({
-            title: event.summary,
-            start: new Date(event.start.dateTime),
-            end: new Date(event.end.dateTime),
-            attendees: event.attendees,
-            location: event.location,
-          })));
-        }).catch((err) => console.warn(err));
+          setEvents(
+            result.items.map((event) => ({
+              title: event.summary,
+              start: new Date(event.start.dateTime),
+              end: new Date(event.end.dateTime),
+              attendees: event.attendees,
+              location: event.location,
+            }))
+          );
+        })
+        .catch((err) => console.warn(err));
     } else {
       setEvents([]);
     }
@@ -248,8 +286,10 @@ const CalendarView = () => {
   const handleSelectSlot = (slotInfo) => {
     const currentTime = new Date();
     if (showCreateEventForm) {
-      if (slotInfo.start > currentTime
-        || slotInfo.start.toLocaleDateString() === currentTime.toLocaleDateString()) {
+      if (
+        slotInfo.start > currentTime ||
+        slotInfo.start.toLocaleDateString() === currentTime.toLocaleDateString()
+      ) {
         setEventDate(slotInfo.start);
       }
     }
@@ -319,16 +359,11 @@ const CalendarView = () => {
               onChange={(e) => setEventTitle(e.target.value)}
             />
           </label>
-          {eventDate !== ''
-            ? (
-              <div>
-                {eventDate.toDateString()}
-              </div>
-            ) : (
-              <div>
-                Select a date from the calendar above.
-              </div>
-            )}
+          {eventDate !== '' ? (
+            <div>{eventDate.toDateString()}</div>
+          ) : (
+            <div>Select a date from the calendar above.</div>
+          )}
           <div>
             <span>
               <Select
@@ -353,7 +388,9 @@ const CalendarView = () => {
                 {friend.displayName}
                 {i > 0 ? (
                   <button
-                    onClick={(e) => removeAttendee(e.target.parentElement.dataset.email)}
+                    onClick={(e) =>
+                      removeAttendee(e.target.parentElement.dataset.email)
+                    }
                   >
                     Remove
                   </button>
@@ -373,15 +410,14 @@ const CalendarView = () => {
           </div>
           <Search setEventLocation={setEventLocation} />
           {eventLocation !== '' ? <div>{eventLocation}</div> : null}
-          <button
-            type="submit"
-            onClick={createEvent}
-          >
+          <button type="submit" onClick={createEvent}>
             Invite
           </button>
         </div>
       ) : null}
-      {showPopup ? <Popup event={clickedEvent} setShowPopup={setShowPopup} /> : null}
+      {showPopup ? (
+        <Popup event={clickedEvent} setShowPopup={setShowPopup} />
+      ) : null}
     </div>
   );
 };

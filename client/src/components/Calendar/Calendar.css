@@ -1,15 +1,15 @@
 .google-calendar {
   position: relative;
-  top: 3vw;
-  left: 18vw;
+  top: 11vw;
+  left: 30vw;
   border: 0;
 }
 
 .calendar {
   background-color: white;
   position: relative;
-  top: 3vw;
-  left: 18vw;
+  top: 11vw;
+  left: 30vw;
   border: 0;
   width: 800px;
   height: 500px;

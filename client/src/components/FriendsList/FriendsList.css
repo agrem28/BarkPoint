@@ -39,6 +39,8 @@
   flex-direction: column;
   background-color: #ac4f22;
   padding-top: 5%;
+  overflow: scroll;
+  height: 556.5px;
 }
 
 .friend-search-box {
@@ -59,7 +61,7 @@
   font-family: 'Roboto', sans-serif;
   margin: 10px 0 10px 0;
   padding: 1.5px;
-  color: 'white';
+  color: white;
   text-align: center;
 }
 
