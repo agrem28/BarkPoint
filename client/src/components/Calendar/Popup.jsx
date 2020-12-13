@@ -1,27 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Typography } from '@material-ui/core';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
+import CloseIcon from '@material-ui/icons/Close';
+import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 import './Calendar.css';
 
 const Popup = ({ event, setShowPopup }) => (
   <div className="calendar-popup">
-    <div id="popup-title">{event.title}</div>
-    <div id="popup-time">
+    <Typography id="popup-title">{event.title}</Typography>
+    <Typography id="popup-time">
       {`${event.start.toDateString()} * ${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()}`}
-    </div>
-    <div id="popup-location">
-      {event.location}
-    </div>
-    <div id="guest-count">
-      {`${event.attendees.length} guest${event.attendees.length > 1 ? 's' : ''}`}
-    </div>
+    </Typography>
     <div>
-      {event.attendees.map((attendee) => (
-        <div key={attendee} className="guestList">
-          {attendee.email}
-        </div>
-      ))}
+      <Typography id="popup-location">
+        <LocationOnOutlinedIcon color="action" />
+        {`   ${event.location}`}
+      </Typography>
     </div>
-    <button id="close" onClick={() => setShowPopup(false)}>X</button>
+    <Typography id="guest-count">
+      <PeopleAltOutlinedIcon color="action" />
+      {`   ${event.attendees.length} guest${event.attendees.length > 1 ? 's' : ''}`}
+    </Typography>
+    <Typography>
+      {event.attendees.map((attendee) => (
+        <Typography key={attendee} className="guestList">
+          {attendee.email}
+        </Typography>
+      ))}
+    </Typography>
+    {/* <Button id="close" onClick={() => setShowPopup(false)}>X</Button> */}
+    <CloseIcon id="close" onClick={() => setShowPopup(false)} />
   </div>
 );
 

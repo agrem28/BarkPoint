@@ -73,7 +73,6 @@ const defaultStartTime = () => {
     if (hour !== '12') {
       hour = `${Number(hour) - 12}`;
     }
-    // console.info(currentTime, hour, minutes);
     for (let i = times.length / 2; i < times.length; i += 1) {
       const timesHour = times[i].value.length > 6 ? times[i].value.slice(0, 2) : times[i].value[0];
       const timesMinutes = times[i].value.length > 6
@@ -81,18 +80,14 @@ const defaultStartTime = () => {
         : times[i].value.slice(2, 4);
       if (minutes >= 45) {
         if (times[i].value === `${Number(hour)}:45pm`) {
-          console.info(hour, minutes);
           return i + 1;
         }
       }
-      console.info(`${minutes} < ${timesMinutes} ${minutes < timesMinutes}`);
       if (hour === timesHour && minutes < timesMinutes) {
-        console.info(times[i].value, hour, minutes);
         return i;
       }
     }
   }
-  console.info(currentTime);
   return currentTime;
 };
 
