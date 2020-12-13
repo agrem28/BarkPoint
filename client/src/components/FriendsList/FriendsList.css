@@ -98,7 +98,29 @@
 }
 
 #msg-receiver-header {
-  margin-top: 5%;
+  margin-top: 4%;
+  margin-left: 2.5%;
+  margin-right: 20%;
+
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  background-color: #f4ebda;
+  padding: 15px 20px 3px 20px;
+  top: 70px;
+  width: 500px;
+  z-index: 20;
+  /* left: 800px; */
+}
+
+#helper-div {
+  position: fixed;
+  right: 154px;
+  top: 127px;
+  background-color: #f4ebda;
+  z-index: 19;
+  height: 60px;
+  width: 667px;
 }
 
 .sender {

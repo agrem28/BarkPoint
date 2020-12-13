@@ -187,6 +187,7 @@ const FriendsList = () => {
               ))}
             </div>
           </div>
+          <div id="helper-div"></div>
           <div className="messages">
             <Typography
               Component="h3"
@@ -199,7 +200,7 @@ const FriendsList = () => {
             {messages[currentDms.name]
               ? messages[currentDms.name].map(({ name, message, time }) => {
                   return (
-                    <div>
+                    <div style={{ marginTop: '30px' }}>
                       <div className={name === user ? 'sender' : 'reciever'}>
                         <div id="msgText">{message}</div>
                       </div>
