@@ -50,17 +50,18 @@ for (let hour = 0; hour < 24; hour += 1) {
   }
 }
 const defaultStartTime = () => {
-  const currentTime = new Date().toLocaleTimeString();
-  const hour = currentTime.length > 10 ? currentTime.slice(0, 2) : currentTime[0];
-  const minutes = currentTime.length > 10 ? currentTime.slice(3, 5) : currentTime.slice(2, 4);
-  if (currentTime.slice(currentTime.length - 2).toLowerCase() === 'am') {
+  const currentTime = new Date().toTimeString();
+  let hour = currentTime.slice(0, 2);
+  const minutes = currentTime.slice(3, 5);
+  if (hour < 12) {
+    hour = hour === '00' ? '12' : `${Number(hour)}`;
     for (let i = 0; i < times.length / 2; i += 1) {
-      const timesHour = times[i].value.length > 6 ? times[i].value.slice(0, 2) : times[i].value[0];
-      const timesMinutes = currentTime.length > 10
+      const timesHour = times[i].value.length > 6 ? times[i].value.slice(0, 2) : `0${times[i].value[0]}`;
+      const timesMinutes = times[i].value.length > 6
         ? times[i].value.slice(3, 5)
         : times[i].value.slice(2, 4);
       if (minutes >= 45) {
-        if (times[i].value === `${hour}:45am`) {
+        if (times[i].value === `${Number(hour)}:45am`) {
           return i + 1;
         }
       }
@@ -69,22 +70,27 @@ const defaultStartTime = () => {
       }
     }
   } else {
+    if (hour !== '12') {
+      hour = `${Number(hour) - 12}`;
+    }
     for (let i = times.length / 2; i < times.length; i += 1) {
       const timesHour = times[i].value.length > 6 ? times[i].value.slice(0, 2) : times[i].value[0];
-      const timesMinutes = currentTime.length > 10
+      const timesMinutes = times[i].value.length > 6
         ? times[i].value.slice(3, 5)
         : times[i].value.slice(2, 4);
       if (minutes >= 45) {
-        if (times[i].value === `${hour}:45pm`) {
+        if (times[i].value === `${Number(hour)}:45pm`) {
+          console.info(hour, minutes);
           return i + 1;
         }
       }
+      console.info(`${minutes} < ${timesMinutes} ${minutes < timesMinutes}`);
       if (hour === timesHour && minutes < timesMinutes) {
+        console.info(times[i].value, hour, minutes);
         return i;
       }
     }
   }
-  console.log(currentTime)
   return currentTime;
 };
 
