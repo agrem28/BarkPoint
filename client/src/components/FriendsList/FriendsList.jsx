@@ -176,7 +176,7 @@ const FriendsList = () => {
                 id="addFriendButton"
                 onClick={() => {
                   sendFriendRequest(); setFriendToSearch('');
-                // socket.emit('request')
+                  socket.emit('request');
                 }}
               >
                 {' '}
