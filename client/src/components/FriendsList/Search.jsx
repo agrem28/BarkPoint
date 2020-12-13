@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Search.css';
@@ -15,7 +14,6 @@ const SearchFriend = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [friendToSearch, setFriendToSearch] = useState('');
   const [warnMessage, setWarnMessage] = useState('');
-  // const [value, setValue] = useState('');
 
   const [users, setUsers] = useState([]);
   const getUsers = () => {
@@ -66,7 +64,7 @@ const SearchFriend = () => {
       <Combobox className="combobox">
         <ComboboxInput
           onChange={friendSearchOnChange}
-          placeholder="Find A Pup Bud!"
+          placeholder="find a pup bud!"
           autoComplete="off"
           onFocus={onFocus}
           id="friendInput"
@@ -74,7 +72,7 @@ const SearchFriend = () => {
         <input
           id="searchFriend"
           type="button"
-          value="Add Friend!"
+          value="add bud"
           onClick={sendFriendRequest}
         />
         <ComboboxPopover>
@@ -82,6 +80,7 @@ const SearchFriend = () => {
             {showSuggestions
               ? suggestions.map((suggestion) => (
                 <ComboboxOption
+                  id="option-friend-name"
                   value={suggestion}
                   onClick={() => {
                     setFriendToSearch(suggestion);

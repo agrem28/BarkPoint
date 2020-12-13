@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import {
+  List, ListItem, ListItemText, Typography,
+} from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const socket = io();
@@ -10,7 +12,7 @@ const Sidebar = () => {
   const [notifs, setNotifs] = useState([]);
   const links = [
     { title: 'My Dogs', path: '/profile' },
-    { title: 'Friends List', path: '/friendsList' },
+    { title: 'Pup Budz', path: '/friendsList' },
     { title: 'Calendar', path: '/calendar' },
   ];
 
@@ -54,14 +56,14 @@ const Sidebar = () => {
           <ListItem button className="sideBarRow">
             <ListItemText primary="Notifications" />
             <NotificationsIcon />
-            <div
-              style={{ color: (notifs.length > 0) ? 'red' : '#012626' }}
+            <Typography
+              style={{ color: 'white' }}
               onClick={() => console.info(notifs)}
             >
               {' '}
               {notifs.length}
               {' '}
-            </div>
+            </Typography>
           </ListItem>
         </Link>
       </List>

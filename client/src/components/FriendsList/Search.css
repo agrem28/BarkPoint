@@ -61,10 +61,15 @@
   color: black;
   text-align: center;
   border: 1px solid lightgrey;
+  font-family: 'Work Sans', sans-serif;
 }
 
 .suggestions:hover {
   background-color: lightgrey;
   cursor: pointer;
   margin: 4px 0 4px 0;
+}
+
+#option-friend-name{
+  font-family: 'Work Sans', sans-serif;
 }

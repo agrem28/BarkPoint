@@ -60,7 +60,6 @@ const FriendsList = () => {
   // const friendSearchOnChange = (event) => {
   //   setShowSuggestions(true);
   //   const { value } = event.target;
-  //   console.info('INSIDEEEEE', value);
   //   let sortedSuggestions = [];
   //   if (value.length > 0) {
   //     const regex = new RegExp(`${value}`, 'i');
@@ -71,11 +70,10 @@ const FriendsList = () => {
   // };
   // Sends friend request to user being searched...
   // const sendFriendRequest = () => {
-  //   console.info('SUCCESS');
   //   axios.get('/session').then(({ data }) => {
   //     axios
   //       .get(`/findFriend/${friendToSearch}/${data.name}`)
-  //       .then(() => socket.emit('request'))
+  //       .then(() => {})
   //       .catch((err) => console.info(err));
   //   });
   // };
@@ -228,7 +226,6 @@ const FriendsList = () => {
                     label="what's on your mind?"
                     variant="outlined"
                     value={messageText}
-                    className="msgInputBox"
                     onChange={(e) => setMessageText(e.target.value)}
                   />
                   <Button
