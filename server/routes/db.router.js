@@ -352,8 +352,9 @@ dbRouter.get('/findFriend/:friendToSearch/:currentUser', (req, res) => {
           if (!friend) {
             res.send(`Looks like ${friendToSearch} isn't a user.`);
           } else if (
-            !friend.friendRequests.includes(currentUser._id) &&
-            !friend.friends.includes(currentUser._id)
+            (!friend.friendRequests.includes(currentUser._id) &&
+              !friend.friends.includes(currentUser._id)) ||
+            friend.friendRequests.includes(currentUser._id)
           ) {
             User.User.updateOne(
               { _id: friend._id },
@@ -363,10 +364,10 @@ dbRouter.get('/findFriend/:friendToSearch/:currentUser', (req, res) => {
               .catch((err) => {
                 console.warn(err);
               });
-          } else if (friend.friendRequests.includes(currentUser._id)) {
-            res.send(`You've already sent ${friendToSearch} a request.`);
           } else if (friend.friends.includes(currentUser._id)) {
             res.send(`You're already friends with ${friendToSearch}.`);
+          } else {
+            res.end();
           }
         })
         .catch();

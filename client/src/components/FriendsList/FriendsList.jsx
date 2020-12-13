@@ -6,6 +6,14 @@ import Navbar from '../Navbar/Navbar';
 import Sidebar from '../ProfileAndToys/Sidebar';
 import friendpic from './friendpic3.png';
 import './FriendsList.css';
+import SearchFriend from './Search.jsx';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxPopover,
+  ComboboxList,
+  ComboboxOption,
+} from '@reach/combobox';
 
 // const socket = io();
 
@@ -46,12 +54,9 @@ const FriendsList = () => {
   const classes = useStyles();
   const [currentDms, setCurrentDms] = useState({});
   const [messageText, setMessageText] = useState('');
-  const [friendToSearch, setFriendToSearch] = useState('');
   const [friendsList, setFriendsList] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+
   const [users, setUsers] = useState([]);
-  const [warnMessage, setWarnMessage] = useState('');
 
   const [messages, setMessages] = useState({});
   let user;
@@ -67,34 +72,6 @@ const FriendsList = () => {
       user = data.name;
     });
   }, []);
-
-  const friendSearchOnChange = (event) => {
-    setShowSuggestions(true);
-    const value = event.target.value;
-
-    let sortedSuggestions = [];
-    if (value.length > 0) {
-      const regex = new RegExp(`${value}`, 'i');
-      sortedSuggestions = users.sort().filter((v) => regex.test(v));
-    }
-    setSuggestions(sortedSuggestions);
-    setFriendToSearch(value);
-  };
-
-  // Sends friend request to user being searched...
-  const sendFriendRequest = () => {
-    document.getElementById('friendInput').value = '';
-    setShowSuggestions(false);
-    axios.get('/session').then(({ data }) => {
-      axios
-        .get(`/findFriend/${friendToSearch}/${data.name}`)
-        .then(({ data }) => {
-          setWarnMessage(data);
-          setTimeout(() => setWarnMessage(''), 3000);
-        })
-        .catch((err) => console.info(err));
-    });
-  };
 
   // Grabs the current users friendsList...
   const getFriendsList = () => {
@@ -162,6 +139,7 @@ const FriendsList = () => {
   useEffect(() => getFriendsList(), []);
 
   useEffect(() => getMessagesList(), {});
+  const nums = [1, 2, 3, 4, 5, 6, 7];
 
   return (
     <div className="Profile">
@@ -174,34 +152,8 @@ const FriendsList = () => {
       <Sidebar />
       <div className="friends-container">
         <div className="main">
-          {warnMessage ? <div id="warnMessage">{warnMessage}</div> : null}
           <div className="friends">
-            <div className="inputAndSuggestions">
-              <input
-                id="friendInput"
-                type="text"
-                placeholder="Search for Budz"
-                onChange={friendSearchOnChange}
-                className="addFriendInput"
-                autoComplete="off"
-              />
-              <input
-                type="submit"
-                className="addFriendButton"
-                value="Add Friend"
-                onClick={sendFriendRequest}
-              />
-              {showSuggestions
-                ? suggestions.map((suggestion) => (
-                    <div
-                      className="suggestions"
-                      onClick={handleSuggestionChoice.bind(this, suggestion)}
-                    >
-                      {suggestion}
-                    </div>
-                  ))
-                : null}
-            </div>
+            <SearchFriend />
             <div className="listOfFriends">
               {friendsList.map((friend) => (
                 <div className="friendsList">

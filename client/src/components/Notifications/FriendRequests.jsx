@@ -6,7 +6,6 @@ const FriendRequests = () => {
   const [friendRequests, setFriendRequests] = useState([]);
   const [friendRequestResponse, setFriendRequestResponse] = useState('');
 
-  //Refactor code to not use state to get the user. Instead call the "/session" route every time you need it.
   useEffect(() => {
     getFriendRequests();
   }, []);
