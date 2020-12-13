@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ApiCalendar from 'react-google-calendar-api';
 import { useLoadScript } from '@react-google-maps/api';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
+import {
+  Typography, Button, FormControl, InputLabel, OutlinedInput,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import Select from 'react-select';
 import moment from 'moment';
 import axios from 'axios';
@@ -17,6 +21,24 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 const localizer = momentLocalizer(moment);
 
 const libraries = ['places'];
+
+const useStyles = makeStyles(() => ({
+  alignItemsAndJustifyContent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'right',
+  },
+  calendarHeader: {
+    color: 'white',
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '10%',
+    marginTop: '5%',
+  },
+}));
 
 const times = [];
 for (let hour = 0; hour < 24; hour += 1) {
@@ -80,10 +102,13 @@ const defaultStartTime = () => {
         : times[i].value.slice(2, 4);
       if (minutes >= 45) {
         if (times[i].value === `${Number(hour)}:45pm`) {
+          console.info(hour, minutes);
           return i + 1;
         }
       }
+      console.info(`${minutes} < ${timesMinutes} ${minutes < timesMinutes}`);
       if (hour === timesHour && minutes < timesMinutes) {
+        console.info(times[i].value, hour, minutes);
         return i;
       }
     }
@@ -92,6 +117,7 @@ const defaultStartTime = () => {
 };
 
 const CalendarView = () => {
+  const classes = useStyles();
   const [email, setEmail] = useState('');
   const [events, setEvents] = useState([]);
   const [sign, setSign] = useState(ApiCalendar.sign);
@@ -272,119 +298,148 @@ const CalendarView = () => {
   useEffect(() => predictEndTime(), [start]);
 
   return (
-    <div className="Profile">
+    <div className="calendar-wrapper">
       <Navbar />
       <Sidebar />
-      {email === '' ? getEmail() : null}
-      {sign ? (
-        <button
-          className="google-calendar"
-          type="button"
-          onClick={() => signInOrOut('sign-out')}
+      <div id="calendar-container">
+        <Typography
+          Component="h1"
+          variant="h2"
+          className={classes.calendarHeader}
+          id="calendar-header"
         >
-          Unlink Calendar
-        </button>
-      ) : (
-        <button
-          className="google-calendar"
-          type="button"
-          onClick={() => signInOrOut('sign-in')}
-        >
-          Link with Your Google Calendar
-        </button>
-      )}
-      <div className="calendar">
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500 }}
-          onSelectEvent={handleSelectEvent}
-          onSelectSlot={handleSelectSlot}
-          selectable
-        />
-      </div>
-      <button
-        className="google-calendar"
-        type="button"
-        onClick={() => setShowCreateEventForm(!showCreateEventForm)}
-      >
-        Create Event
-      </button>
-      {showCreateEventForm ? (
-        <div id="create-event-form">
-          <label htmlFor="title">
-            Title:
-            <input
-              id="title"
-              value={eventTitle}
-              onChange={(e) => setEventTitle(e.target.value)}
-            />
-          </label>
-          {eventDate !== ''
-            ? (
-              <div>
-                {eventDate.toDateString()}
-              </div>
-            ) : (
-              <div>
-                Select a date from the calendar above.
-              </div>
-            )}
-          <div>
-            <span>
-              <Select
-                value={start}
-                options={times}
-                onChange={(e) => setStart(e)}
-                className="time"
-              />
-              {' - '}
-              <Select
-                value={end}
-                options={times}
-                onChange={(e) => setEnd(e)}
-                className="time"
-              />
-            </span>
-          </div>
-          Attendees:
-          <div>
-            {attendees.map((friend, i) => (
-              <div key={friend} data-email={friend.email}>
-                {friend.displayName}
-                {i > 0 ? (
-                  <button
-                    onClick={(e) => removeAttendee(e.target.parentElement.dataset.email)}
-                  >
-                    Remove
-                  </button>
-                ) : null}
-              </div>
-            ))}
-            <input
-              value={attendeeName}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  getEmail(attendeeName);
-                  setAttendeeName('');
-                }
-              }}
-              onChange={(e) => setAttendeeName(e.target.value)}
-            />
-          </div>
-          <Search setEventLocation={setEventLocation} />
-          {eventLocation !== '' ? <div>{eventLocation}</div> : null}
-          <button
-            type="submit"
-            onClick={createEvent}
+          Upcoming Playdates
+        </Typography>
+        {email === '' ? getEmail() : null}
+        {sign ? (
+          <Button
+            variant="contained"
+            color="primary"
+            id="link-unlink-btn"
+            onClick={() => signInOrOut('sign-out')}
           >
-            Invite
-          </button>
+            Unlink Calendar
+          </Button>
+        ) : (
+          <Button
+            variant="outlined"
+            color="primary"
+            id="link-unlink-btn"
+            onClick={() => signInOrOut('sign-in')}
+          >
+            Link with Your Google Calendar
+          </Button>
+        )}
+        <div
+          id="calendar"
+          className={classes.alignItemsAndJustifyContent}
+        >
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: 500, marginRight: 60 }}
+            onSelectEvent={handleSelectEvent}
+            onSelectSlot={handleSelectSlot}
+            selectable
+          />
+
+          <div style={{ textAlign: 'center' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              className="google-calendar-btn"
+              style={{ alignSelf: 'center' }}
+              onClick={() => setShowCreateEventForm(!showCreateEventForm)}
+            >
+              Create Event
+            </Button>
+
+            {showCreateEventForm ? (
+              <div id="create-event-form">
+                <FormControl variant="outlined">
+                  <InputLabel htmlFor="title">Title</InputLabel>
+                  <OutlinedInput id="title" value={eventTitle} onChange={(e) => setEventTitle(e.target.value)} label="Name" />
+                </FormControl>
+
+                {eventDate !== ''
+                  ? (
+                    <div>
+                      {eventDate.toDateString()}
+                    </div>
+                  ) : (
+                    <Typography>
+                      Select a date from the calendar above.
+                    </Typography>
+                  )}
+                <div>
+                  <span>
+                    <Select
+                      variant="filled"
+                      value={start}
+                      options={times}
+                      onChange={(e) => setStart(e)}
+                      className="time"
+                    />
+                    {' - '}
+                    <Select
+                      color="secondary"
+                      value={end}
+                      options={times}
+                      onChange={(e) => setEnd(e)}
+                      className="time"
+                    />
+                  </span>
+                </div>
+                <Typography>
+
+                  Attendees:
+                </Typography>
+                <div>
+                  {attendees.map((friend, i) => (
+                    <div key={friend} data-email={friend.email}>
+                      <Typography>
+                        {friend.displayName}
+
+                      </Typography>
+                      {i > 0 ? (
+                        <Button
+                          onClick={(e) => removeAttendee(e.target.parentElement.dataset.email)}
+                        >
+                          Remove
+                        </Button>
+                      ) : null}
+                    </div>
+                  ))}
+                  <input
+                    value={attendeeName}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        getEmail(attendeeName);
+                        setAttendeeName('');
+                      }
+                    }}
+                    onChange={(e) => setAttendeeName(e.target.value)}
+                  />
+                </div>
+                <Search setEventLocation={setEventLocation} />
+                {eventLocation !== '' ? <div>{eventLocation}</div> : null}
+                <Button
+                  id="invite-btn"
+                  variant="outlined"
+                  color="primary"
+                  onClick={createEvent}
+                >
+                  Invite
+                </Button>
+              </div>
+            ) : null}
+          </div>
         </div>
-      ) : null}
-      {showPopup ? <Popup event={clickedEvent} setShowPopup={setShowPopup} /> : null}
+
+        {showPopup ? <Popup event={clickedEvent} setShowPopup={setShowPopup} /> : null}
+      </div>
     </div>
   );
 };
