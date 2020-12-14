@@ -1,7 +1,7 @@
 .combobox {
   position: relative;
   top: -15px;
-  left: 8px;
+  left: 5%;
 }
 
 #warnMessage {
@@ -14,14 +14,16 @@
 }
 
 #friendInput{
-  margin-top: 5%;
+  /* margin-top: 5%; */
   background-color: #ac4f22;
   border-color: #eadaa0;
   border-radius: 15px;
   border-style: solid;
   color: #eadaa0;
   padding: 8px;
-  margin-left: 23%;
+  position: relative;
+  left: 10%;
+  /* margin-left: 23%; */
 }
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -30,14 +32,17 @@
 
 #searchFriend{
   display: block;
-  margin-top: 5%;
-  margin-left: 45%;
+  /* margin-top: 5%;
+  margin-left: 45%; */
   background-color: #ac4f22;
   border-color: #eadaa0;
   border-radius: 15px;
   border-style: solid;
   color: #eadaa0;
   padding: 8px;
+  position: relative;
+  left: 30%;
+  margin-top: 5%;
 }
 
 .addFriendInput {

@@ -5,6 +5,15 @@
   border: 0;
 } */
 
+.rbc-calendar {
+  width: 100%;
+}
+
+#google-calendar-btn{
+  margin-bottom: 3%;
+  margin-left: 3%;
+}
+
 #link-unlink-btn{
   margin-left: 5%;
   margin-bottom: 3%;
@@ -46,7 +55,7 @@
   /* align-items: center; */
   /* justify-content: center; */
   /* text-align: right; */
-  margin-left: 10%;
+  margin-left: 5%;
 }
 
 #create-event-form {
@@ -64,7 +73,7 @@
   width: 120px;
 }
 
-/* .calendar-popup {
+.calendar-popup {
   background-color: white;
   border: solid 3px black;
   padding: 25px;
@@ -74,41 +83,43 @@
   left: 25vw;
   z-index: 10;
   box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14), 0 9px 46px 8px rgba(0,0,0,0.12), 0 11px 15px -7px rgba(0,0,0,0.2);
-} */
+}
 
-/* #popup-title {
+#popup-title {
   font-size: larger;
   font-weight: bold;
 }
 
 #popup-time {
   margin-bottom: 15px;
-} */
+}
 
 #guest-count {
-  /* padding-top: 5px;
-  padding-bottom: 5px; */
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .guestList {
-  /* margin-left: 10px;
-  padding: 5px; */
+  margin-left: 10px;
+  padding: 5px;
 }
 
 #close {
-  /* position: absolute;
+  position: absolute;
   top: 0rem;
-  right: 0rem; */
+  right: 0rem;
+  border-radius: 100%;
 }
+
+#close:hover {
+  background-color: rgb(241, 241, 241);
+}
+
 .event-container{
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding-top: 25px;
-}
-.google-calendar-btn{
-margin-bottom: 30px;
-margin-left: auto !important;
 }
 
 #invite-btn {

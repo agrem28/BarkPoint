@@ -217,13 +217,13 @@ const FriendsList = () => {
                 </div>
               ))
               : null}
-            <div>
+            <div id="sticky-container">
               {currentDms.name ? (
                 <div className="sendMsgContainer">
                   <TextField
                     className={classes.alignItemsAndJustifyContent}
                     id="outlined-basic"
-                    label="what's on your mind?"
+                    placeholder="what's on your mind?"
                     variant="outlined"
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
@@ -240,8 +240,8 @@ const FriendsList = () => {
                   </Button>
                 </div>
               ) : null}
-              <img alt="" className="friend-pic" src={friendpic} />
             </div>
+            <img alt="" className="friend-pic" src={friendpic} />
           </div>
         </div>
       </div>

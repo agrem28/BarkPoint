@@ -357,9 +357,18 @@ const CalendarView = () => {
             Link with Your Google Calendar
           </Button>
         )}
+        <Button
+          variant="contained"
+          color="primary"
+          id="google-calendar-btn"
+          // style={{ alignSelf: 'center' }}
+          onClick={() => setShowCreateEventForm(!showCreateEventForm)}
+        >
+          Create Event
+        </Button>
         <div
           id="calendar"
-          className={classes.alignItemsAndJustifyContent}
+          // className={classes.alignItemsAndJustifyContent}
         >
           <Calendar
             localizer={localizer}
@@ -371,18 +380,8 @@ const CalendarView = () => {
             onSelectSlot={handleSelectSlot}
             selectable
           />
-
-          <div style={{ textAlign: 'center' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              className="google-calendar-btn"
-              style={{ alignSelf: 'center' }}
-              onClick={() => setShowCreateEventForm(!showCreateEventForm)}
-            >
-              Create Event
-            </Button>
-
+          {/* style={{ textAlign: 'center' }} */}
+          <div>
             {showCreateEventForm ? (
               <div id="create-event-form">
                 <FormControl variant="outlined">
@@ -441,6 +440,7 @@ const CalendarView = () => {
                   ))}
                   <input
                     value={attendeeName}
+                    placeholder="Who do you want to invite?"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         getEmail(attendeeName);

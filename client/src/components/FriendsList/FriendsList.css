@@ -25,23 +25,23 @@
   display: flex;
   text-align: center;
   align-items: center;
-  margin-bottom: 15%;
+  /* margin-bottom: 15%; */
   font-size: 32px;
   font-weight: 400;
-  margin-left: 35%;
-  width: 100%;
+  margin-left: 20%;
+  width: fit-content;
 }
 
 .friends {
-  margin-top: 5%;
+  margin-top: 2%;
   font-family: 'Roboto', sans-serif;
   flex: 0 0 27.15%;
   border: 5px solid #ac4f22;
   flex-direction: column;
   background-color: #ac4f22;
-  padding-top: 5%;
+  /* padding-top: 5%; */
   overflow: scroll;
-  height: 556.5px;
+  height: 38vw;
   z-index: 0;
 }
 
@@ -51,21 +51,21 @@
 }
 
 #search-and-header {
-  position: fixed;
-  top: 130px;
+  position: sticky;
+  top: 4.9%;
   background-color: #ac4f22;
   z-index: 1;
 }
 
 .messages {
-  margin-top: 5%;
+  margin-top: 2%;
   font-family: 'Roboto', sans-serif;
   flex: 1;
   border: 5px solid #f5ebda;
   flex-direction: column;
   background-color: #f5ebda;
   overflow: scroll;
-  height: 603px;
+  height: 38vw;
 }
 
 .friendsList {
@@ -79,7 +79,7 @@
 .listOfFriends {
   position: relative;
   z-index: 0;
-  margin-top: 55%;
+  /* margin-top: 55%; */
 }
 
 .friend-pic {
@@ -99,16 +99,15 @@
 }
 
 #msg-receiver-header {
-  margin-top: 4%;
+  /* margin-top: 4%; */
   margin-left: 2.5%;
   margin-right: 20%;
-
   display: flex;
   justify-content: center;
-  position: fixed;
-  background-color: #f4ebda;
+  position: sticky;
+  /* background-color: #f4ebda; */
   padding: 15px 20px 3px 20px;
-  top: 70px;
+  top: 0;
   width: 500px;
   z-index: 20;
   /* left: 800px; */
@@ -118,7 +117,7 @@
   position: fixed;
   right: 150px;
   top: 127px;
-  background-color: #f4ebda;
+  /* background-color: #f4ebda; */
   z-index: 19;
   height: 60px;
   width: 667px;
@@ -167,10 +166,15 @@
 
 #sendMsgButton {
   margin-top: 2%;
-  margin-left: 16%;
+  margin-left: 45%;
 }
 
 .sendMsgContainer {
-  margin-top: 14%;
-  margin-left: 33%;
+  margin-top: 5%;
+  margin-left: -10%;
+}
+
+#sticky-container {
+  position: sticky;
+  bottom: 0;
 }
